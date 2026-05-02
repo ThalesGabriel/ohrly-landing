@@ -9,7 +9,7 @@ export default function Hero() {
             </div>
 
             <div>
-                <h1 className="text-4xl md:text-5xl font-bold leading-tight">
+                <h1 className="text-4xl md:text-5xl font-bold leading-tight text-[#ededed]">
                     Pare de reagir a incidentes.{" "}
                     Decida <span className="text-green-400">antes</span> que eles aconteçam.
                 </h1>

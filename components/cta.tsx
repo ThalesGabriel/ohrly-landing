@@ -7,7 +7,7 @@ type Props = {
 export default function CTA({loading, submit: handleSubmit }: Props) {
 
   return (
-    <section className="relative px-8 py-20">
+    <section id="cta" className="relative px-8 py-20">
 
       {/* background */}
       <div className="absolute inset-0 -z-10 bg-[#0A0F14]" />

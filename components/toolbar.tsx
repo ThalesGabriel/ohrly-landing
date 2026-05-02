@@ -3,7 +3,7 @@
 export default function Navbar() {
   return (
     <nav className="flex justify-between items-center px-8 py-6">
-      <div className="text-xl font-semibold">Ohrly</div>
+      <div className="text-xl font-semibold text-[#ededed]">Ohrly</div>
 
       <button
         onClick={() =>
