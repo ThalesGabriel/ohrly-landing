@@ -12,11 +12,11 @@ export default function Main() {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
 
-    async function handleSubmit(e) {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setLoading(true);
 
-        const form = new FormData(e.target);
+        const form = new FormData(e.currentTarget);
 
         const res = await fetch("https://formspree.io/f/mkoygpnk", {
             method: "POST",

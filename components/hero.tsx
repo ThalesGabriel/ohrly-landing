@@ -37,7 +37,7 @@ export default function Hero() {
                         ],
                     ].map(([icon, title, subtitle]) => (
                         <div
-                            key={title}
+                            key={title as string}
                             className="p-5 rounded-xl border border-gray-800 bg-zinc-950/40 hover:bg-zinc-900/60 transition"
                         >
                             <div className="flex items-center gap-2 mb-2">
