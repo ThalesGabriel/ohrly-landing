@@ -1,4 +1,5 @@
 import Emlurb from "./Emlurb";
+import FraudCaseStudyPage from "./Fraud";
 
 type CaseDetailPageProps = {
   params: Promise<{
@@ -12,7 +13,7 @@ const cases = {
         description:
             "Como sinais persistentes de degradação revelaram uma janela de decisão antes do impacto operacional se tornar estrutural.",
     },
-    "olist-payments": {
+    "fraud-case-study": {
         title: "Janela de decisão em pagamentos",
         description:
             "Como pequenas variações em tempo de aprovação podem antecipar degradações invisíveis para métricas tradicionais.",
@@ -38,6 +39,9 @@ export default async function CaseDetailPage({ params }: CaseDetailPageProps) {
 
     if(id === 'central-156-emlurb')
         return <Emlurb/>
+
+    if(id === 'fraud-case-study')
+        return <FraudCaseStudyPage/>
 
     return (
         <main className="min-h-screen bg-[#040917] px-6 py-32 text-white">
