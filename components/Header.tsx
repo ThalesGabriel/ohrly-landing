@@ -1,15 +1,26 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const navItems = [
   { label: "Início", href: "/" },
   { label: "Como funciona", href: "/how-it-works" },
+  { label: "Casos", href: "/cases" },
   { label: "Diagnóstico", href: "/diagnostic" },
 ];
 
+function isActivePath(pathname: string, href: string) {
+  if (href === "/") {
+    return pathname === "/";
+  }
+
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 export function Header() {
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -35,21 +46,29 @@ export function Header() {
     >
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-3" aria-label="Ohrly">
-          <span className="text-2xl font-bold text-white">
-            ohrly
-          </span>
+          <span className="text-2xl font-bold text-white">ohrly</span>
         </Link>
 
-        <nav className="hidden items-center gap-10 text-sm font-medium text-slate-200 md:flex">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="transition hover:text-white"
-            >
-              {item.label}
-            </Link>
-          ))}
+        <nav className="hidden items-center gap-3 text-sm font-medium md:flex">
+          {navItems.map((item) => {
+            const active = isActivePath(pathname, item.href);
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={[
+                  "rounded-full px-4 py-2 transition-all duration-200",
+                  active
+                    ? "bg-white/10 text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)]"
+                    : "text-slate-300 hover:bg-white/5 hover:text-white",
+                ].join(" ")}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <Link
