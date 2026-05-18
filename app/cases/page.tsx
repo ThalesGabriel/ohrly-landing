@@ -52,7 +52,7 @@ const cases: CaseStudy[] = [
         accent: "blue",
     },
     {
-        slug: "fraude-trajetorias",
+        slug: "fraud-case-study",
         status: "Exploração de trajetória",
         category: "Fraude",
         title: "Contexto de fraudes",
@@ -60,7 +60,7 @@ const cases: CaseStudy[] = [
             "Um estudo sobre fraudes revelou que o modelo do ohrly melhora a eficiência de detectores.",
         highlights: ["Persistência", "Aceleração", "Densidade", "Momentum"],
         insight: "Desvio isolado gera ruído; trajetória gera contexto.",
-        href: "/casos/fraude-trajetorias",
+        href: "/cases/fraud-case-study",
         icon: ShieldCheck,
         accent: "purple",
     },
