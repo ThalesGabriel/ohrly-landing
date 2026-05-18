@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 const navItems = [
   { label: "Início", href: "/" },
+  { label: "Como funciona", href: "/how-it-works" },
   { label: "Diagnóstico", href: "/diagnostic" },
 ];
 
@@ -35,7 +36,7 @@ export function Header() {
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-3" aria-label="Ohrly">
           <span className="text-2xl font-bold text-white">
-            Ohrly
+            ohrly
           </span>
         </Link>
 
@@ -53,7 +54,7 @@ export function Header() {
 
         <Link
           href="/diagnostic"
-          className="rounded-xl border border-violet-300/30 bg-violet-500 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_0_24px_rgba(124,58,237,0.35)] transition hover:bg-violet-400"
+          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-violet-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm shadow-violet-500 transition hover:-translate-y-0.5 hover:bg-violet-700"
         >
           Analisar um fluxo →
         </Link>
