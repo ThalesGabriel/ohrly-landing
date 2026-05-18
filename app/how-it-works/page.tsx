@@ -460,9 +460,9 @@ function InfoCard({ icon, title, children, accent = "blue" }: { icon: IconName; 
         >
             <Icon name={icon} className="h-8 w-8 text-indigo-300" />
             <h3 className="mt-4 font-medium text-indigo-100">{title}</h3>
-            <p className="mt-3 text-sm leading-6 text-slate-400">
+            <div className="mt-3 text-sm leading-6 text-slate-400">
                 {children}
-            </p>
+            </div>
         </article>
     );
 }
