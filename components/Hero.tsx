@@ -36,7 +36,7 @@ export default function Hero({
 
                     <h1 className="text-5xl font-semibold tracking-tight text-white sm:text-6xl lg:text-6xl">
                         {title}
-                        <span className="block bg-gradient-to-r from-indigo-300 via-violet-300 to-indigo-500 bg-clip-text text-transparent">
+                        <span className="block bg-gradient-to-r from-indigo-300 via-violet-300 to-indigo-500 bg-clip-text text-transparent pb-2">
                             {titleHighlight}
                         </span>
                     </h1>
