@@ -82,8 +82,8 @@ const learnings = [
         icon: "trend",
     },
     {
-        title: "Densidade importa",
-        description: "Mais eventos no mesmo padrão aumentam a confiança do sinal.",
+        title: "Densidade revela concentração",
+        description: "Quando muitos sinais aparecem próximos, o comportamento deixa de parecer ruído e começa a parecer mudança de regime.",
         accent: "text-orange-600 bg-orange-50 border-orange-100",
         icon: "grid",
     },
@@ -99,6 +99,18 @@ const learnings = [
         accent: "text-indigo-600 bg-indigo-50 border-indigo-100",
         icon: "shield",
     },
+    {
+        title: "Propagação muda a prioridade",
+        description: "Quando a degradação sai de um contexto e aparece em outros, o risco deixa de ser localizado.",
+        accent: "text-cyan-600 bg-cyan-50 border-cyan-100",
+        icon: "branch",
+    },
+    {
+        title: "Momentum indica direção",
+        description: "Não basta saber que algo desviou. É preciso entender se o comportamento está se recuperando ou ganhando força.",
+        accent: "text-fuchsia-600 bg-fuchsia-50 border-fuchsia-100",
+        icon: "arrow",
+    }
 ];
 
 const diagnosisSteps = [
@@ -144,7 +156,50 @@ const baseChecklist = [
     "Histórico",
 ];
 
-const navItems = ["Soluções", "Como funciona", "Casos", "Recursos", "Empresa", "Preços"];
+const behavioralSignals = [
+    {
+        title: "Magnitude",
+        description:
+            "Mede o tamanho do desvio em relação ao comportamento histórico esperado. Ajuda a separar variações pequenas de rupturas relevantes.",
+        example: "Ex.: tempo de confirmação 40% acima do padrão recente.",
+        icon: "target",
+    },
+    {
+        title: "Persistência",
+        description:
+            "Observa se o desvio continua se repetindo ao longo do tempo. Um pico isolado pode ser ruído; um padrão sustentado muda o significado do sinal.",
+        example: "Ex.: aumento de abandono por 4 dias consecutivos.",
+        icon: "clock",
+    },
+    {
+        title: "Aceleração",
+        description:
+            "Avalia se a degradação está ganhando velocidade. O problema pode ainda parecer pequeno, mas a velocidade da piora indica risco crescente.",
+        example: "Ex.: retries subindo mais rápido a cada janela.",
+        icon: "trend",
+    },
+    {
+        title: "Densidade",
+        description:
+            "Mede a concentração de eventos degradados em uma mesma janela. Quanto mais eventos incoerentes aparecem juntos, maior a confiança do sinal.",
+        example: "Ex.: várias falhas leves concentradas no mesmo horário.",
+        icon: "grid",
+    },
+    {
+        title: "Propagação",
+        description:
+            "Mostra se o comportamento degradado está ficando restrito a um ponto ou se começa a aparecer em outros contextos, canais, versões ou regiões.",
+        example: "Ex.: começa no mobile e depois aparece também no web.",
+        icon: "branch",
+    },
+    {
+        title: "Momentum",
+        description:
+            "Combina intensidade, persistência e aceleração para entender se a degradação está perdendo força ou ganhando tração.",
+        example: "Ex.: o fluxo não apenas desviou; ele continua piorando.",
+        icon: "arrow",
+    },
+];
 
 type IconName =
     | "timeline"
@@ -536,7 +591,7 @@ export default function HowItWorksPage() {
                 summary="Como o processo funciona"
                 title="Do CSV à janela de"
                 titleHighlight="decisão"
-                description="Um estudo de caso real que mostra o que acontece depois que você envia um fluxo para diagnóstico: saímos dos dados brutos e chegamos a uma leitura clara sobre degradação comportamental."
+                description="Você envia uma base de eventos. O Ohrly reconstrói a trajetória do fluxo, compara com o comportamento histórico e identifica sinais como persistência, magnitude, aceleração, densidade e momentum para indicar quando uma variação começa a formar um estado de degradação."
                 rightHightlight={<HeroFlow />}
 
             />
@@ -569,7 +624,8 @@ export default function HowItWorksPage() {
                     <div>
                         <h2 className="text-3xl font-semibold tracking-tight text-white">A investigação</h2>
                         <p className="mt-3 max-w-2xl text-base leading-7 text-slate-300">
-                            Cada query foi criada para responder uma pergunta específica. A análise não começa pelo gráfico: começa pela dúvida que precisa ser reduzida.
+                            Cada query é criada para responder uma pergunta particular do CSV. A análise não começa pelo gráfico: começa pela dúvida que precisa ser reduzida.
+                            Aqui está um exemplo de como trabalhamos:
                         </p>
                     </div>
                     <Badge className="bg-slate-950 text-white">8 perguntas → 1 leitura de decisão</Badge>
@@ -586,7 +642,55 @@ export default function HowItWorksPage() {
                 </div>
             </section>
 
-            <section className="mx-auto max-w-7xl  pt-16">
+            <section className="mx-auto max-w-7xl border-t border-white/10 pt-16">
+                <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+                    <div>
+                        <h2 className="text-3xl font-semibold tracking-tight text-white">
+                            A gramática da degradação
+                        </h2>
+                        <p className="mt-3 max-w-3xl text-base leading-7 text-slate-300">
+                            O Ohrly não trata qualquer desvio como problema. A análise combina sinais comportamentais para entender quando uma variação deixa de ser ruído e começa a formar um estado.
+                        </p>
+                    </div>
+                    <Badge className="bg-violet-600/15 text-violet-100">
+                        desvio → padrão → estado
+                    </Badge>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    {behavioralSignals.map((signal) => (
+                        <article
+                            key={signal.title}
+                            className="rounded-2xl border border-white/10 bg-white/[0.035] p-5 transition hover:border-indigo-300/40 hover:bg-indigo-400/[0.06]"
+                        >
+                            <Icon name={signal.icon as IconName} className="h-6 w-6 text-indigo-300" />
+                            <h3 className="mt-5 text-base font-bold text-indigo-100">
+                                {signal.title}
+                            </h3>
+                            <p className="mt-3 text-sm leading-6 text-slate-300">
+                                {signal.description}
+                            </p>
+                            <p className="mt-4 rounded-xl border border-white/10 bg-white/[0.035] p-3 text-xs leading-5 text-slate-400">
+                                {signal.example}
+                            </p>
+                        </article>
+                    ))}
+                </div>
+            </section>
+
+            <div className="rounded-3xl border border-violet-300/20 bg-violet-600/10 p-8">
+                <p className="text-sm font-semibold uppercase tracking-wide text-violet-200">
+                    O ponto central
+                </p>
+                <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white">
+                    O Ohrly não pergunta apenas se algo saiu do normal. Ele pergunta se o comportamento está formando uma trajetória de degradação.
+                </h2>
+                <p className="mt-4 text-base leading-7 text-slate-300">
+                    Por isso combinamos magnitude, persistência, aceleração, densidade, propagação e momentum. Sozinhos, esses sinais podem ser ruído. Juntos, eles ajudam a revelar quando esperar deixou de ser neutro.
+                </p>
+            </div>
+
+            <section className="mx-auto max-w-7xl  pt-4">
                 <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-5 transition hover:border-indigo-300/40 hover:bg-indigo-400/[0.06]">
                     <div className="mb-7 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                         <div>
@@ -596,7 +700,7 @@ export default function HowItWorksPage() {
                             O diagnóstico não procura apenas uma anomalia. Ele procura o momento em que o comportamento começa a formar um estado.
                         </p>
                     </div>
-                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                         {learnings.map((item) => (
                             <div key={item.title} className="rounded-2xl border border-white/10 bg-white/[0.035] p-5 transition hover:border-indigo-300/40 hover:bg-indigo-400/[0.06]">
                                 <Icon name={item.icon as IconName} className="h-5 w-5" />
@@ -674,7 +778,7 @@ export default function HowItWorksPage() {
 
             </section>
 
-            <FinalCta/>
+            <FinalCta />
         </DefaultPage>
     )
 }
