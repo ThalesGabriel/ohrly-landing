@@ -22,6 +22,7 @@ function isActivePath(pathname: string, href: string) {
 export function Header() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     function handleScroll() {
@@ -35,11 +36,15 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
+
   return (
     <header
       className={[
         "fixed left-0 top-0 z-50 w-full transition-all duration-300",
-        isScrolled
+        isScrolled || isMenuOpen
           ? "border-b border-white/10 bg-[#040917]/85 shadow-[0_12px_40px_rgba(0,0,0,0.28)] backdrop-blur-xl"
           : "border-b border-transparent bg-[#040917]/60 backdrop-blur-md",
       ].join(" ")}
@@ -71,12 +76,87 @@ export function Header() {
           })}
         </nav>
 
-        <Link
-          href="/diagnostic"
-          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-violet-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm shadow-violet-500 transition hover:-translate-y-0.5 hover:bg-violet-700"
+        <div className="hidden md:block">
+          <Link
+            href="/diagnostic"
+            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-violet-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm shadow-violet-500 transition hover:-translate-y-0.5 hover:bg-violet-700"
+          >
+            Analisar um fluxo →
+          </Link>
+        </div>
+
+        <button
+          type="button"
+          aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
+          aria-expanded={isMenuOpen}
+          aria-controls="mobile-menu"
+          onClick={() => setIsMenuOpen((current) => !current)}
+          className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-white transition hover:bg-white/10 md:hidden"
         >
-          Analisar um fluxo →
-        </Link>
+          <span className="sr-only">
+            {isMenuOpen ? "Fechar menu" : "Abrir menu"}
+          </span>
+
+          <span className="relative h-4 w-5">
+            <span
+              className={[
+                "absolute left-0 top-0 h-0.5 w-5 rounded-full bg-current transition-all duration-200",
+                isMenuOpen ? "translate-y-[7px] rotate-45" : "",
+              ].join(" ")}
+            />
+            <span
+              className={[
+                "absolute left-0 top-[7px] h-0.5 w-5 rounded-full bg-current transition-all duration-200",
+                isMenuOpen ? "opacity-0" : "opacity-100",
+              ].join(" ")}
+            />
+            <span
+              className={[
+                "absolute left-0 top-[14px] h-0.5 w-5 rounded-full bg-current transition-all duration-200",
+                isMenuOpen ? "-translate-y-[7px] -rotate-45" : "",
+              ].join(" ")}
+            />
+          </span>
+        </button>
+      </div>
+
+      <div
+        id="mobile-menu"
+        className={[
+          "overflow-hidden border-t border-white/10 transition-all duration-300 md:hidden",
+          isMenuOpen ? "max-h-[420px] opacity-100" : "max-h-0 opacity-0",
+        ].join(" ")}
+      >
+        <div className="mx-auto max-w-7xl px-6 pb-6 pt-2">
+          <nav className="flex flex-col gap-2 text-sm font-medium">
+            {navItems.map((item) => {
+              const active = isActivePath(pathname, item.href);
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  className={[
+                    "rounded-2xl px-4 py-3 transition-all duration-200",
+                    active
+                      ? "bg-white/10 text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)]"
+                      : "text-slate-300 hover:bg-white/5 hover:text-white",
+                  ].join(" ")}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <Link
+            href="/diagnostic"
+            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-violet-600 px-5 py-3 text-sm font-bold text-white shadow-sm shadow-violet-500 transition hover:bg-violet-700"
+          >
+            Analisar um fluxo →
+          </Link>
+        </div>
       </div>
     </header>
   );
