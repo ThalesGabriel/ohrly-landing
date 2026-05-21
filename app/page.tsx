@@ -10,7 +10,7 @@ type ProblemSignal = {
 type InvestigationArea = {
     title: string;
     description: string;
-    icon: "chat" | "cart" | "bot" | "fingerprint" | "plus";
+    icon: "chat" | "cart" | "bot" | "fingerprint" | "plus" | "retry" | "clock" | "exception";
 };
 
 type Study = {
@@ -26,64 +26,64 @@ type Metric = {
 
 const problemSignals: ProblemSignal[] = [
     {
-        title: "Mais retries",
-        description: "Pequenos aumentos que parecem normais.",
-        icon: "retry",
-    },
-    {
-        title: "Mais handoffs",
-        description: "Transferências que se tornam rotina.",
-        icon: "handoff",
-    },
-    {
-        title: "Mais demora",
-        description: "Tempos maiores que ninguém questiona.",
+        title: "Checkout mais lento",
+        description: "Pequenas fricções aumentam sem parecer incidente.",
         icon: "clock",
     },
     {
-        title: "Mais fricção",
-        description: "Mais esforço para o mesmo resultado.",
+        title: "Mais abandono",
+        description: "A conversão cai aos poucos antes de virar problema óbvio.",
         icon: "friction",
     },
     {
-        title: "Mais exceções",
-        description: "Contornadas hoje, normalizadas amanhã.",
+        title: "Pagamentos demorando",
+        description: "A aprovação acontece, mas fora do comportamento esperado.",
+        icon: "retry",
+    },
+    {
+        title: "Entrega pressionada",
+        description: "Atrasos persistentes aparecem antes da reclamação escalar.",
+        icon: "handoff",
+    },
+    {
+        title: "Mais retrabalho",
+        description: "Exceções operacionais viram rotina silenciosa.",
         icon: "exception",
     },
 ];
 
 const investigationAreas: InvestigationArea[] = [
     {
-        title: "Fluxos conversacionais",
-        description: "O bot continua respondendo, mas o handoff cresce continuamente.",
-        icon: "chat",
-    },
-    {
         title: "Checkout",
-        description: "A conversão cai gradualmente sem incidente explícito.",
+        description: "O fluxo continua funcionando, mas a conversão começa a cair gradualmente.",
         icon: "cart",
     },
     {
-        title: "RPAs",
-        description: "A operação ainda executa, mas perde capacidade de recuperação.",
+        title: "Pagamento",
+        description: "A aprovação continua acontecendo, mas demora mais do que o comportamento normal.",
+        icon: "clock",
+    },
+    {
+        title: "Entrega",
+        description: "Pedidos continuam sendo entregues, mas atrasos persistentes começam a se acumular.",
         icon: "bot",
     },
     {
-        title: "Fraude",
-        description: "O incidente formal aparece depois da trajetória degradada.",
-        icon: "fingerprint",
+        title: "Carrinho",
+        description: "A recuperação perde força antes de aparecer como queda evidente de receita.",
+        icon: "retry",
     },
     {
-        title: "E muito mais",
-        description: "De clima a operações públicas, o padrão se repete.",
-        icon: "plus",
+        title: "Pós-compra",
+        description: "Exceções, reclamações e retrabalho crescem antes do incidente formal.",
+        icon: "exception",
     },
 ];
 
 const metrics: Metric[] = [
     {
         value: "+18%",
-        label: "Taxa de retries",
+        label: "Abandono",
     },
     {
         value: "+27%",
@@ -91,7 +91,7 @@ const metrics: Metric[] = [
     },
     {
         value: "+14%",
-        label: "Handoffs",
+        label: "Exceções",
     },
 ];
 
@@ -100,31 +100,19 @@ const studies: Study[] = [
         title: "Olist",
         tag: "E-commerce",
         description:
-            "Detectamos degradação em fluxos críticos de compra antes da queda se tornar óbvia.",
+            "Detectamos degradação em fluxos críticos de compra e entrega antes da queda se tornar óbvia.",
     },
     {
-        title: "SEFAZ-AL",
-        tag: "Governo",
+        title: "Checkout",
+        tag: "Conversão",
         description:
-            "Comportamentos anômalos em RPAs identificados antes da falha operacional.",
+            "Leitura de fricções graduais que podem afetar conclusão de compra sem quebrar o fluxo.",
     },
     {
-        title: "EMLURB",
-        tag: "Cidade",
+        title: "Pagamento",
+        tag: "Operação",
         description:
-            "Padrões operacionais que antecedem aumento de pressão na operação.",
-    },
-    {
-        title: "Fraude",
-        tag: "Financeiro",
-        description:
-            "Trajetórias de fraude mapeadas antes da confirmação do incidente.",
-    },
-    {
-        title: "Clima",
-        tag: "Ambiental",
-        description:
-            "Modelos interpretativos para degradações graduais em séries históricas.",
+            "Identificação de atrasos persistentes em aprovação antes de virarem reclamação ou retrabalho.",
     },
 ];
 
@@ -132,13 +120,13 @@ export default function HomePage() {
     return (
         <DefaultPage>
             <Hero
-                summary="Observabilidade comportamental para fluxos digitais"
-                title="Nem todo incidente"
-                titleHighlight="começa no alerta."
-                description="O Ohrly investiga quando fluxos digitais começam a perder consistência antes de qualquer incidente explícito."
-                labelButton1="Como funciona?"
+                summary="Leitura de saúde operacional para e-commerce"
+                title="Seu e-commerce não precisa sair do ar"
+                titleHighlight="para começar a perder dinheiro."
+                description="O Ohrly identifica quando checkout, pagamento, entrega e carrinho continuam funcionando, mas começam a se comportar pior do que o normal, antes disso virar reclamação, queda de conversão ou retrabalho."
+                labelButton1="Ver como funciona"
                 hrefButton1="/how-it-works"
-                labelButton2="Quero diagnosticar meu fluxo"
+                labelButton2="Diagnosticar um fluxo"
                 hrefButton2="/diagnostic"
                 rightHightlight={<BehaviorChartCard />}
             />
@@ -165,10 +153,10 @@ function BehaviorChartCard() {
                 <div className="mb-4 flex items-center justify-between gap-4">
                     <div>
                         <h2 className="font-medium text-white">
-                            Comportamento do fluxo de checkout
+                            Checkout funcionando, conversão degradando
                         </h2>
                         <p className="mt-1 text-sm text-slate-400">
-                            Leitura conceitual de estado comportamental
+                            Exemplo de janela operacional antes da queda ficar óbvia
                         </p>
                     </div>
 
@@ -249,8 +237,8 @@ function BehaviorChartCard() {
                     </div>
                 </div>
 
-                <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4 text-sm text-slate-300 text-center">
-                    A maioria das ferramentas só mostra o problema quando já é tarde.
+                <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4 text-center text-sm text-slate-300">
+                    A maioria das ferramentas só mostra o problema quando o impacto já ficou caro.
                 </div>
             </div>
         </div>
@@ -287,8 +275,14 @@ function ProblemSection() {
             <div className="grid gap-10 lg:grid-cols-[1fr_360px]">
                 <div>
                     <h2 className="text-3xl font-semibold tracking-tight text-white">
-                        O sistema não caiu. Mas algo já mudou.
+                        A loja continua vendendo. Mas algo já começou a degradar.
                     </h2>
+
+                    <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-400">
+                        Em e-commerce, muitos problemas não começam quando algo quebra.
+                        Começam quando fluxos essenciais seguem funcionando, mas passam a
+                        operar com mais fricção, mais demora e menos previsibilidade.
+                    </p>
 
                     <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
                         {problemSignals.map((item) => (
@@ -308,9 +302,9 @@ function ProblemSection() {
 
                     <div className="space-y-4">
                         {[
-                            "SLAs continuam verdes",
-                            "Alertas não disparam",
-                            "Dashboards parecem normais",
+                            "O checkout continua no ar",
+                            "Pagamentos ainda são aprovados",
+                            "Pedidos continuam sendo entregues",
                         ].map((text) => (
                             <div key={text} className="flex items-center gap-3 text-slate-200">
                                 <span className="flex h-6 w-6 items-center justify-center rounded-full border border-emerald-300/50 text-xs text-emerald-300">
@@ -322,10 +316,10 @@ function ProblemSection() {
                     </div>
 
                     <p className="mt-7 text-lg leading-7 text-slate-200">
-                        Essa é a zona cinzenta da decisão.
+                        Essa é a janela em que a perda começa.
                         <br />
                         <span className="text-slate-400">
-                            E nela, o custo se acumula.
+                            E quase sempre ela aparece antes do alerta.
                         </span>
                     </p>
                 </div>
@@ -338,8 +332,13 @@ function InvestigationSection() {
     return (
         <section className="relative z-10 border-t border-white/10 pt-8">
             <h2 className="max-w-3xl text-3xl font-semibold tracking-tight text-white">
-                Investigamos operações que continuam funcionando enquanto perdem coerência.
+                Lemos o comportamento dos fluxos que sustentam a operação do e-commerce.
             </h2>
+
+            <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-400">
+                O objetivo não é mostrar mais gráficos. É revelar quando um fluxo crítico
+                deixou de oscilar de forma saudável e começou a acumular pressão operacional.
+            </p>
 
             <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
                 {investigationAreas.map((item) => (
@@ -367,21 +366,22 @@ function WhatOhrlyDoesSection() {
         >
             <div>
                 <p className="text-sm font-medium uppercase tracking-[0.2em] text-indigo-300">
-                    O que o Ohrly faz
+                    O que o Ohrly entrega
                 </p>
 
                 <h2 className="mt-4 text-3xl font-semibold tracking-tight text-white">
-                    Interpretamos comportamento operacional.
+                    Uma leitura de saúde operacional dos seus fluxos.
                 </h2>
 
                 <p className="mt-5 max-w-md leading-7 text-slate-400">
-                    Ohrly não substitui suas ferramentas. Ele interpreta padrões de
-                    comportamento que elas não conseguem nomear sozinhas.
+                    O Ohrly não substitui seus dashboards, APMs ou relatórios. Ele
+                    interpreta o comportamento histórico dos fluxos e mostra quando algo
+                    deixou de funcionar como antes.
                 </p>
 
                 <p className="mt-6 max-w-md leading-7 text-slate-300">
-                    Não alertamos. Não automatizamos. Nomeamos o estado atual para que você
-                    possa decidir.
+                    O foco não é gerar mais alerta. É responder: o que mudou, há quanto
+                    tempo, onde concentra e por que isso importa agora.
                 </p>
             </div>
 
@@ -389,7 +389,7 @@ function WhatOhrlyDoesSection() {
                 <div className="mb-7 flex items-center justify-between">
                     <p className="font-medium text-white">Leitura Ohrly</p>
                     <span className="rounded-lg bg-indigo-400/10 px-3 py-1 text-xs text-indigo-200">
-                        Exemplo realista
+                        Exemplo para e-commerce
                     </span>
                 </div>
 
@@ -404,8 +404,7 @@ function WhatOhrlyDoesSection() {
 
                     <div>
                         <p className="max-w-2xl text-xl leading-8 text-white">
-                            O fluxo de onboarding entrou há 5 dias em um regime incomum de
-                            degradação.
+                            O fluxo de entrega entrou há 6 dias em degradação sustentada.
                         </p>
 
                         <div className="mt-7 grid gap-4 sm:grid-cols-3">
@@ -423,15 +422,17 @@ function WhatOhrlyDoesSection() {
                         </div>
 
                         <div className="mt-5 rounded-2xl border border-white/10 bg-[#020617]/50 p-4">
-                            <p className="text-lg font-medium text-lime-300">Risco crescente</p>
+                            <p className="text-lg font-medium text-lime-300">
+                                Pressão operacional crescente
+                            </p>
                             <p className="mt-2 text-sm leading-6 text-slate-400">
-                                A reversibilidade começou a diminuir porque o comportamento
-                                ultrapassou o ciclo natural de recuperação.
+                                O comportamento ultrapassou o ciclo natural de recuperação e
+                                começa a expor pedidos, atendimento e retrabalho.
                             </p>
                         </div>
 
                         <p className="mt-6 leading-7 text-slate-300">
-                            O sistema ainda funciona, mas já não se comporta como antes.
+                            A operação ainda funciona, mas já não se comporta como antes.
                         </p>
                     </div>
                 </div>
@@ -449,12 +450,12 @@ function WhyItMattersSection() {
                 </p>
 
                 <h2 className="mt-4 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-                    O custo aparece antes do incidente.
+                    O custo aparece antes da reclamação, da queda brusca e do incidente.
                 </h2>
 
                 <p className="mt-4 text-lg leading-8 text-slate-400">
-                    Entre o comportamento saudável e o impacto explícito existe uma janela
-                    onde agir ainda é mais barato, reversível e menos político.
+                    Entre o fluxo saudável e o impacto explícito existe uma janela onde agir
+                    ainda é mais barato, reversível e menos político.
                 </p>
             </div>
 
@@ -463,14 +464,14 @@ function WhyItMattersSection() {
                     <TimelinePoint
                         index="01"
                         title="Normal"
-                        description="A operação segue dentro do comportamento historicamente esperado."
+                        description="Checkout, pagamento, entrega e carrinho seguem dentro do comportamento esperado."
                         tone="green"
                     />
 
                     <TimelinePoint
                         index="02"
                         title="Variação"
-                        description="Pequenos sinais começam a aparecer, mas ainda parecem ruído ou sazonalidade."
+                        description="Pequenos sinais aparecem, mas ainda parecem ruído, sazonalidade ou oscilação normal."
                         tone="yellow"
                         highlighted
                     />
@@ -484,8 +485,8 @@ function WhyItMattersSection() {
 
                     <TimelinePoint
                         index="04"
-                        title="Incidente"
-                        description="O impacto se torna explícito, caro e difícil de ignorar."
+                        title="Impacto"
+                        description="A queda de conversão, reclamação ou retrabalho se torna explícita e difícil de ignorar."
                         tone="red"
                     />
                 </div>
@@ -506,7 +507,7 @@ function WhyItMattersSection() {
                 <div className="mt-8 grid gap-4 md:grid-cols-3">
                     <InsightCard
                         label="O que muda"
-                        text="O desvio deixa de ser apenas uma métrica fora do lugar e passa a indicar mudança de estado."
+                        text="O fluxo deixa de apenas variar e passa a operar fora do comportamento historicamente esperado."
                     />
                     <InsightCard
                         label="O que importa"
@@ -537,7 +538,7 @@ function TimelineWindow() {
                 </div>
 
                 <p className="max-w-md text-base leading-7 text-slate-300">
-                    Aqui o sistema ainda funciona, mas já começou a se afastar do
+                    Aqui o fluxo ainda funciona, mas já começou a se afastar do
                     comportamento esperado. A decisão ainda é reversível.
                 </p>
             </div>
@@ -590,7 +591,9 @@ function TimelinePoint({
             className={[
                 "rounded-2xl border p-5 transition",
                 styles.border,
-                highlighted ? `${styles.bg} shadow-[0_0_50px_rgba(250,204,21,0.06)]` : "bg-white/[0.025]",
+                highlighted
+                    ? `${styles.bg} shadow-[0_0_50px_rgba(250,204,21,0.06)]`
+                    : "bg-white/[0.025]",
             ].join(" ")}
         >
             <div className="mb-5 flex items-center justify-between">
@@ -630,10 +633,10 @@ function FinalCta() {
 
                     <div>
                         <h2 className="max-w-2xl text-3xl font-semibold tracking-tight text-white">
-                            Mostre um fluxo que sua equipe sente que está estranho.
+                            Mostre um fluxo do seu e-commerce que parece estar perdendo força.
                         </h2>
                         <p className="mt-2 text-lg text-indigo-100/80">
-                            Vamos analisar juntos.
+                            Vamos transformar histórico operacional em uma leitura clara.
                         </p>
                     </div>
                 </div>
@@ -642,7 +645,7 @@ function FinalCta() {
                     href="/diagnostic"
                     className="inline-flex items-center justify-center gap-2 rounded-2xl bg-violet-600 px-6 py-4 text-sm font-bold text-white shadow-sm shadow-violet-500 transition hover:-translate-y-0.5 hover:bg-violet-700"
                 >
-                    Analisar um fluxo crítico
+                    Diagnosticar checkout, pagamento ou entrega
                 </a>
             </div>
         </section>
@@ -654,9 +657,9 @@ function Icon({
     className,
 }: {
     name:
-    | ProblemSignal["icon"]
-    | InvestigationArea["icon"]
-    | "pulse";
+        | ProblemSignal["icon"]
+        | InvestigationArea["icon"]
+        | "pulse";
     className?: string;
 }) {
     const commonProps = {

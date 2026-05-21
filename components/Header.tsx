@@ -9,6 +9,7 @@ const navItems = [
   { label: "Como funciona", href: "/how-it-works" },
   { label: "Casos", href: "/cases" },
   { label: "Diagnóstico", href: "/diagnostic" },
+  { label: "Demonstração", href: "/demonstration" },
 ];
 
 function isActivePath(pathname: string, href: string) {
