@@ -1,789 +1,694 @@
-import DefaultPage from "@/components/DefaultPage";
-import Hero from "@/components/Hero";
+"use client";
 
-type ProblemSignal = {
-    title: string;
-    description: string;
-    icon: "retry" | "handoff" | "clock" | "friction" | "exception";
-};
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import {
+    ArrowRight,
+    BarChart3,
+    Boxes,
+    Braces,
+    CheckCircle2,
+    ChevronUp,
+    CircleDollarSign,
+    Clock3,
+    Code2,
+    Gauge,
+    GitBranch,
+    Headphones,
+    Hourglass,
+    Lightbulb,
+    LineChart,
+    MonitorSmartphone,
+    PackageCheck,
+    PlayCircle,
+    Radar,
+    Search,
+    ShieldCheck,
+    ShoppingCart,
+    Sparkles,
+    Target,
+    Users,
+    Zap,
+} from "lucide-react";
 
-type InvestigationArea = {
-    title: string;
-    description: string;
-    icon: "chat" | "cart" | "bot" | "fingerprint" | "plus" | "retry" | "clock" | "exception";
-};
+import { useEffect, useState } from "react";
 
-type Study = {
-    title: string;
-    tag: string;
-    description: string;
-};
-
-type Metric = {
+type StatusCard = {
+    icon: React.ElementType;
+    label: string;
     value: string;
-    label: string;
+    tone?: "cyan" | "green" | "yellow" | "red";
 };
 
-const problemSignals: ProblemSignal[] = [
-    {
-        title: "Checkout mais lento",
-        description: "Pequenas fricções aumentam sem parecer incidente.",
-        icon: "clock",
-    },
-    {
-        title: "Mais abandono",
-        description: "A conversão cai aos poucos antes de virar problema óbvio.",
-        icon: "friction",
-    },
-    {
-        title: "Pagamentos demorando",
-        description: "A aprovação acontece, mas fora do comportamento esperado.",
-        icon: "retry",
-    },
-    {
-        title: "Entrega pressionada",
-        description: "Atrasos persistentes aparecem antes da reclamação escalar.",
-        icon: "handoff",
-    },
-    {
-        title: "Mais retrabalho",
-        description: "Exceções operacionais viram rotina silenciosa.",
-        icon: "exception",
-    },
-];
-
-const investigationAreas: InvestigationArea[] = [
-    {
-        title: "Checkout",
-        description: "O fluxo continua funcionando, mas a conversão começa a cair gradualmente.",
-        icon: "cart",
-    },
-    {
-        title: "Pagamento",
-        description: "A aprovação continua acontecendo, mas demora mais do que o comportamento normal.",
-        icon: "clock",
-    },
-    {
-        title: "Entrega",
-        description: "Pedidos continuam sendo entregues, mas atrasos persistentes começam a se acumular.",
-        icon: "bot",
-    },
-    {
-        title: "Carrinho",
-        description: "A recuperação perde força antes de aparecer como queda evidente de receita.",
-        icon: "retry",
-    },
-    {
-        title: "Pós-compra",
-        description: "Exceções, reclamações e retrabalho crescem antes do incidente formal.",
-        icon: "exception",
-    },
-];
-
-const metrics: Metric[] = [
-    {
-        value: "+18%",
-        label: "Abandono",
-    },
-    {
-        value: "+27%",
-        label: "Tempo médio",
-    },
-    {
-        value: "+14%",
-        label: "Exceções",
-    },
-];
-
-const studies: Study[] = [
-    {
-        title: "Olist",
-        tag: "E-commerce",
-        description:
-            "Detectamos degradação em fluxos críticos de compra e entrega antes da queda se tornar óbvia.",
-    },
-    {
-        title: "Checkout",
-        tag: "Conversão",
-        description:
-            "Leitura de fricções graduais que podem afetar conclusão de compra sem quebrar o fluxo.",
-    },
-    {
-        title: "Pagamento",
-        tag: "Operação",
-        description:
-            "Identificação de atrasos persistentes em aprovação antes de virarem reclamação ou retrabalho.",
-    },
-];
-
-export default function HomePage() {
-    return (
-        <DefaultPage>
-            <Hero
-                summary="Leitura de saúde operacional para e-commerce"
-                title="Seu e-commerce não precisa sair do ar"
-                titleHighlight="para começar a perder dinheiro."
-                description="O Ohrly identifica quando checkout, pagamento, entrega e carrinho continuam funcionando, mas começam a se comportar pior do que o normal, antes disso virar reclamação, queda de conversão ou retrabalho."
-                labelButton1="Ver como funciona"
-                hrefButton1="/how-it-works"
-                labelButton2="Diagnosticar um fluxo"
-                hrefButton2="/diagnostic"
-                rightHightlight={<BehaviorChartCard />}
-            />
-
-            <ProblemSection />
-
-            <InvestigationSection />
-
-            <WhatOhrlyDoesSection />
-
-            <WhyItMattersSection />
-
-            <FinalCta />
-        </DefaultPage>
-    );
-}
-
-function BehaviorChartCard() {
-    return (
-        <div className="relative rounded-[2rem] border border-white/10 bg-white/[0.035] p-5 shadow-2xl shadow-black/30 backdrop-blur">
-            <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-indigo-500/10 via-transparent to-red-500/10" />
-
-            <div className="relative">
-                <div className="mb-4 flex items-center justify-between gap-4">
-                    <div>
-                        <h2 className="font-medium text-white">
-                            Checkout funcionando, conversão degradando
-                        </h2>
-                        <p className="mt-1 text-sm text-slate-400">
-                            Exemplo de janela operacional antes da queda ficar óbvia
-                        </p>
-                    </div>
-
-                    <span className="rounded-lg bg-indigo-400/10 px-3 py-1 text-xs font-medium text-indigo-200">
-                        Janela Operacional de Decisão
-                    </span>
-                </div>
-
-                <div className="relative h-[250px] overflow-hidden rounded-2xl border border-white/10 bg-[#030712]/70">
-                    <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:48px_48px]" />
-
-                    <div className="absolute left-[36%] top-0 h-full w-[28%] bg-yellow-400/10 ring-1 ring-yellow-300/20" />
-                    <div className="absolute left-[64%] top-0 h-full w-[18%] bg-orange-500/10 ring-1 ring-orange-400/20" />
-                    <div className="absolute left-[82%] top-0 h-full w-[18%] bg-red-500/10 ring-1 ring-red-400/20" />
-
-                    <svg
-                        viewBox="0 0 760 240"
-                        className="absolute inset-x-4 top-3 h-[180px] w-[calc(100%-2rem)]"
-                        role="img"
-                        aria-label="Linha de comportamento degradando progressivamente"
-                    >
-                        <defs>
-                            <linearGradient id="line-gradient" x1="0" x2="1" y1="0" y2="0">
-                                <stop offset="0%" stopColor="#86efac" />
-                                <stop offset="38%" stopColor="#a3e635" />
-                                <stop offset="58%" stopColor="#facc15" />
-                                <stop offset="78%" stopColor="#fb923c" />
-                                <stop offset="100%" stopColor="#ef4444" />
-                            </linearGradient>
-                        </defs>
-
-                        <path
-                            d="M0 135 C25 118, 44 126, 67 122 C96 117, 119 133, 146 121 C172 109, 199 132, 228 117 C258 101, 285 128, 315 119 C345 111, 370 136, 398 128 C426 119, 454 126, 482 123 C510 118, 536 124, 562 112 C590 99, 614 104, 640 92 C668 80, 694 67, 720 54 C736 46, 750 38, 760 31"
-                            fill="none"
-                            stroke="url(#line-gradient)"
-                            strokeLinecap="round"
-                            strokeWidth="4"
-                        />
-
-                        <line
-                            x1="292"
-                            x2="292"
-                            y1="16"
-                            y2="210"
-                            stroke="rgba(255,255,255,0.55)"
-                            strokeDasharray="4 6"
-                        />
-                        <circle
-                            cx="292"
-                            cy="120"
-                            r="8"
-                            fill="#020617"
-                            stroke="#f8fafc"
-                            strokeWidth="3"
-                        />
-
-                        <line
-                            x1="500"
-                            x2="500"
-                            y1="16"
-                            y2="210"
-                            stroke="rgba(255,255,255,0.3)"
-                            strokeDasharray="4 6"
-                        />
-                    </svg>
-
-                    <div className="absolute left-[41%] top-20 rounded-xl border border-yellow-200/10 bg-yellow-300/10 px-4 py-3 text-sm text-yellow-50 shadow-xl backdrop-blur">
-                        Aqui decisões
-                        <br />
-                        mudam o resultado.
-                    </div>
-
-                    <div className="absolute bottom-5 grid w-full grid-cols-4 px-5 text-center text-xs sm:text-sm">
-                        <Stage label="NORMAL" description="Comportamento esperado" tone="green" />
-                        <Stage label="VARIAÇÃO" description="Pequenas mudanças aparecem" tone="yellow" />
-                        <Stage label="DEGRADAÇÃO" description="Desvio persistente" tone="orange" />
-                        <Stage label="INCIDENTE" description="Impacto explícito" tone="red" />
-                    </div>
-                </div>
-
-                <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4 text-center text-sm text-slate-300">
-                    A maioria das ferramentas só mostra o problema quando o impacto já ficou caro.
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function Stage({
-    label,
-    description,
-    tone,
-}: {
-    label: string;
-    description: string;
-    tone: "green" | "yellow" | "orange" | "red";
-}) {
-    const toneClass = {
-        green: "text-emerald-300",
-        yellow: "text-yellow-300",
-        orange: "text-orange-300",
-        red: "text-red-300",
-    }[tone];
-
-    return (
-        <div className="px-2">
-            <p className={`font-semibold ${toneClass}`}>{label}</p>
-            <p className="mt-1 hidden text-slate-300 sm:block">{description}</p>
-        </div>
-    );
-}
-
-function ProblemSection() {
-    return (
-        <section className="relative z-10 border-t border-white/10 pt-8">
-            <div className="grid gap-10 lg:grid-cols-[1fr_360px]">
-                <div>
-                    <h2 className="text-3xl font-semibold tracking-tight text-white">
-                        A loja continua vendendo. Mas algo já começou a degradar.
-                    </h2>
-
-                    <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-400">
-                        Em e-commerce, muitos problemas não começam quando algo quebra.
-                        Começam quando fluxos essenciais seguem funcionando, mas passam a
-                        operar com mais fricção, mais demora e menos previsibilidade.
-                    </p>
-
-                    <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
-                        {problemSignals.map((item) => (
-                            <div key={item.title}>
-                                <Icon name={item.icon} className="h-9 w-9 text-indigo-300" />
-                                <h3 className="mt-4 font-medium text-white">{item.title}</h3>
-                                <p className="mt-2 text-sm leading-6 text-slate-400">
-                                    {item.description}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="rounded-3xl border border-white/10 bg-white/[0.035] p-6">
-                    <p className="mb-5 font-medium text-white">Enquanto isso:</p>
-
-                    <div className="space-y-4">
-                        {[
-                            "O checkout continua no ar",
-                            "Pagamentos ainda são aprovados",
-                            "Pedidos continuam sendo entregues",
-                        ].map((text) => (
-                            <div key={text} className="flex items-center gap-3 text-slate-200">
-                                <span className="flex h-6 w-6 items-center justify-center rounded-full border border-emerald-300/50 text-xs text-emerald-300">
-                                    ✓
-                                </span>
-                                <span>{text}</span>
-                            </div>
-                        ))}
-                    </div>
-
-                    <p className="mt-7 text-lg leading-7 text-slate-200">
-                        Essa é a janela em que a perda começa.
-                        <br />
-                        <span className="text-slate-400">
-                            E quase sempre ela aparece antes do alerta.
-                        </span>
-                    </p>
-                </div>
-            </div>
-        </section>
-    );
-}
-
-function InvestigationSection() {
-    return (
-        <section className="relative z-10 border-t border-white/10 pt-8">
-            <h2 className="max-w-3xl text-3xl font-semibold tracking-tight text-white">
-                Lemos o comportamento dos fluxos que sustentam a operação do e-commerce.
-            </h2>
-
-            <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-400">
-                O objetivo não é mostrar mais gráficos. É revelar quando um fluxo crítico
-                deixou de oscilar de forma saudável e começou a acumular pressão operacional.
-            </p>
-
-            <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-                {investigationAreas.map((item) => (
-                    <article
-                        key={item.title}
-                        className="rounded-2xl border border-white/10 bg-white/[0.035] p-5 transition hover:border-indigo-300/40 hover:bg-indigo-400/[0.06]"
-                    >
-                        <Icon name={item.icon} className="h-8 w-8 text-indigo-300" />
-                        <h3 className="mt-4 font-medium text-indigo-100">{item.title}</h3>
-                        <p className="mt-3 text-sm leading-6 text-slate-400">
-                            {item.description}
-                        </p>
-                    </article>
-                ))}
-            </div>
-        </section>
-    );
-}
-
-function WhatOhrlyDoesSection() {
-    return (
-        <section
-            id="how"
-            className="relative z-10 grid gap-8 border-t border-white/10 pt-8 lg:grid-cols-[0.8fr_1.2fr]"
-        >
-            <div>
-                <p className="text-sm font-medium uppercase tracking-[0.2em] text-indigo-300">
-                    O que o Ohrly entrega
-                </p>
-
-                <h2 className="mt-4 text-3xl font-semibold tracking-tight text-white">
-                    Uma leitura de saúde operacional dos seus fluxos.
-                </h2>
-
-                <p className="mt-5 max-w-md leading-7 text-slate-400">
-                    O Ohrly não substitui seus dashboards, APMs ou relatórios. Ele
-                    interpreta o comportamento histórico dos fluxos e mostra quando algo
-                    deixou de funcionar como antes.
-                </p>
-
-                <p className="mt-6 max-w-md leading-7 text-slate-300">
-                    O foco não é gerar mais alerta. É responder: o que mudou, há quanto
-                    tempo, onde concentra e por que isso importa agora.
-                </p>
-            </div>
-
-            <div className="rounded-3xl border border-white/10 bg-white/[0.035] p-6 shadow-2xl shadow-black/20">
-                <div className="mb-7 flex items-center justify-between">
-                    <p className="font-medium text-white">Leitura Ohrly</p>
-                    <span className="rounded-lg bg-indigo-400/10 px-3 py-1 text-xs text-indigo-200">
-                        Exemplo para e-commerce
-                    </span>
-                </div>
-
-                <div className="grid gap-6 sm:grid-cols-[32px_1fr]">
-                    <div className="hidden flex-col items-center sm:flex">
-                        <span className="h-3 w-3 rounded-full bg-slate-300" />
-                        <span className="h-20 w-px bg-white/20" />
-                        <span className="h-3 w-3 rounded-full bg-slate-300" />
-                        <span className="h-20 w-px bg-white/20" />
-                        <span className="h-3 w-3 rounded-full bg-slate-300" />
-                    </div>
-
-                    <div>
-                        <p className="max-w-2xl text-xl leading-8 text-white">
-                            O fluxo de entrega entrou há 6 dias em degradação sustentada.
-                        </p>
-
-                        <div className="mt-7 grid gap-4 sm:grid-cols-3">
-                            {metrics.map((metric) => (
-                                <div
-                                    key={metric.label}
-                                    className="rounded-2xl border border-white/10 bg-[#020617]/50 p-4"
-                                >
-                                    <p className="text-3xl font-semibold text-lime-300">
-                                        {metric.value}
-                                    </p>
-                                    <p className="mt-2 text-sm text-slate-400">{metric.label}</p>
-                                </div>
-                            ))}
-                        </div>
-
-                        <div className="mt-5 rounded-2xl border border-white/10 bg-[#020617]/50 p-4">
-                            <p className="text-lg font-medium text-lime-300">
-                                Pressão operacional crescente
-                            </p>
-                            <p className="mt-2 text-sm leading-6 text-slate-400">
-                                O comportamento ultrapassou o ciclo natural de recuperação e
-                                começa a expor pedidos, atendimento e retrabalho.
-                            </p>
-                        </div>
-
-                        <p className="mt-6 leading-7 text-slate-300">
-                            A operação ainda funciona, mas já não se comporta como antes.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    );
-}
-
-function WhyItMattersSection() {
-    return (
-        <section id="why" className="relative z-10 border-t border-white/10 pt-10">
-            <div className="mb-10 max-w-3xl">
-                <p className="text-sm font-medium uppercase tracking-[0.2em] text-indigo-300">
-                    Por que isso importa
-                </p>
-
-                <h2 className="mt-4 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-                    O custo aparece antes da reclamação, da queda brusca e do incidente.
-                </h2>
-
-                <p className="mt-4 text-lg leading-8 text-slate-400">
-                    Entre o fluxo saudável e o impacto explícito existe uma janela onde agir
-                    ainda é mais barato, reversível e menos político.
-                </p>
-            </div>
-
-            <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.025] p-6 sm:p-8 lg:p-10">
-                <div className="grid gap-6 lg:grid-cols-4 lg:gap-4">
-                    <TimelinePoint
-                        index="01"
-                        title="Normal"
-                        description="Checkout, pagamento, entrega e carrinho seguem dentro do comportamento esperado."
-                        tone="green"
-                    />
-
-                    <TimelinePoint
-                        index="02"
-                        title="Variação"
-                        description="Pequenos sinais aparecem, mas ainda parecem ruído, sazonalidade ou oscilação normal."
-                        tone="yellow"
-                        highlighted
-                    />
-
-                    <TimelinePoint
-                        index="03"
-                        title="Degradação"
-                        description="O desvio persiste, ultrapassa o ciclo natural de recuperação e começa a acumular custo."
-                        tone="orange"
-                    />
-
-                    <TimelinePoint
-                        index="04"
-                        title="Impacto"
-                        description="A queda de conversão, reclamação ou retrabalho se torna explícita e difícil de ignorar."
-                        tone="red"
-                    />
-                </div>
-
-                <div className="relative mt-10 hidden lg:block">
-                    <div className="h-1 rounded-full bg-gradient-to-r from-emerald-300 via-yellow-300 via-orange-400 to-red-500" />
-
-                    <div className="absolute left-[12.5%] top-1/2 h-5 w-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-[#07111f] bg-emerald-300" />
-                    <div className="absolute left-[37.5%] top-1/2 h-5 w-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-[#07111f] bg-yellow-300" />
-                    <div className="absolute left-[62.5%] top-1/2 h-5 w-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-[#07111f] bg-orange-400" />
-                    <div className="absolute left-[87.5%] top-1/2 h-5 w-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-[#07111f] bg-red-400" />
-
-                    <div className="absolute left-[25%] top-1/2 h-px w-[25%] -translate-y-1/2 border-t border-dashed border-yellow-200/40" />
-                </div>
-
-                <TimelineWindow />
-
-                <div className="mt-8 grid gap-4 md:grid-cols-3">
-                    <InsightCard
-                        label="O que muda"
-                        text="O fluxo deixa de apenas variar e passa a operar fora do comportamento historicamente esperado."
-                    />
-                    <InsightCard
-                        label="O que importa"
-                        text="Persistência, contexto e recuperação dizem mais do que um pico isolado."
-                    />
-                    <InsightCard
-                        label="O que o Ohrly mostra"
-                        text="Há quanto tempo esperar deixou de ser uma escolha neutra."
-                    />
-                </div>
-            </div>
-        </section>
-    );
-}
-
-function TimelineWindow() {
-    return (
-        <div className="mt-8 rounded-3xl border border-yellow-300/30 bg-yellow-300/[0.08] p-6 shadow-[0_0_70px_rgba(250,204,21,0.08)] lg:mx-auto lg:max-w-3xl">
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.18em] text-yellow-300">
-                        Janela operacional de decisão
-                    </p>
-
-                    <h3 className="mt-3 text-2xl font-semibold tracking-tight text-white">
-                        O momento em que agir ainda é barato.
-                    </h3>
-                </div>
-
-                <p className="max-w-md text-base leading-7 text-slate-300">
-                    Aqui o fluxo ainda funciona, mas já começou a se afastar do
-                    comportamento esperado. A decisão ainda é reversível.
-                </p>
-            </div>
-        </div>
-    );
-}
-
-function TimelinePoint({
-    index,
-    title,
-    description,
-    tone,
-    highlighted = false,
-}: {
-    index: string;
+type ReadingItem = {
+    icon: React.ElementType;
     title: string;
-    description: string;
-    tone: "green" | "yellow" | "orange" | "red";
-    highlighted?: boolean;
-}) {
-    const styles = {
-        green: {
-            border: "border-emerald-300/25",
-            bg: "bg-emerald-300/10",
-            text: "text-emerald-300",
-            dot: "bg-emerald-300",
-        },
-        yellow: {
-            border: "border-yellow-300/30",
-            bg: "bg-yellow-300/10",
-            text: "text-yellow-300",
-            dot: "bg-yellow-300",
-        },
-        orange: {
-            border: "border-orange-400/30",
-            bg: "bg-orange-400/10",
-            text: "text-orange-300",
-            dot: "bg-orange-400",
-        },
-        red: {
-            border: "border-red-400/30",
-            bg: "bg-red-400/10",
-            text: "text-red-300",
-            dot: "bg-red-400",
-        },
-    }[tone];
+};
 
-    return (
-        <article
-            className={[
-                "rounded-2xl border p-5 transition",
-                styles.border,
-                highlighted
-                    ? `${styles.bg} shadow-[0_0_50px_rgba(250,204,21,0.06)]`
-                    : "bg-white/[0.025]",
-            ].join(" ")}
-        >
-            <div className="mb-5 flex items-center justify-between">
-                <span className={`text-sm font-semibold ${styles.text}`}>{index}</span>
-                <span className={`h-3 w-3 rounded-full ${styles.dot}`} />
-            </div>
+const statusCards: StatusCard[] = [
+    { icon: Gauge, label: "Estado", value: "Degradação sustentada", tone: "red" },
+    { icon: Clock3, label: "Persistência", value: "4 dias", tone: "cyan" },
+    { icon: LineChart, label: "Pressão de recuperação", value: "Alta", tone: "green" },
+    { icon: MonitorSmartphone, label: "Contexto afetado", value: "Pix + Mobile", tone: "cyan" },
+    { icon: GitBranch, label: "Sinal secundário", value: "Retries aumentando", tone: "yellow" },
+    { icon: CircleDollarSign, label: "Valor exposto", value: "R$ 184 mil", tone: "green" },
+];
 
-            <h3 className={`text-xl font-semibold ${styles.text}`}>{title}</h3>
+const readingItems: ReadingItem[] = [
+    { icon: Search, title: "O que mudou" },
+    { icon: Clock3, title: "Há quanto tempo mudou" },
+    { icon: Target, title: "Onde o problema está concentrado" },
+    { icon: Zap, title: "Se parece ruído ou degradação" },
+    { icon: ShieldCheck, title: "Qual operação ou valor está exposto" },
+    { icon: Hourglass, title: "Esperar pode estar ficando caro." },
+];
 
-            <p className="mt-3 text-sm leading-6 text-slate-400">{description}</p>
-        </article>
-    );
+const personas = [
+    {
+        icon: ShoppingCart,
+        title: "E-commerce",
+        description: "Entenda onde o funil de compra perde consistência antes da receita ser impactada.",
+    },
+    {
+        icon: Boxes,
+        title: "Produto",
+        description: "Veja o comportamento real dos fluxos que sustentam a experiência do usuário.",
+    },
+    {
+        icon: Code2,
+        title: "Engenharia",
+        description: "Priorize problemas que já são relevantes no comportamento, não apenas no sistema.",
+    },
+    {
+        icon: Gauge,
+        title: "Operações",
+        description: "Antecipe filas, atrasos e retrabalho antes que virem custo operacional explícito.",
+    },
+];
+
+const steps = [
+    {
+        title: "Escolha um fluxo crítico",
+        description: "Checkout, pagamento, entrega, atendimento, onboarding ou outro fluxo importante.",
+        icon: PackageCheck,
+    },
+    {
+        title: "Envie dados históricos",
+        description: "Pode começar com uma planilha, exportação ou eventos já existentes.",
+        icon: BarChart3,
+    },
+    {
+        title: "Receba uma leitura operacional",
+        description: "O Ohrly mostra onde o fluxo saiu do esperado, há quanto tempo e o que merece atenção.",
+        icon: LineChart,
+    },
+];
+
+function cn(...classes: Array<string | false | null | undefined>) {
+    return classes.filter(Boolean).join(" ");
 }
 
-function InsightCard({ label, text }: { label: string; text: string }) {
-    return (
-        <div className="rounded-2xl border border-white/10 bg-[#020617]/50 p-5">
-            <p className="text-sm font-medium text-indigo-300">{label}</p>
-            <p className="mt-3 text-sm leading-6 text-slate-400">{text}</p>
-        </div>
-    );
-}
-
-function FinalCta() {
-    return (
-        <section
-            id="contact"
-            className="relative z-10 overflow-hidden rounded-3xl border border-indigo-300/20 bg-gradient-to-r from-indigo-950 via-violet-950 to-indigo-950 p-8 shadow-2xl shadow-indigo-950/40"
-        >
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(129,140,248,0.25),transparent_35%),radial-gradient(circle_at_80%_40%,rgba(168,85,247,0.18),transparent_30%)]" />
-
-            <div className="relative flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-center">
-                <div className="flex gap-5">
-                    <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-indigo-300/20 bg-white/5">
-                        <Icon name="pulse" className="h-8 w-8 text-indigo-200" />
-                    </div>
-
-                    <div>
-                        <h2 className="max-w-2xl text-3xl font-semibold tracking-tight text-white">
-                            Mostre um fluxo do seu e-commerce que parece estar perdendo força.
-                        </h2>
-                        <p className="mt-2 text-lg text-indigo-100/80">
-                            Vamos transformar histórico operacional em uma leitura clara.
-                        </p>
-                    </div>
-                </div>
-
-                <a
-                    href="/diagnostic"
-                    className="inline-flex items-center justify-center gap-2 rounded-2xl bg-violet-600 px-6 py-4 text-sm font-bold text-white shadow-sm shadow-violet-500 transition hover:-translate-y-0.5 hover:bg-violet-700"
-                >
-                    Diagnosticar checkout, pagamento ou entrega
-                </a>
-            </div>
-        </section>
-    );
-}
-
-function Icon({
-    name,
+function GlowCard({
+    children,
     className,
 }: {
-    name:
-        | ProblemSignal["icon"]
-        | InvestigationArea["icon"]
-        | "pulse";
+    children: React.ReactNode;
     className?: string;
 }) {
-    const commonProps = {
-        className,
-        viewBox: "0 0 24 24",
-        fill: "none",
-        xmlns: "http://www.w3.org/2000/svg",
-        stroke: "currentColor",
-        strokeWidth: 1.7,
-        strokeLinecap: "round" as const,
-        strokeLinejoin: "round" as const,
-    };
+    return (
+        <div
+            className={cn(
+                "relative overflow-hidden rounded-2xl border border-cyan-300/15 bg-slate-950/70 shadow-2xl shadow-cyan-950/20 backdrop-blur",
+                "before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_35%)]",
+                className,
+            )}
+        >
+            <div className="relative z-10">{children}</div>
+        </div>
+    );
+}
 
-    switch (name) {
-        case "retry":
-            return (
-                <svg {...commonProps}>
-                    <path d="M17 2v5h-5" />
-                    <path d="M7 22v-5h5" />
-                    <path d="M19 9a7 7 0 0 0-11.9-4.9L5 6" />
-                    <path d="M5 15a7 7 0 0 0 11.9 4.9L19 18" />
-                </svg>
-            );
+function Pill({ children }: { children: React.ReactNode }) {
+    return (
+        <span className="inline-flex items-center gap-2 rounded-full border border-cyan-300/15 bg-cyan-300/5 px-3 py-1 text-xs text-slate-300">
+            {children}
+        </span>
+    );
+}
 
-        case "handoff":
-            return (
-                <svg {...commonProps}>
-                    <path d="M7 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
-                    <path d="M17 13a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
-                    <path d="M3 22v-2a4 4 0 0 1 4-4h1" />
-                    <path d="M13 22v-2a4 4 0 0 1 4-4h4" />
-                    <path d="M10 15h4" />
-                </svg>
-            );
+function PrimaryButton({ children }: { children: React.ReactNode }) {
+    return (
+        <a
+            href="/contact"
+            className="group inline-flex h-14 items-center justify-center gap-3 rounded-xl bg-cyan-300 px-6 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-500/20 transition hover:-translate-y-0.5 hover:bg-cyan-200"
+        >
+            {children}
+            <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+        </a>
+    );
+}
 
-        case "clock":
-            return (
-                <svg {...commonProps}>
-                    <circle cx="12" cy="12" r="9" />
-                    <path d="M12 7v5l3 2" />
-                </svg>
-            );
+function SecondaryButton({ children }: { children: React.ReactNode }) {
+    return (
+        <a
+            href="/demo"
+            className="inline-flex h-14 items-center justify-center gap-3 rounded-xl border border-slate-700/80 bg-slate-950/40 px-6 text-sm font-semibold text-slate-200 transition hover:border-cyan-300/40 hover:bg-cyan-300/5"
+        >
+            <PlayCircle className="h-5 w-5 text-cyan-300" />
+            {children}
+        </a>
+    );
+}
 
-        case "friction":
-            return (
-                <svg {...commonProps}>
-                    <path d="M7 8h10" />
-                    <path d="M5 12h14" />
-                    <path d="M7 16h10" />
-                    <path d="M4 4l16 16" />
-                </svg>
-            );
+function MiniChart() {
+  const states = [
+    {
+      label: "Saudável",
+      from: "7 dias atrás",
+      to: "5 dias atrás",
+      width: "34%",
+      dot: "bg-emerald-400",
+      line: "from-emerald-400/70 to-emerald-400/20",
+      text: "text-emerald-300",
+      description: "Comportamento dentro do esperado",
+    },
+    {
+      label: "Atenção",
+      from: "5 dias atrás",
+      to: "3 dias atrás",
+      width: "28%",
+      dot: "bg-yellow-300",
+      line: "from-yellow-300/70 to-yellow-300/20",
+      text: "text-yellow-200",
+      description: "Desvio persistente começando",
+    },
+    {
+      label: "Degradação",
+      from: "3 dias atrás",
+      to: "Hoje",
+      width: "38%",
+      dot: "bg-red-400",
+      line: "from-red-400/80 to-red-400/25",
+      text: "text-red-300",
+      description: "Perda sustentada de consistência",
+    },
+  ];
 
-        case "exception":
-            return (
-                <svg {...commonProps}>
-                    <path d="M12 3a7 7 0 0 0-7 7v4a4 4 0 0 0 4 4h1l2 3 2-3h1a4 4 0 0 0 4-4v-4a7 7 0 0 0-7-7Z" />
-                    <path d="M9 10h.01" />
-                    <path d="M15 10h.01" />
-                    <path d="M9.5 14c1.5 1 3.5 1 5 0" />
-                </svg>
-            );
+  return (
+    <div className="mt-6">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400">
+        <span>Evolução do estado</span>
 
-        case "chat":
-            return (
-                <svg {...commonProps}>
-                    <path d="M21 12a8 8 0 0 1-8 8H7l-4 3v-7a8 8 0 1 1 18-4Z" />
-                    <path d="M8 12h.01" />
-                    <path d="M12 12h.01" />
-                    <path d="M16 12h.01" />
-                </svg>
-            );
+        <div className="flex items-center gap-4">
+          <span className="flex items-center gap-2">
+            <i className="h-2 w-2 rounded-full bg-emerald-400" />
+            Saudável
+          </span>
 
-        case "cart":
-            return (
-                <svg {...commonProps}>
-                    <path d="M3 3h2l2.2 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L20 8H6" />
-                    <circle cx="10" cy="20" r="1.5" />
-                    <circle cx="17" cy="20" r="1.5" />
-                </svg>
-            );
+          <span className="flex items-center gap-2">
+            <i className="h-2 w-2 rounded-full bg-yellow-300" />
+            Atenção
+          </span>
 
-        case "bot":
-            return (
-                <svg {...commonProps}>
-                    <rect x="5" y="8" width="14" height="10" rx="3" />
-                    <path d="M12 4v4" />
-                    <path d="M9 13h.01" />
-                    <path d="M15 13h.01" />
-                    <path d="M9 17h6" />
-                    <path d="M3 12h2" />
-                    <path d="M19 12h2" />
-                </svg>
-            );
+          <span className="flex items-center gap-2">
+            <i className="h-2 w-2 rounded-full bg-red-400" />
+            Degradação
+          </span>
+        </div>
+      </div>
 
-        case "fingerprint":
-            return (
-                <svg {...commonProps}>
-                    <path d="M12 11a3 3 0 0 1 3 3c0 2.5-.8 4.8-2.1 6.7" />
-                    <path d="M9 14a3 3 0 0 1 6 0" />
-                    <path d="M6.5 17a8.3 8.3 0 0 1-.5-3 6 6 0 0 1 12 0" />
-                    <path d="M18 18.5a12.7 12.7 0 0 0 1-4.5 7 7 0 0 0-14 0" />
-                    <path d="M9.5 20.5A10.5 10.5 0 0 0 11 14" />
-                    <path d="M3 14a9 9 0 0 1 18 0" />
-                </svg>
-            );
+      <div className="rounded-xl border border-slate-800/80 bg-slate-950/70 p-4">
+        <div className="relative">
+          <div className="absolute left-0 right-0 top-[18px] h-px bg-slate-800" />
 
-        case "plus":
-            return (
-                <svg {...commonProps}>
-                    <circle cx="12" cy="12" r="9" />
-                    <path d="M12 8v8" />
-                    <path d="M8 12h8" />
-                </svg>
-            );
+          <div className="relative flex w-full">
+            {states.map((state, index) => (
+              <div
+                key={state.label}
+                className="relative"
+                style={{ width: state.width }}
+              >
+                <div className="flex items-center">
+                  <div
+                    className={`z-10 h-4 w-4 rounded-full border-2 border-slate-950 ${state.dot} shadow-lg`}
+                  />
 
-        case "pulse":
-            return (
-                <svg {...commonProps}>
-                    <path d="M3 12h4l2-6 4 12 2-6h6" />
-                </svg>
-            );
+                  <div
+                    className={`h-1 flex-1 rounded-full bg-gradient-to-r ${state.line}`}
+                  />
+                </div>
 
-        default:
-            return null;
+                <div className="mt-4 pr-3">
+                  <p className={`text-xs font-semibold ${state.text}`}>
+                    {state.label}
+                  </p>
+
+                  <p className="mt-1 text-[11px] leading-4 text-slate-400">
+                    {state.description}
+                  </p>
+
+                  <p className="mt-3 text-[10px] text-slate-500">
+                    {state.from}
+                    {index === states.length - 1 && (
+                      <span className="text-slate-400"> → {state.to}</span>
+                    )}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-5 rounded-lg border border-red-400/20 bg-red-400/10 px-3 py-2">
+          <p className="text-xs leading-5 text-slate-300">
+            O fluxo saiu de uma variação normal, entrou em atenção e permanece
+            em degradação sustentada há 4 dias.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ReadingExample() {
+    return (
+        <GlowCard className="p-6 lg:p-8">
+            <div className="mb-5 flex items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                <div className="flex items-center gap-3">
+                    <Sparkles className="h-5 w-5 text-cyan-300" />
+                    <p className="text-sm font-semibold text-slate-100">Exemplo de leitura Ohrly</p>
+                </div>
+                <Pill>
+                    <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                    Diagnóstico gerado agora
+                </Pill>
+            </div>
+
+            <div>
+                <h2 className="text-2xl font-semibold tracking-tight text-slate-100">
+                    Fluxo de pagamento <span className="text-red-400">- Degradação sustentada</span>
+                </h2>
+                <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-300">
+                    O fluxo de pagamento começou a perder consistência há 4 dias. O tempo de aprovação está 2,8x acima do esperado para Pix mobile em dias úteis. O comportamento ultrapassou o ciclo natural de recuperação e começou a se propagar para novos sinais do pagamento.
+                </p>
+            </div>
+
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {statusCards.map((card) => {
+                    const Icon = card.icon;
+                    return (
+                        <div key={card.label} className="rounded-xl border border-slate-800 bg-slate-900/45 p-4">
+                            <div className="flex items-start gap-3">
+                                <Icon
+                                    className={cn(
+                                        "mt-1 h-5 w-5",
+                                        card.tone === "red" && "text-red-400",
+                                        card.tone === "yellow" && "text-yellow-300",
+                                        card.tone === "green" && "text-emerald-400",
+                                        (!card.tone || card.tone === "cyan") && "text-cyan-300",
+                                    )}
+                                />
+                                <div>
+                                    <p className="text-xs text-slate-400">{card.label}</p>
+                                    <p className="mt-1 text-sm font-semibold text-slate-100">{card.value}</p>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+
+            <MiniChart />
+        </GlowCard>
+    );
+}
+
+function SharedReadingSection() {
+    const items = [
+        { icon: Code2, title: "Engenharia vê retries." },
+        { icon: BarChart3, title: "Produto vê queda de conversão." },
+        { icon: Users, title: "Operações vê fila crescendo." },
+        { icon: CircleDollarSign, title: "Negócio vê receita oscilando." },
+    ];
+
+    return (
+        <GlowCard className="p-6 lg:p-8" >
+            <div className="grid gap-8 lg:grid-cols-[1.05fr_1fr] lg:items-center" id="como-funciona">
+                <div>
+                    <h2 className="text-2xl font-semibold text-slate-100">Você já tem dados. O que falta é uma leitura comum.</h2>
+                    <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                        {items.map((item) => {
+                            const Icon = item.icon;
+                            return (
+                                <div key={item.title} className="flex items-center gap-4">
+                                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-cyan-300/10 text-cyan-300">
+                                        <Icon className="h-5 w-5" />
+                                    </div>
+                                    <p className="text-sm text-slate-200">{item.title}</p>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+                <div>
+                    <div className="flex items-center gap-[10px]">
+                        <Lightbulb />
+                        <p className="text-sm leading-6 text-slate-300">
+                            Esses sinais muitas vezes fazem parte do mesmo problema, mas aparecem separados. O Ohrly conecta esses sinais em uma resposta simples:
+                        </p>
+                    </div>
+                    <div className="mt-4 rounded-2xl border border-cyan-300/25 bg-cyan-300/8 p-8 shadow-lg shadow-cyan-950/20">
+                        <p className="text-4xl leading-none text-cyan-300">“</p>
+                        <p className="text-2xl font-semibold leading-snug text-slate-100">
+                            Esse fluxo ainda está saudável ou começou a perder consistência?
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div className="text-center mt-10">
+                <p className="text-sm text-slate-200">Você recebe</p>
+                <h2 className="mt-1 text-3xl font-semibold tracking-tight text-slate-100">
+                    Uma leitura <span className="text-cyan-300">comportamental</span> do seu fluxo
+                </h2>
+            </div>
+            <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
+                {readingItems.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                        <GlowCard key={item.title} className="p-5 text-center">
+                            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-cyan-300/8 text-cyan-300">
+                                <Icon className="h-24 w-24" />
+                            </div>
+                            <p className="mt-5 text-sm font-medium leading-5 text-slate-200">{item.title}</p>
+                        </GlowCard>
+                    );
+                })}
+            </div>
+        </GlowCard>
+    );
+}
+
+function DashboardComparison() {
+  const traditionalSignals = [
+    "Serviço disponível",
+    "Erro dentro do limite",
+    "Latência aceitável",
+    "SLA não violado",
+  ];
+
+  const ohrlySignals = [
+    "Retries aumentando",
+    "Aprovação mais lenta",
+    "Fallback crescendo",
+    "Valor exposto subindo",
+  ];
+
+  return (
+    <section className="py-6" id="not-dash">
+      <GlowCard className="p-6 lg:p-8">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-sm font-medium text-cyan-300">
+            Não é mais um dashboard
+          </p>
+
+          <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-100">
+            O Ohrly olha para o fluxo, não só para o sistema
+          </h2>
+
+          <p className="mt-4 text-sm leading-6 text-slate-400">
+            O sistema pode continuar de pé, sem erro crítico e dentro do SLA.
+            Ainda assim, o comportamento do fluxo pode já ter começado a piorar.
+          </p>
+        </div>
+
+        <div className="mt-8 grid gap-5 lg:grid-cols-[1fr_auto_1fr] lg:items-stretch">
+          <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-6">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-800/80 text-slate-400">
+                <Gauge className="h-5 w-5" />
+              </div>
+
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+                  Ferramentas tradicionais
+                </p>
+                <h3 className="mt-1 text-xl font-semibold text-slate-100">
+                  O sistema caiu?
+                </h3>
+              </div>
+            </div>
+
+            <div className="mt-6 space-y-3">
+              {traditionalSignals.map((signal) => (
+                <div
+                  key={signal}
+                  className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-900/40 px-4 py-3"
+                >
+                  <span className="text-sm text-slate-300">{signal}</span>
+                  <span className="rounded-full bg-emerald-400/10 px-2 py-1 text-xs font-medium text-emerald-300">
+                    OK
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6 rounded-xl border border-slate-800 bg-slate-950/80 p-4">
+              <p className="text-xs text-slate-500">Leitura gerada</p>
+              <p className="mt-2 text-lg font-semibold text-slate-300">
+                Nenhum incidente detectado.
+              </p>
+            </div>
+          </div>
+
+          <div className="hidden items-center lg:flex">
+            <div className="relative flex h-full min-h-80 items-center">
+              <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-cyan-300/30 to-transparent" />
+              <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full border border-cyan-300/30 bg-slate-950 text-xs font-semibold text-cyan-300 shadow-lg shadow-cyan-950/40">
+                mas
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-cyan-300/25 bg-cyan-300/8 p-6 shadow-lg shadow-cyan-950/20">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-300/10 text-cyan-300">
+                <GitBranch className="h-5 w-5" />
+              </div>
+
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-cyan-300/80">
+                  Ohrly
+                </p>
+                <h3 className="mt-1 text-xl font-semibold text-slate-100">
+                  O fluxo ainda funciona bem?
+                </h3>
+              </div>
+            </div>
+
+            <div className="mt-6 space-y-3">
+              {ohrlySignals.map((signal, index) => (
+                <div
+                  key={signal}
+                  className="flex items-center justify-between rounded-xl border border-cyan-300/10 bg-slate-950/50 px-4 py-3"
+                >
+                  <span className="text-sm text-slate-200">{signal}</span>
+
+                  <span
+                    className={
+                      index < 2
+                        ? "rounded-full bg-yellow-300/10 px-2 py-1 text-xs font-medium text-yellow-200"
+                        : "rounded-full bg-red-400/10 px-2 py-1 text-xs font-medium text-red-300"
+                    }
+                  >
+                    {index < 2 ? "atenção" : "degradando"}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6 rounded-xl border border-cyan-300/20 bg-cyan-300/10 p-4">
+              <p className="text-xs text-cyan-300">Leitura gerada</p>
+              <p className="mt-2 text-lg font-semibold leading-snug text-slate-100">
+                O fluxo ainda está de pé, mas perdeu consistência há 4 dias.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mx-auto mt-7 max-w-3xl rounded-2xl border border-slate-800 bg-slate-950/60 p-5 text-center">
+          <p className="text-sm leading-6 text-slate-300">
+            A diferença não é ver mais gráficos. É entender quando um fluxo
+            continua funcionando, mas já começou a gerar mais espera, retries,
+            abandono, fallback, atendimento humano e retrabalho.
+          </p>
+        </div>
+      </GlowCard>
+    </section>
+  );
+}
+
+function HowItWorks() {
+    return (
+        <section className="py-12">
+            <h2 className="text-center text-2xl font-semibold text-slate-100">Como funciona</h2>
+            <div className="mt-6 grid gap-5 lg:grid-cols-3">
+                {steps.map((step, index) => {
+                    const Icon = step.icon;
+                    return (
+                        <GlowCard key={step.title} className="p-6">
+                            <div className="flex items-start gap-5">
+                                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-cyan-300 text-sm font-bold text-slate-950">
+                                    {index + 1}
+                                </div>
+                                <div>
+                                    <div className="flex items-center gap-[10px]">
+                                    <Icon className="h-15 w-15 text-cyan-300" />
+                                    <h2 className="text-2xl font-semibold text-slate-100">{step.title}</h2>
+                                    </div>
+                                    <p className="mt-3 text-lg leading-6 text-slate-300">{step.description}</p>
+                                </div>
+                            </div>
+                        </GlowCard>
+                    );
+                })}
+            </div>
+        </section>
+    );
+}
+
+function PersonasSection() {
+    return (
+        <section id="para-quem" className="pb-12">
+            <h2 className="text-center text-2xl font-semibold text-slate-100">Para quem é</h2>
+            <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                {personas.map((persona) => {
+                    const Icon = persona.icon;
+                    return (
+                        <GlowCard key={persona.title} className="p-5">
+                            <div className="flex gap-4">
+                                <Icon className="h-8 w-8 shrink-0 text-cyan-300" />
+                                <div>
+                                    <h3 className="font-semibold text-slate-100">{persona.title}</h3>
+                                    <p className="mt-2 text-xs leading-5 text-slate-200">{persona.description}</p>
+                                </div>
+                            </div>
+                        </GlowCard>
+                    );
+                })}
+            </div>
+        </section>
+    );
+}
+
+function CTA() {
+    return (
+        <GlowCard className="p-8 lg:p-10">
+            <div className="grid gap-8 lg:grid-cols-[180px_1fr_auto] lg:items-center" id="contato">
+                <div className="relative mx-auto flex h-32 w-32 items-center justify-center rounded-full border border-cyan-300/20 bg-cyan-300/8 lg:mx-0">
+                    <div className="absolute h-24 w-24 rounded-full border border-cyan-300/20" />
+                    <div className="absolute h-14 w-14 rounded-full border border-cyan-300/20" />
+                    <div className="h-4 w-4 rounded-full bg-cyan-300 shadow-lg shadow-cyan-300/60" />
+                </div>
+                <div>
+                    <h2 className="max-w-xl text-3xl font-semibold tracking-tight text-slate-100 lg:text-4xl">
+                        Quer descobrir se um fluxo seu já começou a piorar?
+                    </h2>
+                    <p className="mt-4 text-base text-slate-400">Rode um piloto simples com 1 fluxo crítico.</p>
+                </div>
+                <div className="lg:min-w-72">
+                    <PrimaryButton>Quero analisar um fluxo</PrimaryButton>
+                    <p className="mt-5 flex items-center gap-2 text-xs text-slate-400">
+                        <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                        Você não precisa mudar sua arquitetura para começar.
+                    </p>
+                </div>
+            </div>
+        </GlowCard>
+    );
+}
+
+function ScrollToTopButton() {
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+        function handleScroll() {
+            setIsVisible(window.scrollY > 500);
+        }
+
+        handleScroll();
+
+        window.addEventListener("scroll", handleScroll, { passive: true });
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, []);
+
+    function scrollToTop() {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
     }
+
+    return (
+        <button
+            type="button"
+            aria-label="Voltar ao topo"
+            onClick={scrollToTop}
+            className={cn(
+                "cursor-pointer fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-cyan-300/25 bg-slate-950/80 text-cyan-300 shadow-2xl shadow-cyan-950/40 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/50 hover:bg-cyan-300/10",
+                isVisible
+                    ? "pointer-events-auto translate-y-0 opacity-100"
+                    : "pointer-events-none translate-y-4 opacity-0",
+            )}
+        >
+            <ChevronUp className="h-10 w-10" />
+        </button>
+    );
+}
+
+export default function OhrlyLandingPage() {
+    return (
+        <main className="min-h-screen overflow-x-hidden bg-[#020b12] text-slate-100">
+            <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(34,211,238,0.12),transparent_28%),radial-gradient(circle_at_80%_0%,rgba(14,165,233,0.10),transparent_28%),linear-gradient(180deg,#020b12_0%,#020812_55%,#020b12_100%)]" />
+            <div className="pointer-events-none fixed inset-0 opacity-[0.06] [background-image:linear-gradient(rgba(255,255,255,.7)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.7)_1px,transparent_1px)] [background-size:44px_44px]" />
+
+            <div className="relative mx-auto px-5 py-6 sm:px-8 lg:px-10">
+                
+                <Header/>
+                
+                <section className="grid gap-10 py-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:py-12">
+                    <div>
+                        <h1 className="max-w-2xl text-5xl font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl">
+                            Descubra onde seus fluxos começaram a piorar <span className="text-cyan-300">antes do impacto aparecer</span>
+                        </h1>
+                        <p className="mt-8 max-w-xl text-base leading-7 text-slate-300 sm:text-lg">
+                            Analise checkout, pagamento, entrega, atendimento ou onboarding e receba uma leitura clara sobre o que mudou, há quanto tempo mudou e onde sua operação pode estar perdendo consistência.
+                        </p>
+                        <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+                            <PrimaryButton>Quero analisar um fluxo</PrimaryButton>
+                            <SecondaryButton>Ver demonstração</SecondaryButton>
+                        </div>
+                        <p className="mt-8 flex items-center gap-2 text-sm text-slate-300">
+                            <ShieldCheck className="h-4 w-4 text-emerald-400" />
+                            Comece com 1 fluxo crítico. Não precisa de integração.
+                        </p>
+                    </div>
+
+                    <ReadingExample />
+                </section>
+
+                <DashboardComparison />
+                <SharedReadingSection />
+                <HowItWorks />
+                <PersonasSection />
+                <CTA />
+                <Footer/>
+            </div>
+
+            <ScrollToTopButton />
+        </main>
+    );
 }
