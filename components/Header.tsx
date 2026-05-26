@@ -1,30 +1,21 @@
-// src/components/Header.tsx
 "use client";
 
-import Link from "next/link";
-import { Menu, X } from "lucide-react";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import {Menu, X} from "lucide-react";
+import {useTranslations} from "next-intl";
+import {useState} from "react";
+import {Link, usePathname} from "@/i18n/navigation";
 import ThemeToggle from "@/components/theme/ThemeToggle";
+import LocaleSwitcher from "./i18n/LocaleSwitcher";
 
 type NavItem = {
-    label: string;
-    href: string;
+    labelKey: string;
+    href: "/" | "/demo" | "/contact";
 };
 
 const navItems: NavItem[] = [
-    {
-        label: "Início",
-        href: "/",
-    },
-    {
-        label: "Demonstração",
-        href: "/demo",
-    },
-    {
-        label: "Fale conosco",
-        href: "/contact",
-    },
+    {labelKey: "home", href: "/"},
+    {labelKey: "demo", href: "/demo"},
+    {labelKey: "contact", href: "/contact"},
 ];
 
 function cn(...classes: Array<string | false | null | undefined>) {
@@ -40,6 +31,7 @@ function isActivePath(pathname: string, href: string) {
 }
 
 export default function Header() {
+    const t = useTranslations("nav");
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
 
@@ -73,17 +65,22 @@ export default function Header() {
                                         : "text-slate-600 hover:bg-slate-100 hover:text-cyan-700 dark:text-slate-200 dark:hover:bg-slate-900/80 dark:hover:text-cyan-300",
                                 )}
                             >
-                                {item.label}
+                                {t(item.labelKey)}
                             </Link>
                         );
                     })}
 
                     <div className="ml-3">
+                        <LocaleSwitcher />
+                    </div>
+
+                    <div className="ml-2">
                         <ThemeToggle />
                     </div>
                 </nav>
 
                 <div className="flex items-center gap-3 md:hidden">
+                    <LocaleSwitcher />
                     <ThemeToggle />
 
                     <button
@@ -122,7 +119,7 @@ export default function Header() {
                                         : "text-slate-600 hover:bg-slate-100 hover:text-cyan-700 dark:text-slate-200 dark:hover:bg-slate-900 dark:hover:text-cyan-300",
                                 )}
                             >
-                                {item.label}
+                                {t(item.labelKey)}
                             </Link>
                         );
                     })}

@@ -12,6 +12,7 @@ import {
     Sparkles,
     UploadCloud,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 type FormState = {
@@ -118,6 +119,8 @@ function Textarea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
 }
 
 function ContactForm() {
+    const t = useTranslations("contact.form");
+
     const [form, setForm] = useState<FormState>({
         name: "",
         email: "",
@@ -141,14 +144,12 @@ function ContactForm() {
                     <Sparkles className="h-5 w-5 text-cyan-600 dark:text-cyan-300" />
 
                     <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-                        Solicitar uma conversa
+                        {t("title")}
                     </p>
                 </div>
 
                 <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
-                    Conte um pouco sobre o fluxo que você gostaria de analisar.
-                    A ideia é começar simples: um fluxo crítico, dados históricos e
-                    uma leitura comportamental.
+                    {t("description")}
                 </p>
             </div>
 
@@ -158,21 +159,21 @@ function ContactForm() {
                 method="POST"
             >
                 <div className="grid gap-5 sm:grid-cols-2">
-                    <Field label="Nome">
+                    <Field label={t("name")}>
                         <Input
                             name="name"
-                            placeholder="Seu nome"
+                            placeholder={t("namePlaceholder")}
                             value={form.name}
                             onChange={(event) => updateField("name", event.target.value)}
                             required
                         />
                     </Field>
 
-                    <Field label="E-mail">
+                    <Field label={t("email")}>
                         <Input
                             name="email"
                             type="email"
-                            placeholder="voce@empresa.com"
+                            placeholder={t("emailPlaceholder")}
                             value={form.email}
                             onChange={(event) => updateField("email", event.target.value)}
                             required
@@ -181,77 +182,72 @@ function ContactForm() {
                 </div>
 
                 <div className="grid gap-5 sm:grid-cols-2">
-                    <Field label="Empresa">
+                    <Field label={t("company")}>
                         <Input
                             name="company"
-                            placeholder="Nome da empresa"
+                            placeholder={t("companyPlaceholder")}
                             value={form.company}
                             onChange={(event) => updateField("company", event.target.value)}
                         />
                     </Field>
 
-                    <Field label="Seu papel">
+                    <Field label={t("role")}>
                         <Select
                             name="role"
                             value={form.role}
                             onChange={(event) => updateField("role", event.target.value)}
                         >
-                            <option value="">Selecione uma opção</option>
-                            <option value="produto">Produto</option>
-                            <option value="engenharia">Engenharia</option>
-                            <option value="operacoes">Operações</option>
-                            <option value="dados">Dados / Analytics</option>
-                            <option value="lideranca">Liderança</option>
-                            <option value="outro">Outro</option>
+                            <option value="">{t("rolePlaceholder")}</option>
+                            <option value="produto">{t("roleOptions.product")}</option>
+                            <option value="engenharia">{t("roleOptions.engineering")}</option>
+                            <option value="operacoes">{t("roleOptions.operations")}</option>
+                            <option value="dados">{t("roleOptions.data")}</option>
+                            <option value="lideranca">{t("roleOptions.leadership")}</option>
+                            <option value="outro">{t("roleOptions.other")}</option>
                         </Select>
                     </Field>
                 </div>
 
-                <Field label="Qual fluxo você gostaria de analisar?">
+                <Field label={t("flowType")}>
                     <Select
                         name="flowType"
                         value={form.flowType}
                         onChange={(event) => updateField("flowType", event.target.value)}
                     >
-                        <option value="">Selecione uma opção</option>
-                        <option value="checkout">Checkout</option>
-                        <option value="pagamento">Pagamento</option>
-                        <option value="entrega">Entrega</option>
-                        <option value="carrinho">Recuperação de carrinho</option>
-                        <option value="atendimento">Atendimento / suporte</option>
-                        <option value="onboarding">Onboarding</option>
-                        <option value="chatbot">Chatbot / canais conversacionais</option>
-                        <option value="outro">Outro fluxo crítico</option>
+                        <option value="">{t("rolePlaceholder")}</option>
+                        <option value="checkout">{t("flowOptions.checkout")}</option>
+                        <option value="pagamento">{t("flowOptions.payment")}</option>
+                        <option value="entrega">{t("flowOptions.delivery")}</option>
+                        <option value="carrinho">{t("flowOptions.cartRecovery")}</option>
+                        <option value="atendimento">{t("flowOptions.support")}</option>
+                        <option value="onboarding">{t("flowOptions.onboarding")}</option>
+                        <option value="chatbot">{t("flowOptions.chatbot")}</option>
+                        <option value="outro">{t("flowOptions.other")}</option>
                     </Select>
                 </Field>
 
-                <Field label="O que você gostaria de entender nesse fluxo?">
+                <Field label={t("message")}>
                     <Textarea
                         name="message"
-                        placeholder="Ex: quero entender se o checkout começou a perder conversão depois das últimas mudanças, ou se o fluxo de pagamento está ficando mais lento em alguns contextos."
+                        placeholder={t("messagePlaceholder")}
                         value={form.message}
                         onChange={(event) => updateField("message", event.target.value)}
                         required
                     />
                 </Field>
 
-                <input
-                    type="hidden"
-                    name="source"
-                    value="Página Fale Conosco - Ohrly"
-                />
+                <input type="hidden" name="source" value={t("source")} />
 
                 <button
                     type="submit"
                     className="group inline-flex h-14 cursor-pointer items-center justify-center gap-3 rounded-xl bg-cyan-300 px-6 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-500/20 transition hover:-translate-y-0.5 hover:bg-cyan-200"
                 >
-                    Enviar mensagem
+                    {t("submit")}
                     <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                 </button>
 
                 <p className="text-xs leading-5 text-slate-500 dark:text-slate-500">
-                    Ao enviar, você compartilha essas informações para avaliarmos
-                    se faz sentido rodar uma leitura inicial do seu fluxo.
+                    {t("privacy")}
                 </p>
             </form>
         </GlowCard>
@@ -259,30 +255,28 @@ function ContactForm() {
 }
 
 function InfoPanel() {
+    const t = useTranslations("contact.infoPanel");
+
     const items = [
         {
             icon: BarChart3,
-            title: "Comece com dados históricos",
-            description:
-                "Uma planilha, exportação ou base simples já pode ser suficiente para um primeiro diagnóstico.",
+            title: t("historicalData.title"),
+            description: t("historicalData.description"),
         },
         {
             icon: Clock3,
-            title: "Foco em um fluxo crítico",
-            description:
-                "Checkout, pagamento, entrega, atendimento, onboarding ou outro fluxo que tenha impacto real.",
+            title: t("criticalFlow.title"),
+            description: t("criticalFlow.description"),
         },
         {
             icon: ShieldCheck,
-            title: "Sem promessa de causa raiz",
-            description:
-                "A leitura mostra onde o comportamento perdeu consistência e ajuda a qualificar a investigação.",
+            title: t("noRootCausePromise.title"),
+            description: t("noRootCausePromise.description"),
         },
         {
             icon: UploadCloud,
-            title: "Sem integração no primeiro passo",
-            description:
-                "O piloto pode começar sem mexer na arquitetura da sua operação.",
+            title: t("noIntegration.title"),
+            description: t("noIntegration.description"),
         },
     ];
 
@@ -316,41 +310,38 @@ function InfoPanel() {
 }
 
 export default function FaleConoscoPage() {
+    const t = useTranslations("contact");
+
+    const bullets = [
+        t("bullets.one"),
+        t("bullets.two"),
+        t("bullets.three"),
+    ];
+
     return (
         <OhrlyPageShell>
             <section className="mx-auto grid gap-10 px-5 py-10 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-10 lg:py-14">
                 <div>
                     <div className="inline-flex items-center gap-2 rounded-full border border-cyan-700/15 bg-cyan-50 px-3 py-1 text-xs text-slate-600 dark:border-cyan-300/15 dark:bg-cyan-300/5 dark:text-slate-300">
                         <MessageSquare className="h-3.5 w-3.5 text-cyan-600 dark:text-cyan-300" />
-                        Fale conosco
+                        {t("badge")}
                     </div>
 
                     <h1 className="mt-6 max-w-2xl text-5xl font-semibold leading-[1.05] tracking-tight text-slate-950 sm:text-6xl dark:text-white">
-                        Vamos aplicar uma leitura Ohrly em um fluxo real seu?
+                        {t("title")}
                     </h1>
 
                     <p className="mt-6 max-w-xl text-base leading-7 text-slate-600 sm:text-lg dark:text-slate-300">
-                        Conte qual fluxo você quer entender. A partir disso, podemos
-                        avaliar se faz sentido rodar um piloto simples com dados
-                        históricos para identificar perda de consistência, pressão de
-                        recuperação e contextos afetados.
+                        {t("description")}
                     </p>
 
                     <div className="mt-8 grid gap-3 text-sm text-slate-600 dark:text-slate-300">
-                        <p className="flex items-center gap-3">
-                            <CheckCircle2 className="h-5 w-5 text-emerald-500 dark:text-emerald-400" />
-                            Ideal para testar 1 fluxo crítico.
-                        </p>
-
-                        <p className="flex items-center gap-3">
-                            <CheckCircle2 className="h-5 w-5 text-emerald-500 dark:text-emerald-400" />
-                            Pode começar com exportação ou CSV.
-                        </p>
-
-                        <p className="flex items-center gap-3">
-                            <CheckCircle2 className="h-5 w-5 text-emerald-500 dark:text-emerald-400" />
-                            Foco em leitura operacional, não em dashboard genérico.
-                        </p>
+                        {bullets.map((bullet) => (
+                            <p key={bullet} className="flex items-center gap-3">
+                                <CheckCircle2 className="h-5 w-5 text-emerald-500 dark:text-emerald-400" />
+                                {bullet}
+                            </p>
+                        ))}
                     </div>
 
                     <div className="mt-8 rounded-2xl border border-slate-200 bg-white/70 p-5 shadow-sm shadow-slate-200/60 dark:border-cyan-300/15 dark:bg-slate-950/60 dark:shadow-none">
@@ -358,15 +349,15 @@ export default function FaleConoscoPage() {
                             <Mail className="h-5 w-5 text-cyan-600 dark:text-cyan-300" />
 
                             <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                                Prefere e-mail direto?
+                                {t("emailBox.title")}
                             </p>
                         </div>
 
                         <a
-                            href="mailto:contato@ohrly.com.br"
+                            href={`mailto:${t("emailBox.email")}`}
                             className="mt-3 inline-flex text-sm text-cyan-600 transition hover:text-cyan-700 dark:text-cyan-300 dark:hover:text-cyan-200"
                         >
-                            taraujo@ohrly.com.br
+                            {t("emailBox.email")}
                         </a>
                     </div>
                 </div>

@@ -1,0 +1,317 @@
+{
+  "nav": {
+    "home": "Home",
+    "demo": "Demo",
+    "contact": "Contact"
+  },
+  "footer": {
+    "description": "A behavioral reading layer to understand when digital flows are still working, but have already started losing consistency.",
+    "product": "Product",
+    "contact": "Contact",
+    "analyzeFlow": "Analyze a flow",
+    "rights": "All rights reserved.",
+    "tagline": "Ohrly does not eliminate incidents. It eliminates the silence before them."
+  },
+  "home": {
+    "hero": {
+      "titleStart": "Discover where your digital flows start getting worse",
+      "titleHighlight": "before the impact becomes consolidated",
+      "description": "Analyze checkout, payment, delivery, support or onboarding and receive a clear reading of what changed, how long ago it changed and where your operation may be losing consistency.",
+      "primaryCta": "Analyze a flow",
+      "secondaryCta": "View demo",
+      "note": "Start with 1 critical flow. No integration required."
+    },
+    "readingExample": {
+      "badge": "Ohrly reading example",
+      "generated": "Diagnosis generated now",
+      "title": "Payment flow",
+      "state": "Sustained degradation",
+      "description": "The payment flow started losing consistency 4 days ago. Approval time is 2.8x above the expected baseline for Pix mobile on business days. The behavior exceeded the natural recovery cycle and started propagating to new payment signals.",
+      "evolution": "State evolution",
+      "healthy": "Healthy",
+      "attention": "Attention",
+      "degradation": "Degradation",
+      "healthyDescription": "Behavior within expected range",
+      "attentionDescription": "Persistent deviation starting",
+      "degradationDescription": "Sustained loss of consistency",
+      "sevenDaysAgo": "7 days ago",
+      "fiveDaysAgo": "5 days ago",
+      "threeDaysAgo": "3 days ago",
+      "today": "Today",
+      "timelineNote": "The flow moved from normal variation into attention and remains in sustained degradation for 4 days."
+    },
+    "statusCards": {
+      "stateLabel": "State",
+      "stateValue": "Sustained degradation",
+      "persistenceLabel": "Persistence",
+      "persistenceValue": "4 days",
+      "pressureLabel": "Recovery pressure",
+      "pressureValue": "High",
+      "contextLabel": "Affected context",
+      "contextValue": "Pix + Mobile",
+      "secondarySignalLabel": "Secondary signal",
+      "secondarySignalValue": "Retries increasing",
+      "exposedValueLabel": "Exposed value",
+      "exposedValueValue": "R$ 184k"
+    },
+    "howItWorks": {
+      "step1Title": "Choose a critical flow",
+      "step1Description": "Checkout, payment, delivery, support, onboarding or another important flow.",
+      "step2Title": "Send historical data",
+      "step2Description": "You can start with a spreadsheet, export or existing events.",
+      "step3Title": "Receive an operational reading",
+      "step3Description": "Ohrly shows where the flow moved away from expected behavior, how long ago and what deserves attention."
+    },
+    "compactReport": {
+      "title": "From a raw CSV to a decision reading.",
+      "description": "We used a synthetic retention dataset for a boleto flow to simulate how Ohrly interprets a critical flow: first it understands the file, then applies a behavioral contract and finally generates an operational reading.",
+      "inputTitle": "Support and retention dataset for boleto",
+      "inputSubtitle": "1. What went in",
+      "configTitle": "Flow behavioral contract",
+      "configSubtitle": "2. How Ohrly interpreted it",
+      "outputTitle": "Pressure with propagation",
+      "outputSubtitle": "3. What came out",
+      "highConfidence": "High confidence",
+      "actionsSubtitle": "4. What to do with it",
+      "actionsTitle": "Suggested actions for prioritization",
+      "investigationPlan": "Investigation plan",
+      "ohrlyRole": "Ohrly does not decide for the team. It organizes the investigation: shows where pressure appeared, which signals are more reliable and which hypotheses deserve priority in the next conversation.",
+      "mainEpisode": {
+        "title": "Main episode",
+        "days": "5 days",
+        "description": "1.047 exposed events expostos, RPI 68.93 and 60% of consumed decision window."
+      },
+      "finalReading": "Final reading",
+      "waitingIsNotNeutral": "Waiting is no longer neutral.",
+      "finalReadingDescription": "The degradation was not isolated: it appeared in retention, handoff, complaint, boleto failure, resolution and human time.",
+      "whatItMeans": "Given this context, what does it mean?",
+      "meaningTitle": "The flow did not show only an isolated fluctuation. It accumulated operational pressure across multiple signals, with propagation and high statistical confidence.",
+      "meaningDescription": "In a call, this helps the team move from “I think it got worse” to an evidence-based conversation: what changed, how long ago, where it concentrated and how many events went through degradation periods.",
+      "inputStats": {
+        "availableEvents": {
+          "label": "Available events",
+          "value": "59,863",
+          "description": "conversations in the analyzed dataset"
+        },
+        "fileColumns": {
+          "label": "File columns",
+          "value": "18",
+          "description": "raw fields available in the CSV"
+        },
+        "mappedFields": {
+          "label": "Mapped fields",
+          "value": "18",
+          "description": "entity, context, metrics and impact signals"
+        },
+        "analyzedPeriod": {
+          "label": "Analyzed period",
+          "value": "54 days",
+          "description": "from 01/06/2025 to 02/28/2025"
+        }
+      },
+      "configStats": {
+        "contexts": {
+          "label": "Contexts",
+          "value": "3",
+          "description": "intent, subject_tag and channel"
+        },
+        "configuredMetrics": {
+          "label": "Configured metrics",
+          "value": "8",
+          "description": "retention, resolution, failure, handoff, complaint and time metrics"
+        },
+        "baseline": {
+          "label": "Baseline",
+          "value": "7 windows",
+          "description": "contextual rolling baseline with hierarchical fallback"
+        },
+        "minimumVolume": {
+          "label": "Minimum volume",
+          "value": "30",
+          "description": "events per window for analysis"
+        }
+      },
+      "outputStats": {
+        "detectedEpisodes": {
+          "label": "Detected episodes",
+          "value": "44",
+          "description": "recovery pressure episodes identified"
+        },
+        "highPressure": {
+          "label": "High pressure",
+          "value": "32",
+          "description": "episodes reached high pressure"
+        },
+        "degradedEvents": {
+          "label": "Degraded events",
+          "value": "39,096",
+          "description": "events in degraded episodes"
+        },
+        "highPressureEvents": {
+          "label": "Events in high pressure",
+          "value": "33,897",
+          "description": "events in high or critical pressure episodes"
+        }
+      },
+      "priorities": {
+        "high": "High",
+        "medium": "Medium"
+      },
+      "actions": {
+        "compareOperationalChanges": {
+          "title": "Compare with operational changes",
+          "description": "Cross-check the highest-pressure periods with deployments, rule changes, campaigns or support changes."
+        },
+        "investigateMetricPropagation": {
+          "title": "Investigate propagation across metrics",
+          "description": "Check whether the retention drop appeared together with handoff, complaints, boleto failures or increased human handling time."
+        },
+        "prioritizeHighConfidenceSignals": {
+          "title": "Prioritize high-confidence signals",
+          "description": "Start with episodes with higher volume and statistical confidence before investigating weaker signals."
+        },
+        "trackRecurrence": {
+          "title": "Track recurrence",
+          "description": "Compare the highlighted episodes with previous occurrences to identify recurring degradation families."
+        }
+      }
+    },
+    "sharedReading": {
+      "title": "You already have data. What is missing is a shared reading.",
+      "engineering": "Engineering sees retries.",
+      "product": "Product sees conversion drops.",
+      "operations": "Operations sees queues growing.",
+      "business": "Business sees revenue oscillating.",
+      "description": "These signals often belong to the same problem, but appear separately. Ohrly connects them into a simple answer:",
+      "question": "Is this flow still healthy or has it started losing consistency?",
+      "youReceive": "You receive",
+      "readingTitleStart": "A",
+      "readingTitleHighlight": "behavioral",
+      "readingTitleEnd": "reading of your flow"
+    },
+    "dashboardComparison": {
+      "eyebrow": "Not another dashboard",
+      "title": "Ohrly looks at the flow, not only the system",
+      "description": "The system can remain up, with no critical error and within SLA. Even so, the behavior of the flow may already have started getting worse.",
+      "traditional": "Traditional tools",
+      "traditionalQuestion": "Did the system go down?",
+      "ohrly": "Ohrly",
+      "ohrlyQuestion": "Is the flow still working well?",
+      "generatedReading": "Generated reading",
+      "noIncident": "No incident detected.",
+      "flowDegraded": "The flow is still up, but has lost consistency for 4 days.",
+      "bottomDescription": "The difference is not seeing more charts. It is understanding when a flow is still working, but has already started generating more waiting time, retries, abandonment, fallback, human support and rework.",
+      "traditionalSignals": {
+        "serviceAvailable": "Service available",
+        "errorWithinLimit": "Error within limit",
+        "latencyAcceptable": "Acceptable latency",
+        "slaNotViolated": "SLA not violated"
+      },
+      "ohrlySignals": {
+        "retriesIncreasing": "Retries increasing",
+        "approvalSlower": "Approval getting slower",
+        "fallbackGrowing": "Fallback growing",
+        "exposedValueGrowing": "Exposed value increasing"
+      },
+      "statuses": {
+        "ok": "OK",
+        "attention": "attention",
+        "degrading": "degrading"
+      },
+      "connector": "but"
+    },
+    "readingItems": {
+      "whatChanged": "What changed",
+      "howLong": "How long ago it changed",
+      "where": "Where the problem is concentrated",
+      "noiseOrDegradation": "Whether it looks like noise or degradation",
+      "exposure": "Which operation or value is exposed",
+      "waitingCost": "Waiting may be getting expensive."
+    },
+    "personas": {
+      "title": "Who it is for",
+      "ecommerceTitle": "E-commerce",
+      "ecommerceDescription": "Understand where the purchase funnel loses consistency before revenue is impacted.",
+      "productTitle": "Product",
+      "productDescription": "See the real behavior of the flows that sustain the user experience.",
+      "engineeringTitle": "Engineering",
+      "engineeringDescription": "Prioritize problems that are already relevant in behavior, not only in the system.",
+      "operationsTitle": "Operations",
+      "operationsDescription": "Anticipate queues, delays and rework before they become explicit operational cost."
+    },
+    "cta": {
+      "title": "Want to discover whether one of your flows has already started getting worse?",
+      "description": "Run a simple pilot with 1 critical flow.",
+      "button": "Analyze a flow",
+      "note": "You do not need to change your architecture to get started."
+    }
+  },
+  "contact": {
+    "badge": "Contact",
+    "title": "Should we apply an Ohrly reading to one of your real flows?",
+    "description": "Tell us which flow you want to understand. From there, we can evaluate whether it makes sense to run a simple pilot with historical data to identify loss of consistency, recovery pressure and affected contexts.",
+    "bullets": {
+      "one": "Ideal for testing 1 critical flow.",
+      "two": "Can start with an export or CSV.",
+      "three": "Focused on operational reading, not a generic dashboard."
+    },
+    "emailBox": {
+      "title": "Prefer direct email?",
+      "email": "taraujo@ohrly.com.br"
+    },
+    "form": {
+      "title": "Request a conversation",
+      "description": "Tell us a little about the flow you would like to analyze. The idea is to start simple: one critical flow, historical data and a behavioral reading.",
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "email": "Email",
+      "emailPlaceholder": "you@company.com",
+      "company": "Company",
+      "companyPlaceholder": "Company name",
+      "role": "Your role",
+      "rolePlaceholder": "Select an option",
+      "flowType": "Which flow would you like to analyze?",
+      "message": "What would you like to understand about this flow?",
+      "messagePlaceholder": "E.g. I want to understand whether checkout conversion started dropping after the latest changes, or whether the payment flow is getting slower in some contexts.",
+      "submit": "Send message",
+      "privacy": "By submitting, you share this information so we can evaluate whether it makes sense to run an initial reading of your flow.",
+      "roleOptions": {
+        "product": "Product",
+        "engineering": "Engineering",
+        "operations": "Operations",
+        "data": "Data / Analytics",
+        "leadership": "Leadership",
+        "other": "Other"
+      },
+      "flowOptions": {
+        "checkout": "Checkout",
+        "payment": "Payment",
+        "delivery": "Delivery",
+        "cartRecovery": "Cart recovery",
+        "support": "Support / customer service",
+        "onboarding": "Onboarding",
+        "chatbot": "Chatbot / conversational channels",
+        "other": "Another critical flow"
+      },
+      "source": "Contact Page - Ohrly"
+    },
+    "infoPanel": {
+      "historicalData": {
+        "title": "Start with historical data",
+        "description": "A spreadsheet, export or simple dataset may already be enough for a first diagnosis."
+      },
+      "criticalFlow": {
+        "title": "Focus on one critical flow",
+        "description": "Checkout, payment, delivery, support, onboarding or another flow with real impact."
+      },
+      "noRootCausePromise": {
+        "title": "No root-cause promise",
+        "description": "The reading shows where behavior lost consistency and helps qualify the investigation."
+      },
+      "noIntegration": {
+        "title": "No integration at first",
+        "description": "The pilot can start without changing your operation architecture."
+      }
+    }
+  }
+}

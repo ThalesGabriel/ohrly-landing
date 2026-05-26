@@ -1,0 +1,317 @@
+{
+  "nav": {
+    "home": "Início",
+    "demo": "Demonstração",
+    "contact": "Fale conosco"
+  },
+  "footer": {
+    "description": "Uma camada de leitura comportamental para entender quando fluxos digitais continuam funcionando, mas já começaram a perder consistência.",
+    "product": "Produto",
+    "contact": "Contato",
+    "analyzeFlow": "Analisar um fluxo",
+    "rights": "Todos os direitos reservados.",
+    "tagline": "O Ohrly não elimina incidentes. Ele elimina o silêncio antes deles."
+  },
+  "home": {
+    "hero": {
+      "titleStart": "Descubra onde seus fluxos digitais pioram",
+      "titleHighlight": "antes do impacto se consolidar",
+      "description": "Analise checkout, pagamento, entrega, atendimento ou onboarding e receba uma leitura clara sobre o que mudou, há quanto tempo mudou e onde sua operação pode estar perdendo consistência.",
+      "primaryCta": "Quero analisar um fluxo",
+      "secondaryCta": "Ver demonstração",
+      "note": "Comece com 1 fluxo crítico. Não precisa de integração."
+    },
+    "readingExample": {
+      "badge": "Exemplo de leitura Ohrly",
+      "generated": "Diagnóstico gerado agora",
+      "title": "Fluxo de pagamento",
+      "state": "Degradação sustentada",
+      "description": "O fluxo de pagamento começou a perder consistência há 4 dias. O tempo de aprovação está 2,8x acima do esperado para Pix mobile em dias úteis. O comportamento ultrapassou o ciclo natural de recuperação e começou a se propagar para novos sinais do pagamento.",
+      "evolution": "Evolução do estado",
+      "healthy": "Saudável",
+      "attention": "Atenção",
+      "degradation": "Degradação",
+      "healthyDescription": "Comportamento dentro do esperado",
+      "attentionDescription": "Desvio persistente começando",
+      "degradationDescription": "Perda sustentada de consistência",
+      "sevenDaysAgo": "7 dias atrás",
+      "fiveDaysAgo": "5 dias atrás",
+      "threeDaysAgo": "3 dias atrás",
+      "today": "Hoje",
+      "timelineNote": "O fluxo saiu de uma variação normal, entrou em atenção e permanece em degradação sustentada há 4 dias."
+    },
+    "readingItems": {
+      "whatChanged": "O que mudou",
+      "howLong": "Há quanto tempo mudou",
+      "where": "Onde o problema está concentrado",
+      "noiseOrDegradation": "Se parece ruído ou degradação",
+      "exposure": "Qual operação ou valor está exposto",
+      "waitingCost": "Esperar pode estar ficando caro."
+    },
+    "statusCards": {
+      "stateLabel": "Estado",
+      "stateValue": "Degradação sustentada",
+      "persistenceLabel": "Persistência",
+      "persistenceValue": "4 dias",
+      "pressureLabel": "Pressão de recuperação",
+      "pressureValue": "Alta",
+      "contextLabel": "Contexto afetado",
+      "contextValue": "Pix + Mobile",
+      "secondarySignalLabel": "Sinal secundário",
+      "secondarySignalValue": "Retries aumentando",
+      "exposedValueLabel": "Valor exposto",
+      "exposedValueValue": "R$ 184 mil"
+    },
+    "howItWorks": {
+      "step1Title": "Escolha um fluxo crítico",
+      "step1Description": "Checkout, pagamento, entrega, atendimento, onboarding ou outro fluxo importante.",
+      "step2Title": "Envie dados históricos",
+      "step2Description": "Pode começar com uma planilha, exportação ou eventos já existentes.",
+      "step3Title": "Receba uma leitura operacional",
+      "step3Description": "O Ohrly mostra onde o fluxo saiu do esperado, há quanto tempo e o que merece atenção."
+    },
+    "compactReport": {
+      "title": "De um CSV bruto para uma leitura de decisão.",
+      "description": "Usamos um dataset sintético de retenção no fluxo de boleto para simular como o Ohrly interpreta um fluxo crítico: primeiro entende o arquivo, depois aplica um contrato comportamental e, por fim, gera uma leitura operacional.",
+      "inputTitle": "Dataset de atendimento e retenção em boleto",
+      "inputSubtitle": "1. O que entrou",
+      "configTitle": "Contrato comportamental do fluxo",
+      "configSubtitle": "2. Como o Ohrly interpretou",
+      "outputTitle": "Pressão com propagação",
+      "outputSubtitle": "3. O que saiu",
+      "highConfidence": "Alta confiança",
+      "actionsSubtitle": "4. O que fazer com isso",
+      "actionsTitle": "Ações sugeridas para priorização",
+      "investigationPlan": "Plano de investigação",
+      "ohrlyRole": "O Ohrly não decide pelo time. Ele organiza a investigação: mostra onde a pressão apareceu, quais sinais são mais confiáveis e quais hipóteses merecem prioridade na próxima conversa.",
+      "mainEpisode": {
+        "title": "Episódio principal",
+        "days": "dias",
+        "description": "1.047 eventos expostos, RPI 68,93 e janela de decisão consumida em 60%."
+      },
+      "finalReading": "Leitura final",
+      "waitingIsNotNeutral": "Esperar deixou de ser neutro.",
+      "finalReadingDescription": "A degradação não ficou isolada: apareceu em retenção, handoff, reclamação, falha no boleto, resolução e tempo humano.",
+      "whatItMeans": "Diante desse contexto, o que isso quer dizer?",
+      "meaningTitle": "O fluxo não apresentou apenas uma oscilação isolada. Ele acumulou pressão operacional em múltiplos sinais, com propagação e alta confiança estatística.",
+      "meaningDescription": "Em uma call, isso ajuda o time a sair do “acho que piorou” para uma conversa baseada em evidências: o que mudou, há quanto tempo, onde concentrou e quantos eventos passaram por períodos de degradação.",
+      "inputStats": {
+        "availableEvents": {
+          "label": "Eventos disponíveis",
+          "value": "59.863",
+          "description": "conversas no dataset analisado"
+        },
+        "fileColumns": {
+          "label": "Colunas do arquivo",
+          "value": "18",
+          "description": "campos brutos disponíveis no CSV"
+        },
+        "mappedFields": {
+          "label": "Campos mapeados",
+          "value": "18",
+          "description": "entidade, contexto, métricas e sinais de impacto"
+        },
+        "analyzedPeriod": {
+          "label": "Período analisado",
+          "value": "54 dias",
+          "description": "de 06/01/2025 a 28/02/2025"
+        }
+      },
+      "configStats": {
+        "contexts": {
+          "label": "Contextos",
+          "value": "3",
+          "description": "intent, subject_tag e channel"
+        },
+        "configuredMetrics": {
+          "label": "Métricas configuradas",
+          "value": "8",
+          "description": "retenção, resolução, falha, handoff, reclamação e tempos"
+        },
+        "baseline": {
+          "label": "Baseline",
+          "value": "7 janelas",
+          "description": "rolling contextual com fallback hierárquico"
+        },
+        "minimumVolume": {
+          "label": "Volume mínimo",
+          "value": "30",
+          "description": "eventos por janela para análise"
+        }
+      },
+      "outputStats": {
+        "detectedEpisodes": {
+          "label": "Episódios detectados",
+          "value": "44",
+          "description": "pressões de recuperação identificadas"
+        },
+        "highPressure": {
+          "label": "Pressão alta",
+          "value": "32",
+          "description": "episódios chegaram a alta pressão"
+        },
+        "degradedEvents": {
+          "label": "Eventos degradados",
+          "value": "39.096",
+          "description": "eventos em episódios degradados"
+        },
+        "highPressureEvents": {
+          "label": "Eventos em alta pressão",
+          "value": "33.897",
+          "description": "eventos em episódios de alta pressão ou crítica"
+        }
+      },
+      "priorities": {
+        "high": "Alta",
+        "medium": "Média"
+      },
+      "actions": {
+        "compareOperationalChanges": {
+          "title": "Comparar com mudanças operacionais",
+          "description": "Cruzar os períodos de maior pressão com deploys, mudanças de regra, campanhas ou alterações no atendimento."
+        },
+        "investigateMetricPropagation": {
+          "title": "Investigar propagação entre métricas",
+          "description": "Verificar se a queda de retenção apareceu junto com handoff, reclamações, falhas no boleto ou aumento do tempo humano."
+        },
+        "prioritizeHighConfidenceSignals": {
+          "title": "Priorizar sinais com alta confiança",
+          "description": "Começar pelos episódios com maior volume e confiança estatística antes de investigar sinais mais frágeis."
+        },
+        "trackRecurrence": {
+          "title": "Acompanhar recorrência",
+          "description": "Comparar os episódios destacados com ocorrências anteriores para identificar famílias recorrentes de degradação."
+        }
+      }
+    },
+    "sharedReading": {
+      "title": "Você já tem dados. O que falta é uma leitura comum.",
+      "engineering": "Engenharia vê retries.",
+      "product": "Produto vê queda de conversão.",
+      "operations": "Operações vê fila crescendo.",
+      "business": "Negócio vê receita oscilando.",
+      "description": "Esses sinais muitas vezes fazem parte do mesmo problema, mas aparecem separados. O Ohrly conecta esses sinais em uma resposta simples:",
+      "question": "Esse fluxo ainda está saudável ou começou a perder consistência?",
+      "youReceive": "Você recebe",
+      "readingTitleStart": "Uma leitura",
+      "readingTitleHighlight": "comportamental",
+      "readingTitleEnd": "do seu fluxo"
+    },
+    "dashboardComparison": {
+      "eyebrow": "Não é mais um dashboard",
+      "title": "O Ohrly olha para o fluxo, não só para o sistema",
+      "description": "O sistema pode continuar de pé, sem erro crítico e dentro do SLA. Ainda assim, o comportamento do fluxo pode já ter começado a piorar.",
+      "traditional": "Ferramentas tradicionais",
+      "traditionalQuestion": "O sistema caiu?",
+      "ohrly": "Ohrly",
+      "ohrlyQuestion": "O fluxo ainda funciona bem?",
+      "generatedReading": "Leitura gerada",
+      "noIncident": "Nenhum incidente detectado.",
+      "flowDegraded": "O fluxo ainda está de pé, mas perdeu consistência há 4 dias.",
+      "bottomDescription": "A diferença não é ver mais gráficos. É entender quando um fluxo continua funcionando, mas já começou a gerar mais espera, retries, abandono, fallback, atendimento humano e retrabalho.",
+      "traditionalSignals": {
+        "serviceAvailable": "Serviço disponível",
+        "errorWithinLimit": "Erro dentro do limite",
+        "latencyAcceptable": "Latência aceitável",
+        "slaNotViolated": "SLA não violado"
+      },
+      "ohrlySignals": {
+        "retriesIncreasing": "Retries aumentando",
+        "approvalSlower": "Aprovação mais lenta",
+        "fallbackGrowing": "Fallback crescendo",
+        "exposedValueGrowing": "Valor exposto subindo"
+      },
+      "statuses": {
+        "ok": "OK",
+        "attention": "atenção",
+        "degrading": "degradando"
+      },
+      "connector": "mas"
+    },
+    "personas": {
+      "title": "Para quem é",
+      "ecommerceTitle": "E-commerce",
+      "ecommerceDescription": "Entenda onde o funil de compra perde consistência antes da receita ser impactada.",
+      "productTitle": "Produto",
+      "productDescription": "Veja o comportamento real dos fluxos que sustentam a experiência do usuário.",
+      "engineeringTitle": "Engenharia",
+      "engineeringDescription": "Priorize problemas que já são relevantes no comportamento, não apenas no sistema.",
+      "operationsTitle": "Operações",
+      "operationsDescription": "Antecipe filas, atrasos e retrabalho antes que virem custo operacional explícito."
+    },
+    "cta": {
+      "title": "Quer descobrir se um fluxo seu já começou a piorar?",
+      "description": "Rode um piloto simples com 1 fluxo crítico.",
+      "button": "Quero analisar um fluxo",
+      "note": "Você não precisa mudar sua arquitetura para começar."
+    }
+  },
+  "contact": {
+    "badge": "Fale conosco",
+    "title": "Vamos aplicar uma leitura Ohrly em um fluxo real seu?",
+    "description": "Conte qual fluxo você quer entender. A partir disso, podemos avaliar se faz sentido rodar um piloto simples com dados históricos para identificar perda de consistência, pressão de recuperação e contextos afetados.",
+    "bullets": {
+      "one": "Ideal para testar 1 fluxo crítico.",
+      "two": "Pode começar com exportação ou CSV.",
+      "three": "Foco em leitura operacional, não em dashboard genérico."
+    },
+    "emailBox": {
+      "title": "Prefere e-mail direto?",
+      "email": "taraujo@ohrly.com.br"
+    },
+    "form": {
+      "title": "Solicitar uma conversa",
+      "description": "Conte um pouco sobre o fluxo que você gostaria de analisar. A ideia é começar simples: um fluxo crítico, dados históricos e uma leitura comportamental.",
+      "name": "Nome",
+      "namePlaceholder": "Seu nome",
+      "email": "E-mail",
+      "emailPlaceholder": "voce@empresa.com",
+      "company": "Empresa",
+      "companyPlaceholder": "Nome da empresa",
+      "role": "Seu papel",
+      "rolePlaceholder": "Selecione uma opção",
+      "flowType": "Qual fluxo você gostaria de analisar?",
+      "message": "O que você gostaria de entender nesse fluxo?",
+      "messagePlaceholder": "Ex: quero entender se o checkout começou a perder conversão depois das últimas mudanças, ou se o fluxo de pagamento está ficando mais lento em alguns contextos.",
+      "submit": "Enviar mensagem",
+      "privacy": "Ao enviar, você compartilha essas informações para avaliarmos se faz sentido rodar uma leitura inicial do seu fluxo.",
+      "roleOptions": {
+        "product": "Produto",
+        "engineering": "Engenharia",
+        "operations": "Operações",
+        "data": "Dados / Analytics",
+        "leadership": "Liderança",
+        "other": "Outro"
+      },
+      "flowOptions": {
+        "checkout": "Checkout",
+        "payment": "Pagamento",
+        "delivery": "Entrega",
+        "cartRecovery": "Recuperação de carrinho",
+        "support": "Atendimento / suporte",
+        "onboarding": "Onboarding",
+        "chatbot": "Chatbot / canais conversacionais",
+        "other": "Outro fluxo crítico"
+      },
+      "source": "Página Fale Conosco - Ohrly"
+    },
+    "infoPanel": {
+      "historicalData": {
+        "title": "Comece com dados históricos",
+        "description": "Uma planilha, exportação ou base simples já pode ser suficiente para um primeiro diagnóstico."
+      },
+      "criticalFlow": {
+        "title": "Foco em um fluxo crítico",
+        "description": "Checkout, pagamento, entrega, atendimento, onboarding ou outro fluxo que tenha impacto real."
+      },
+      "noRootCausePromise": {
+        "title": "Sem promessa de causa raiz",
+        "description": "A leitura mostra onde o comportamento perdeu consistência e ajuda a qualificar a investigação."
+      },
+      "noIntegration": {
+        "title": "Sem integração no primeiro passo",
+        "description": "O piloto pode começar sem mexer na arquitetura da sua operação."
+      }
+    }
+  }
+}

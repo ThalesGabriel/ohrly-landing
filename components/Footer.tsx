@@ -1,8 +1,11 @@
-// src/components/Footer.tsx
-import Link from "next/link";
+import {useTranslations} from "next-intl";
+import {Link} from "@/i18n/navigation";
+
+const CURRENT_YEAR = 2026;
 
 export default function Footer() {
-    const year = new Date().getFullYear();
+    const t = useTranslations("footer");
+    const nav = useTranslations("nav");
 
     return (
         <footer className="relative mt-10 border-t border-cyan-700/10 py-10 dark:border-cyan-300/10">
@@ -16,39 +19,38 @@ export default function Footer() {
                     </Link>
 
                     <p className="mt-4 max-w-md text-sm leading-6 text-slate-500 dark:text-slate-400">
-                        Uma camada de leitura comportamental para entender quando fluxos digitais
-                        continuam funcionando, mas já começaram a perder consistência.
+                        {t("description")}
                     </p>
                 </div>
 
                 <div>
                     <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-                        Produto
+                        {t("product")}
                     </h3>
 
                     <div className="mt-4 grid gap-3 text-sm text-slate-500 dark:text-slate-400">
                         <Link className="transition hover:text-cyan-700 dark:hover:text-cyan-300" href="/">
-                            Início
+                            {nav("home")}
                         </Link>
 
                         <Link className="transition hover:text-cyan-700 dark:hover:text-cyan-300" href="/demo">
-                            Demonstração
+                            {nav("demo")}
                         </Link>
 
                         <Link className="transition hover:text-cyan-700 dark:hover:text-cyan-300" href="/contact">
-                            Fale conosco
+                            {nav("contact")}
                         </Link>
                     </div>
                 </div>
 
                 <div>
                     <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-                        Contato
+                        {t("contact")}
                     </h3>
 
                     <div className="mt-4 grid gap-3 text-sm text-slate-500 dark:text-slate-400">
                         <Link className="transition hover:text-cyan-700 dark:hover:text-cyan-300" href="/contact">
-                            Analisar um fluxo
+                            {t("analyzeFlow")}
                         </Link>
 
                         <a
@@ -62,8 +64,8 @@ export default function Footer() {
             </div>
 
             <div className="mx-auto mt-10 flex flex-col gap-3 px-5 pt-6 text-xs text-cyan-700 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-10 dark:text-cyan-300">
-                <p>© {year} Ohrly. Todos os direitos reservados.</p>
-                <p>O Ohrly não elimina incidentes. Ele elimina o silêncio antes deles.</p>
+                <p>© {CURRENT_YEAR} Ohrly. {t("rights")}</p>
+                <p>{t("tagline")}</p>
             </div>
         </footer>
     );
