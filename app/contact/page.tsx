@@ -306,12 +306,14 @@ export default function FaleConoscoPage() {
             <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(34,211,238,0.12),transparent_28%),radial-gradient(circle_at_80%_0%,rgba(14,165,233,0.10),transparent_28%),linear-gradient(180deg,#020b12_0%,#020812_55%,#020b12_100%)]" />
             <div className="pointer-events-none fixed inset-0 opacity-[0.06] [background-image:linear-gradient(rgba(255,255,255,.7)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.7)_1px,transparent_1px)] [background-size:44px_44px]" />
 
-            <div className="relative mx-auto px-5 py-6 sm:px-8 lg:px-10">
-                <Header />
+            <div className="relative  mx-auto py-6">
+                <div className="px-5 sm:px-8 lg:px-10">
+                    <Header />
+                </div>
 
-                <section className="mx-auto grid gap-10 px-5 py-14 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-10 lg:py-20">
+                <section className="mx-auto grid gap-10 px-5 py-10 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-10 lg:py-14">
                     <div>
-                        <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/15 bg-cyan-300/5 px-3 py-1 text-xs text-slate-300">
+                        <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/15 bg-cyan-300/5 px-3 text-xs text-slate-300">
                             <MessageSquare className="h-3.5 w-3.5 text-cyan-300" />
                             Fale conosco
                         </div>

@@ -2,7 +2,7 @@ export default function Footer() {
     const year = new Date().getFullYear();
 
     return (
-        <footer className="relative border-t border-cyan-300/10 py-10">
+        <footer className="relative border-t border-cyan-300/10 py-10 mt-10">
             <div className="mx-auto grid gap-8 px-5 sm:px-8 lg:grid-cols-[1.2fr_1fr_1fr] lg:px-10">
                 <div>
                     <a href="#" className="text-2xl font-bold tracking-tight text-white">
@@ -45,9 +45,9 @@ export default function Footer() {
                 </div>
             </div>
 
-            <div className="mx-auto mt-10 flex max-w-[1600px] flex-col gap-3 border-t border-slate-800/80 px-5 pt-6 text-xs text-slate-500 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-10">
+            <div className="mx-auto mt-10 flex flex-col gap-3 px-5 pt-6 text-xs text-cyan-300 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-10">
                 <p>© {year} Ohrly. Todos os direitos reservados.</p>
-                <p>A Ohrly não elimina incidentes. Ela elimina o silêncio antes deles.</p>
+                <p>O Ohrly não elimina incidentes. Ela elimina o silêncio antes deles.</p>
             </div>
         </footer>
     );

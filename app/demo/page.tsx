@@ -306,11 +306,11 @@ function EvidenceSection() {
                                     className={cn(
                                         "flex h-12 w-12 shrink-0 items-center justify-center rounded-xl",
                                         item.tone === "green" &&
-                                            "bg-emerald-400/10 text-emerald-300",
+                                        "bg-emerald-400/10 text-emerald-300",
                                         item.tone === "purple" &&
-                                            "bg-violet-400/10 text-violet-300",
+                                        "bg-violet-400/10 text-violet-300",
                                         item.tone === "cyan" &&
-                                            "bg-cyan-300/10 text-cyan-300",
+                                        "bg-cyan-300/10 text-cyan-300",
                                     )}
                                 >
                                     <Icon className="h-6 w-6" />
@@ -353,7 +353,7 @@ function CTA() {
                 </div>
 
                 <Link
-                    href="/fale-conosco"
+                    href="/contact"
                     className="group inline-flex h-14 items-center justify-center gap-3 rounded-xl bg-cyan-300 px-6 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-500/20 transition hover:-translate-y-0.5 hover:bg-cyan-200"
                 >
                     Quero analisar um fluxo
@@ -370,13 +370,15 @@ export default function DemonstracaoPage() {
             <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(34,211,238,0.12),transparent_28%),radial-gradient(circle_at_80%_0%,rgba(14,165,233,0.10),transparent_28%),linear-gradient(180deg,#020b12_0%,#020812_55%,#020b12_100%)]" />
             <div className="pointer-events-none fixed inset-0 opacity-[0.06] [background-image:linear-gradient(rgba(255,255,255,.7)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.7)_1px,transparent_1px)] [background-size:44px_44px]" />
 
-            <div className="relative mx-auto px-5 py-6 sm:px-8 lg:px-10">
-                <Header />
+            <div className="relative mx-auto py-6">
+                <div className="px-5 sm:px-8 lg:px-10">
+                    <Header />
+                </div>
 
                 <section className="mx-auto px-5 py-10 sm:px-8 lg:px-10 lg:py-14">
-                    <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
+                    <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
                         <div>
-                            <p className="inline-flex items-center gap-2 rounded-full border border-cyan-300/15 bg-cyan-300/5 px-3 py-1 text-xs text-slate-300">
+                            <p className="inline-flex items-center gap-2 rounded-full border border-cyan-300/15 bg-cyan-300/5 px-3 text-xs text-slate-300">
                                 <Sparkles className="h-3.5 w-3.5 text-cyan-300" />
                                 Demonstração de leitura Ohrly
                             </p>

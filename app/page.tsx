@@ -160,114 +160,445 @@ function SecondaryButton({ children }: { children: React.ReactNode }) {
     );
 }
 
+function CompactReportExampleSection() {
+    const inputStats = [
+        {
+            label: "Eventos disponíveis",
+            value: "59.863",
+            description: "conversas no dataset analisado",
+        },
+        {
+            label: "Colunas do arquivo",
+            value: "18",
+            description: "campos brutos disponíveis no CSV",
+        },
+        {
+            label: "Campos mapeados",
+            value: "18",
+            description: "entidade, contexto, métricas e sinais de impacto",
+        },
+        {
+            label: "Período analisado",
+            value: "54 dias",
+            description: "de 06/01/2025 a 28/02/2025",
+        },
+    ];
+
+    const configStats = [
+        {
+            label: "Contextos",
+            value: "3",
+            description: "intent, subject_tag e channel",
+        },
+        {
+            label: "Métricas configuradas",
+            value: "8",
+            description: "retenção, resolução, falha, handoff, reclamação e tempos",
+        },
+        {
+            label: "Baseline",
+            value: "7 janelas",
+            description: "rolling contextual com fallback hierárquico",
+        },
+        {
+            label: "Volume mínimo",
+            value: "30",
+            description: "eventos por janela para análise",
+        },
+    ];
+
+    const outputStats = [
+        {
+            label: "Episódios detectados",
+            value: "44",
+            description: "pressões de recuperação identificadas",
+            className: "border-cyan-300/20 bg-cyan-300/10",
+        },
+        {
+            label: "Pressão alta",
+            value: "32",
+            description: "episódios chegaram a alta pressão",
+            className: "border-red-400/20 bg-red-400/10",
+        },
+        {
+            label: "Eventos degradados",
+            value: "39.096",
+            description: "eventos em episódios degradados",
+            className: "border-yellow-300/20 bg-yellow-300/10",
+        },
+        {
+            label: "Eventos em alta pressão",
+            value: "33.897",
+            description: "eventos em episódios de alta pressão ou crítica",
+            className: "border-red-400/20 bg-red-400/10",
+        },
+    ];
+
+    const actionItems = [
+        {
+            priority: "Alta",
+            title: "Comparar com mudanças operacionais",
+            description:
+                "Cruzar os períodos de maior pressão com deploys, mudanças de regra, campanhas ou alterações no atendimento.",
+        },
+        {
+            priority: "Alta",
+            title: "Investigar propagação entre métricas",
+            description:
+                "Verificar se a queda de retenção apareceu junto com handoff, reclamações, falhas no boleto ou aumento do tempo humano.",
+        },
+        {
+            priority: "Média",
+            title: "Priorizar sinais com alta confiança",
+            description:
+                "Começar pelos episódios com maior volume e confiança estatística antes de investigar sinais mais frágeis.",
+        },
+        {
+            priority: "Média",
+            title: "Acompanhar recorrência",
+            description:
+                "Comparar os episódios destacados com ocorrências anteriores para identificar famílias recorrentes de degradação.",
+        },
+    ];
+
+    return (
+        <section className="py-6">
+            <GlowCard className="p-6 lg:p-8">
+                <div>
+                        <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-100">
+                        De um CSV bruto para uma leitura de decisão.
+                    </h2>
+
+                    <p className="mt-4 text-sm leading-6 text-slate-400">
+                        Usamos um dataset sintético de retenção no fluxo de boleto
+                        para simular como o Ohrly interpreta um fluxo crítico: primeiro
+                        entende o arquivo, depois aplica um contrato comportamental e,
+                        por fim, gera uma leitura operacional.
+                    </p>
+
+                </div>
+                <div className="grid gap-8 lg:grid-cols-3 lg:items-start mt-5">
+                    <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-5">
+                        <div>
+                            <div className="flex items-center justify-between flex-1">
+                                <div>
+                                    <p className="text-xs text-cyan-300">1. O que entrou</p>
+                                </div>
+                                <div>
+                                    <span className="rounded-full border border-slate-700 bg-slate-900 px-3 py-1 text-xs font-medium text-slate-300">
+                                        CSV
+                                    </span>
+                                </div>
+                            </div>
+                            <h3 className="mt-3 text-xl font-semibold text-slate-100">
+                                Dataset de atendimento e retenção em boleto
+                            </h3>
+                        </div>
+
+                        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-2">
+                            {inputStats.map((item) => (
+                                <div
+                                    key={item.label}
+                                    className="rounded-xl border border-slate-800 bg-slate-900/40 p-4"
+                                >
+                                    <p className="text-xs text-cyan-300">{item.label}</p>
+                                    <p className="mt-2 text-2xl font-semibold text-slate-100">
+                                        {item.value}
+                                    </p>
+                                    <p className="mt-2 text-xs leading-5 text-slate-400">
+                                        {item.description}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="rounded-2xl border border-cyan-300/15 bg-slate-950/70 p-5">
+                        <div>
+                            <div className="flex items-center justify-between flex-1">
+                                <div>
+                                    <p className="text-xs text-cyan-300">2. Como o Ohrly interpretou</p>
+                                </div>
+                                <div>
+                                    <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-xs font-medium text-cyan-300">
+                                        boleto_retention_flow
+                                    </span>
+                                </div>
+                            </div>
+                            <h3 className="mt-3 text-xl font-semibold text-slate-100">
+                                Contrato comportamental do fluxo
+                            </h3>
+                        </div>
+
+                        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-2">
+                            {configStats.map((item) => (
+                                <div
+                                    key={item.label}
+                                    className="rounded-xl border border-cyan-300/10 bg-cyan-300/5 p-4"
+                                >
+                                    <p className="text-xs text-cyan-300">{item.label}</p>
+                                    <p className="mt-2 text-2xl font-semibold text-slate-100">
+                                        {item.value}
+                                    </p>
+                                    <p className="mt-2 text-xs leading-5 text-slate-400">
+                                        {item.description}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div>
+                        <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-5">
+                            <div>
+                                <div className="flex items-center justify-between flex-1">
+                                    <div>
+                                        <p className="text-xs text-cyan-300">3. O que saiu</p>
+                                    </div>
+                                    <div>
+                                        <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-300">
+                                            Alta confiança
+                                        </span>
+                                    </div>
+                                </div>
+                                <h3 className="mt-3 text-xl font-semibold text-slate-100">
+                                    Pressão com propagação
+                                </h3>
+                            </div>
+
+
+                            <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-2">
+                                {outputStats.map((item) => (
+                                    <div
+                                        key={item.label}
+                                        className={`rounded-xl border p-4 ${item.className}`}
+                                    >
+                                        <p className="text-xs text-slate-300">{item.label}</p>
+                                        <p className="mt-2 text-2xl font-semibold text-slate-100">
+                                            {item.value}
+                                        </p>
+                                        <p className="mt-2 text-xs leading-5 text-slate-300">
+                                            {item.description}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div className="grid gap-8 lg:grid-cols-2 lg:items-start mt-5">
+                    <div className="rounded-2xl border border-violet-300/20 bg-violet-300/10 p-5">
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                            <div>
+                                <p className="text-xs text-violet-200">4. O que fazer com isso</p>
+                                <h3 className="mt-1 text-xl font-semibold text-slate-100">
+                                    Ações sugeridas para priorização
+                                </h3>
+                            </div>
+
+                            <span className="rounded-full border border-violet-300/20 bg-violet-300/10 px-3 py-1 text-xs font-medium text-violet-200">
+                                Plano de investigação
+                            </span>
+                        </div>
+
+                        <div className="mt-5 grid gap-3 lg:grid-cols-2">
+                            {actionItems.map((item) => (
+                                <div
+                                    key={item.title}
+                                    className="rounded-xl border border-slate-800 bg-slate-950/60 p-4"
+                                >
+                                    <div className="flex items-center justify-between gap-3">
+                                        <p className="text-sm font-semibold text-slate-100">
+                                            {item.title}
+                                        </p>
+
+                                        <span
+                                            className={
+                                                item.priority === "Alta"
+                                                    ? "rounded-full bg-red-400/10 px-2 py-1 text-[10px] font-medium text-red-300"
+                                                    : "rounded-full bg-yellow-300/10 px-2 py-1 text-[10px] font-medium text-yellow-200"
+                                            }
+                                        >
+                                            {item.priority}
+                                        </span>
+                                    </div>
+
+                                    <p className="mt-3 text-xs leading-5 text-slate-400">
+                                        {item.description}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="mt-5 rounded-xl border border-violet-300/20 bg-slate-950/50 p-4">
+                            <p className="text-sm leading-6 text-slate-300">
+                                O Ohrly não decide pelo time. Ele organiza a investigação:
+                                mostra onde a pressão apareceu, quais sinais são mais confiáveis
+                                e quais hipóteses merecem prioridade na próxima conversa.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col justify-between h-[100%]">
+                        <div className="grid gap-4 lg:grid-cols-2">
+                            <div className="rounded-2xl border border-yellow-300/20 bg-yellow-300/10 p-5">
+                                <p className="text-xs text-yellow-200">Episódio principal</p>
+                                <p className="mt-2 text-2xl font-semibold text-slate-100">
+                                    retention_rate · 5 dias
+                                </p>
+                                <p className="mt-3 text-sm leading-6 text-slate-300">
+                                    1.047 eventos expostos, RPI 68,93 e janela de decisão
+                                    consumida em 60%.
+                                </p>
+                            </div>
+
+                            <div className="rounded-2xl border border-cyan-300/20 bg-cyan-300/10 p-5">
+                                <p className="text-xs text-cyan-300">Leitura final</p>
+                                <p className="mt-2 text-2xl font-semibold text-slate-100">
+                                    Esperar deixou de ser neutro.
+                                </p>
+                                <p className="mt-3 text-sm leading-6 text-slate-300">
+                                    A degradação não ficou isolada: apareceu em retenção,
+                                    handoff, reclamação, falha no boleto, resolução e tempo humano.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="rounded-xl border border-cyan-300/15 bg-cyan-300/5 p-5">
+                            <p className="text-sm font-medium text-cyan-300">
+                                Diante desse contexto, o que isso quer dizer?
+                            </p>
+
+                            <p className="mt-3 text-lg font-semibold leading-snug text-slate-100">
+                                O fluxo não apresentou apenas uma oscilação isolada.
+                                Ele acumulou pressão operacional em múltiplos sinais,
+                                com propagação e alta confiança estatística.
+                            </p>
+
+                            <p className="mt-4 text-sm leading-6 text-slate-400">
+                                Em uma call, isso ajuda o time a sair do “acho que piorou”
+                                para uma conversa baseada em evidências: o que mudou,
+                                há quanto tempo, onde concentrou e quantos eventos passaram
+                                por períodos de degradação.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+
+            </GlowCard>
+        </section>
+    );
+}
+
 function MiniChart() {
-  const states = [
-    {
-      label: "Saudável",
-      from: "7 dias atrás",
-      to: "5 dias atrás",
-      width: "34%",
-      dot: "bg-emerald-400",
-      line: "from-emerald-400/70 to-emerald-400/20",
-      text: "text-emerald-300",
-      description: "Comportamento dentro do esperado",
-    },
-    {
-      label: "Atenção",
-      from: "5 dias atrás",
-      to: "3 dias atrás",
-      width: "28%",
-      dot: "bg-yellow-300",
-      line: "from-yellow-300/70 to-yellow-300/20",
-      text: "text-yellow-200",
-      description: "Desvio persistente começando",
-    },
-    {
-      label: "Degradação",
-      from: "3 dias atrás",
-      to: "Hoje",
-      width: "38%",
-      dot: "bg-red-400",
-      line: "from-red-400/80 to-red-400/25",
-      text: "text-red-300",
-      description: "Perda sustentada de consistência",
-    },
-  ];
+    const states = [
+        {
+            label: "Saudável",
+            from: "7 dias atrás",
+            to: "5 dias atrás",
+            width: "34%",
+            dot: "bg-emerald-400",
+            line: "from-emerald-400/70 to-emerald-400/20",
+            text: "text-emerald-300",
+            description: "Comportamento dentro do esperado",
+        },
+        {
+            label: "Atenção",
+            from: "5 dias atrás",
+            to: "3 dias atrás",
+            width: "28%",
+            dot: "bg-yellow-300",
+            line: "from-yellow-300/70 to-yellow-300/20",
+            text: "text-yellow-200",
+            description: "Desvio persistente começando",
+        },
+        {
+            label: "Degradação",
+            from: "3 dias atrás",
+            to: "Hoje",
+            width: "38%",
+            dot: "bg-red-400",
+            line: "from-red-400/80 to-red-400/25",
+            text: "text-red-300",
+            description: "Perda sustentada de consistência",
+        },
+    ];
 
-  return (
-    <div className="mt-6">
-      <div className="mb-3 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400">
-        <span>Evolução do estado</span>
+    return (
+        <div className="mt-6">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400">
+                <span>Evolução do estado</span>
 
-        <div className="flex items-center gap-4">
-          <span className="flex items-center gap-2">
-            <i className="h-2 w-2 rounded-full bg-emerald-400" />
-            Saudável
-          </span>
+                <div className="flex items-center gap-4">
+                    <span className="flex items-center gap-2">
+                        <i className="h-2 w-2 rounded-full bg-emerald-400" />
+                        Saudável
+                    </span>
 
-          <span className="flex items-center gap-2">
-            <i className="h-2 w-2 rounded-full bg-yellow-300" />
-            Atenção
-          </span>
+                    <span className="flex items-center gap-2">
+                        <i className="h-2 w-2 rounded-full bg-yellow-300" />
+                        Atenção
+                    </span>
 
-          <span className="flex items-center gap-2">
-            <i className="h-2 w-2 rounded-full bg-red-400" />
-            Degradação
-          </span>
-        </div>
-      </div>
+                    <span className="flex items-center gap-2">
+                        <i className="h-2 w-2 rounded-full bg-red-400" />
+                        Degradação
+                    </span>
+                </div>
+            </div>
 
-      <div className="rounded-xl border border-slate-800/80 bg-slate-950/70 p-4">
-        <div className="relative">
-          <div className="absolute left-0 right-0 top-[18px] h-px bg-slate-800" />
+            <div className="rounded-xl border border-slate-800/80 bg-slate-950/70 p-4">
+                <div className="relative">
+                    <div className="absolute left-0 right-0 top-[18px] h-px bg-slate-800" />
 
-          <div className="relative flex w-full">
-            {states.map((state, index) => (
-              <div
-                key={state.label}
-                className="relative"
-                style={{ width: state.width }}
-              >
-                <div className="flex items-center">
-                  <div
-                    className={`z-10 h-4 w-4 rounded-full border-2 border-slate-950 ${state.dot} shadow-lg`}
-                  />
+                    <div className="relative flex w-full">
+                        {states.map((state, index) => (
+                            <div
+                                key={state.label}
+                                className="relative"
+                                style={{ width: state.width }}
+                            >
+                                <div className="flex items-center">
+                                    <div
+                                        className={`z-10 h-4 w-4 rounded-full border-2 border-slate-950 ${state.dot} shadow-lg`}
+                                    />
 
-                  <div
-                    className={`h-1 flex-1 rounded-full bg-gradient-to-r ${state.line}`}
-                  />
+                                    <div
+                                        className={`h-1 flex-1 rounded-full bg-gradient-to-r ${state.line}`}
+                                    />
+                                </div>
+
+                                <div className="mt-4 pr-3">
+                                    <p className={`text-xs font-semibold ${state.text}`}>
+                                        {state.label}
+                                    </p>
+
+                                    <p className="mt-1 text-[11px] leading-4 text-slate-400">
+                                        {state.description}
+                                    </p>
+
+                                    <p className="mt-3 text-[10px] text-slate-500">
+                                        {state.from}
+                                        {index === states.length - 1 && (
+                                            <span className="text-slate-400"> → {state.to}</span>
+                                        )}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
-                <div className="mt-4 pr-3">
-                  <p className={`text-xs font-semibold ${state.text}`}>
-                    {state.label}
-                  </p>
-
-                  <p className="mt-1 text-[11px] leading-4 text-slate-400">
-                    {state.description}
-                  </p>
-
-                  <p className="mt-3 text-[10px] text-slate-500">
-                    {state.from}
-                    {index === states.length - 1 && (
-                      <span className="text-slate-400"> → {state.to}</span>
-                    )}
-                  </p>
+                <div className="mt-5 rounded-lg border border-red-400/20 bg-red-400/10 px-3 py-2">
+                    <p className="text-xs leading-5 text-slate-300">
+                        O fluxo saiu de uma variação normal, entrou em atenção e permanece
+                        em degradação sustentada há 4 dias.
+                    </p>
                 </div>
-              </div>
-            ))}
-          </div>
+            </div>
         </div>
-
-        <div className="mt-5 rounded-lg border border-red-400/20 bg-red-400/10 px-3 py-2">
-          <p className="text-xs leading-5 text-slate-300">
-            O fluxo saiu de uma variação normal, entrou em atenção e permanece
-            em degradação sustentada há 4 dias.
-          </p>
-        </div>
-      </div>
-    </div>
-  );
+    );
 }
 
 function ReadingExample() {
@@ -390,148 +721,147 @@ function SharedReadingSection() {
 }
 
 function DashboardComparison() {
-  const traditionalSignals = [
-    "Serviço disponível",
-    "Erro dentro do limite",
-    "Latência aceitável",
-    "SLA não violado",
-  ];
+    const traditionalSignals = [
+        "Serviço disponível",
+        "Erro dentro do limite",
+        "Latência aceitável",
+        "SLA não violado",
+    ];
 
-  const ohrlySignals = [
-    "Retries aumentando",
-    "Aprovação mais lenta",
-    "Fallback crescendo",
-    "Valor exposto subindo",
-  ];
+    const ohrlySignals = [
+        "Retries aumentando",
+        "Aprovação mais lenta",
+        "Fallback crescendo",
+        "Valor exposto subindo",
+    ];
 
-  return (
-    <section className="py-6" id="not-dash">
-      <GlowCard className="p-6 lg:p-8">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="text-sm font-medium text-cyan-300">
-            Não é mais um dashboard
-          </p>
+    return (
+        <section className="py-6" id="not-dash">
+            <GlowCard className="p-6 lg:p-8">
+                <div className="mx-auto max-w-3xl text-center">
+                    <p className="text-sm font-medium text-cyan-300">
+                        Não é mais um dashboard
+                    </p>
 
-          <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-100">
-            O Ohrly olha para o fluxo, não só para o sistema
-          </h2>
+                    <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-100">
+                        O Ohrly olha para o fluxo, não só para o sistema
+                    </h2>
 
-          <p className="mt-4 text-sm leading-6 text-slate-400">
-            O sistema pode continuar de pé, sem erro crítico e dentro do SLA.
-            Ainda assim, o comportamento do fluxo pode já ter começado a piorar.
-          </p>
-        </div>
-
-        <div className="mt-8 grid gap-5 lg:grid-cols-[1fr_auto_1fr] lg:items-stretch">
-          <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-6">
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-800/80 text-slate-400">
-                <Gauge className="h-5 w-5" />
-              </div>
-
-              <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                  Ferramentas tradicionais
-                </p>
-                <h3 className="mt-1 text-xl font-semibold text-slate-100">
-                  O sistema caiu?
-                </h3>
-              </div>
-            </div>
-
-            <div className="mt-6 space-y-3">
-              {traditionalSignals.map((signal) => (
-                <div
-                  key={signal}
-                  className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-900/40 px-4 py-3"
-                >
-                  <span className="text-sm text-slate-300">{signal}</span>
-                  <span className="rounded-full bg-emerald-400/10 px-2 py-1 text-xs font-medium text-emerald-300">
-                    OK
-                  </span>
+                    <p className="mt-4 text-sm leading-6 text-slate-400">
+                        O sistema pode continuar de pé, sem erro crítico e dentro do SLA.
+                        Ainda assim, o comportamento do fluxo pode já ter começado a piorar.
+                    </p>
                 </div>
-              ))}
-            </div>
 
-            <div className="mt-6 rounded-xl border border-slate-800 bg-slate-950/80 p-4">
-              <p className="text-xs text-slate-500">Leitura gerada</p>
-              <p className="mt-2 text-lg font-semibold text-slate-300">
-                Nenhum incidente detectado.
-              </p>
-            </div>
-          </div>
+                <div className="mt-8 grid gap-5 lg:grid-cols-[1fr_auto_1fr] lg:items-stretch">
+                    <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-6">
+                        <div className="flex items-center gap-3">
+                            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-800/80 text-slate-400">
+                                <Gauge className="h-5 w-5" />
+                            </div>
 
-          <div className="hidden items-center lg:flex">
-            <div className="relative flex h-full min-h-80 items-center">
-              <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-cyan-300/30 to-transparent" />
-              <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full border border-cyan-300/30 bg-slate-950 text-xs font-semibold text-cyan-300 shadow-lg shadow-cyan-950/40">
-                mas
-              </div>
-            </div>
-          </div>
+                            <div>
+                                <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+                                    Ferramentas tradicionais
+                                </p>
+                                <h3 className="mt-1 text-xl font-semibold text-slate-100">
+                                    O sistema caiu?
+                                </h3>
+                            </div>
+                        </div>
 
-          <div className="rounded-2xl border border-cyan-300/25 bg-cyan-300/8 p-6 shadow-lg shadow-cyan-950/20">
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-300/10 text-cyan-300">
-                <GitBranch className="h-5 w-5" />
-              </div>
+                        <div className="mt-6 space-y-3">
+                            {traditionalSignals.map((signal) => (
+                                <div
+                                    key={signal}
+                                    className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-900/40 px-4 py-3"
+                                >
+                                    <span className="text-sm text-slate-300">{signal}</span>
+                                    <span className="rounded-full bg-emerald-400/10 px-2 py-1 text-xs font-medium text-emerald-300">
+                                        OK
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
 
-              <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-cyan-300/80">
-                  Ohrly
-                </p>
-                <h3 className="mt-1 text-xl font-semibold text-slate-100">
-                  O fluxo ainda funciona bem?
-                </h3>
-              </div>
-            </div>
+                        <div className="mt-6 rounded-xl border border-slate-800 bg-slate-950/80 p-4">
+                            <p className="text-xs text-slate-500">Leitura gerada</p>
+                            <p className="mt-2 text-lg font-semibold text-slate-300">
+                                Nenhum incidente detectado.
+                            </p>
+                        </div>
+                    </div>
 
-            <div className="mt-6 space-y-3">
-              {ohrlySignals.map((signal, index) => (
-                <div
-                  key={signal}
-                  className="flex items-center justify-between rounded-xl border border-cyan-300/10 bg-slate-950/50 px-4 py-3"
-                >
-                  <span className="text-sm text-slate-200">{signal}</span>
+                    <div className="hidden items-center lg:flex">
+                        <div className="relative flex h-full min-h-80 items-center">
+                            <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-cyan-300/30 to-transparent" />
+                            <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full border border-cyan-300/30 bg-slate-950 text-xs font-semibold text-cyan-300 shadow-lg shadow-cyan-950/40">
+                                mas
+                            </div>
+                        </div>
+                    </div>
 
-                  <span
-                    className={
-                      index < 2
-                        ? "rounded-full bg-yellow-300/10 px-2 py-1 text-xs font-medium text-yellow-200"
-                        : "rounded-full bg-red-400/10 px-2 py-1 text-xs font-medium text-red-300"
-                    }
-                  >
-                    {index < 2 ? "atenção" : "degradando"}
-                  </span>
+                    <div className="rounded-2xl border border-cyan-300/25 bg-cyan-300/8 p-6 shadow-lg shadow-cyan-950/20">
+                        <div className="flex items-center gap-3">
+                            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-300/10 text-cyan-300">
+                                <GitBranch className="h-5 w-5" />
+                            </div>
+
+                            <div>
+                                <p className="text-xs uppercase tracking-[0.2em] text-cyan-300/80">
+                                    Ohrly
+                                </p>
+                                <h3 className="mt-1 text-xl font-semibold text-slate-100">
+                                    O fluxo ainda funciona bem?
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div className="mt-6 space-y-3">
+                            {ohrlySignals.map((signal, index) => (
+                                <div
+                                    key={signal}
+                                    className="flex items-center justify-between rounded-xl border border-cyan-300/10 bg-slate-950/50 px-4 py-3"
+                                >
+                                    <span className="text-sm text-slate-200">{signal}</span>
+
+                                    <span
+                                        className={
+                                            index < 2
+                                                ? "rounded-full bg-yellow-300/10 px-2 py-1 text-xs font-medium text-yellow-200"
+                                                : "rounded-full bg-red-400/10 px-2 py-1 text-xs font-medium text-red-300"
+                                        }
+                                    >
+                                        {index < 2 ? "atenção" : "degradando"}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="mt-6 rounded-xl border border-cyan-300/20 bg-cyan-300/10 p-4">
+                            <p className="text-xs text-cyan-300">Leitura gerada</p>
+                            <p className="mt-2 text-lg font-semibold leading-snug text-slate-100">
+                                O fluxo ainda está de pé, mas perdeu consistência há 4 dias.
+                            </p>
+                        </div>
+                    </div>
                 </div>
-              ))}
-            </div>
 
-            <div className="mt-6 rounded-xl border border-cyan-300/20 bg-cyan-300/10 p-4">
-              <p className="text-xs text-cyan-300">Leitura gerada</p>
-              <p className="mt-2 text-lg font-semibold leading-snug text-slate-100">
-                O fluxo ainda está de pé, mas perdeu consistência há 4 dias.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="mx-auto mt-7 max-w-3xl rounded-2xl border border-slate-800 bg-slate-950/60 p-5 text-center">
-          <p className="text-sm leading-6 text-slate-300">
-            A diferença não é ver mais gráficos. É entender quando um fluxo
-            continua funcionando, mas já começou a gerar mais espera, retries,
-            abandono, fallback, atendimento humano e retrabalho.
-          </p>
-        </div>
-      </GlowCard>
-    </section>
-  );
+                <div className="mx-auto mt-7 max-w-3xl rounded-2xl border border-slate-800 bg-slate-950/60 p-5 text-center">
+                    <p className="text-sm leading-6 text-slate-300">
+                        A diferença não é ver mais gráficos. É entender quando um fluxo
+                        continua funcionando, mas já começou a gerar mais espera, retries,
+                        abandono, fallback, atendimento humano e retrabalho.
+                    </p>
+                </div>
+            </GlowCard>
+        </section>
+    );
 }
 
 function HowItWorks() {
     return (
-        <section className="py-12">
-            <h2 className="text-center text-2xl font-semibold text-slate-100">Como funciona</h2>
+        <section className="pb-8">
             <div className="mt-6 grid gap-5 lg:grid-cols-3">
                 {steps.map((step, index) => {
                     const Icon = step.icon;
@@ -543,8 +873,8 @@ function HowItWorks() {
                                 </div>
                                 <div>
                                     <div className="flex items-center gap-[10px]">
-                                    <Icon className="h-15 w-15 text-cyan-300" />
-                                    <h2 className="text-2xl font-semibold text-slate-100">{step.title}</h2>
+                                        <Icon className="h-15 w-15 text-cyan-300" />
+                                        <h2 className="text-2xl font-semibold text-slate-100">{step.title}</h2>
                                     </div>
                                     <p className="mt-3 text-lg leading-6 text-slate-300">{step.description}</p>
                                 </div>
@@ -559,7 +889,7 @@ function HowItWorks() {
 
 function PersonasSection() {
     return (
-        <section id="para-quem" className="pb-12">
+        <section id="para-quem" className="py-12">
             <h2 className="text-center text-2xl font-semibold text-slate-100">Para quem é</h2>
             <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 {personas.map((persona) => {
@@ -656,13 +986,13 @@ export default function OhrlyLandingPage() {
             <div className="pointer-events-none fixed inset-0 opacity-[0.06] [background-image:linear-gradient(rgba(255,255,255,.7)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.7)_1px,transparent_1px)] [background-size:44px_44px]" />
 
             <div className="relative mx-auto px-5 py-6 sm:px-8 lg:px-10">
-                
-                <Header/>
-                
-                <section className="grid gap-10 py-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:py-12">
+
+                <Header />
+
+                <section className="grid gap-10 pt-16 pb-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:pt-12">
                     <div>
                         <h1 className="max-w-2xl text-5xl font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl">
-                            Descubra onde seus fluxos começaram a piorar <span className="text-cyan-300">antes do impacto aparecer</span>
+                            Descubra onde seus fluxos digitais pioram <span className="text-cyan-300">antes do impacto se consolidar</span>
                         </h1>
                         <p className="mt-8 max-w-xl text-base leading-7 text-slate-300 sm:text-lg">
                             Analise checkout, pagamento, entrega, atendimento ou onboarding e receba uma leitura clara sobre o que mudou, há quanto tempo mudou e onde sua operação pode estar perdendo consistência.
@@ -680,12 +1010,13 @@ export default function OhrlyLandingPage() {
                     <ReadingExample />
                 </section>
 
+                <HowItWorks />
+                <CompactReportExampleSection />
                 <DashboardComparison />
                 <SharedReadingSection />
-                <HowItWorks />
                 <PersonasSection />
                 <CTA />
-                <Footer/>
+                <Footer />
             </div>
 
             <ScrollToTopButton />
