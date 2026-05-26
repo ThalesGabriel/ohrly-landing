@@ -313,5 +313,250 @@
         "description": "O piloto pode começar sem mexer na arquitetura da sua operação."
       }
     }
+  },
+  "demo": {
+    "hero": {
+      "badge": "Simulador de fluxos Ohrly",
+      "title": "Veja como o Ohrly leria um fluxo parecido com o seu.",
+      "description": "Escolha um template, ajuste um cenário de degradação e gere uma leitura comportamental sintética sem enviar dados reais.",
+      "chips": {
+        "noSensitiveData": "Sem dados sensíveis",
+        "demoReading": "Leitura demonstrativa"
+      }
+    },
+    "howItWorks": {
+      "eyebrow": "Sem dataset real no primeiro contato",
+      "title": "Antes de pedir dados, mostre o que seria possível enxergar",
+      "description": "A simulação não substitui uma análise real. Ela ajuda o usuário a entender quais sinais poderiam ser observados, quais campos seriam necessários e como o Ohrly transformaria isso em uma leitura comportamental.",
+      "steps": {
+        "chooseTemplate": {
+          "title": "Escolha um template",
+          "description": "Comece por um fluxo comum, como checkout, chatbot, entrega ou billing."
+        },
+        "seeFields": {
+          "title": "Veja os campos necessários",
+          "description": "O Ohrly mostra quais colunas ajudariam a observar o comportamento real do fluxo."
+        },
+        "generateReading": {
+          "title": "Gere uma leitura sintética",
+          "description": "Sem dados sensíveis, a página simula uma degradação e mostra como seria a leitura Ohrly."
+        }
+      }
+    },
+    "templateSection": {
+      "eyebrow": "1. Escolha um ponto de partida",
+      "title": "Templates de fluxos críticos",
+      "description": "Os templates funcionam como cenários sintéticos. Eles ajudam o usuário a reconhecer um fluxo parecido com o seu antes de qualquer integração ou envio de base histórica."
+    },
+    "contractSection": {
+      "eyebrow": "2. Entenda o contrato do fluxo",
+      "title": "O que esse template permite observar",
+      "description": "A página mostra etapas, colunas e sinais que poderiam compor uma leitura real. Isso já ajuda a pessoa a entender se sua operação possui os dados mínimos para um piloto."
+    },
+    "scenarioSection": {
+      "eyebrow": "3. Ajuste o cenário sintético",
+      "title": "Simule uma degradação silenciosa",
+      "description": "Ajuste poucos parâmetros para ver como a leitura muda. No produto real, esses sinais seriam calculados a partir do histórico do fluxo.",
+      "degradationType": "Tipo de degradação",
+      "persistenceQuestion": "Há quanto tempo o comportamento parece pior?",
+      "recoveryQuestion": "Como o fluxo costuma se recuperar?",
+      "propagationQuestion": "A degradação parece localizada ou propagada?"
+    },
+    "flowMap": {
+      "title": "Fluxo sintético usado na simulação"
+    },
+    "fields": {
+      "title": "Colunas sugeridas",
+      "description": "Você não precisa enviar esses dados agora. O objetivo é mostrar que tipo de estrutura permitiria transformar o fluxo em uma leitura Ohrly real."
+    },
+    "signals": {
+      "title": "Sinais observáveis"
+    },
+    "reading": {
+      "title": "Leitura Ohrly sintética",
+      "summary": "No cenário sintético de <template></template>, o Ohrly simulou <degradation></degradation> concentrado em <context></context>.",
+      "disclaimer": "Esta leitura não diagnostica sua operação real. Ela mostra como o Ohrly interpretaria um fluxo parecido com o seu sem usar dados sensíveis.",
+      "tags": {
+        "state": "Estado",
+        "rpi": "RPI simulado",
+        "persistence": "Persistência",
+        "context": "Contexto",
+        "days": "{count, plural, one {# dia} other {# dias}}"
+      }
+    },
+    "states": {
+      "lossOfRecoverability": {
+        "label": "PERDA DE RECUPERABILIDADE PROVÁVEL",
+        "short": "Perda de recuperabilidade",
+        "description": "O fluxo parece ter ultrapassado sua capacidade natural de recuperação. Em um cenário real, esperar já poderia estar acumulando custo operacional relevante."
+      },
+      "sustainedDegradation": {
+        "label": "DEGRADAÇÃO SUSTENTADA PROVÁVEL",
+        "short": "Degradação sustentada",
+        "description": "O comportamento descrito já não parece apenas oscilação. Persistência, recuperação frágil e propagação indicam perda de consistência operacional."
+      },
+      "operationalAttention": {
+        "label": "ATENÇÃO OPERACIONAL",
+        "short": "Atenção",
+        "description": "O fluxo ainda parece dentro de uma zona reversível, mas já apresenta sinais suficientes para justificar observação consciente."
+      },
+      "controlledVariation": {
+        "label": "VARIAÇÃO CONTROLADA",
+        "short": "Variação",
+        "description": "O cenário descrito ainda se parece mais com variação normal do que com degradação sustentada."
+      }
+    },
+    "timeline": {
+      "title": "Linha do tempo simulada",
+      "states": {
+        "normal": "Normal",
+        "variation": "Variação",
+        "attention": "Atenção",
+        "degradation": "Degradação"
+      },
+      "rpiLabel": "Pressão de recuperação simulada",
+      "description": "O RPI sintético estima quanta pressão o cenário exerce sobre a capacidade natural de recuperação do fluxo. No produto real, esse índice é calculado a partir de baseline, persistência, magnitude e propagação nos dados históricos."
+    },
+    "nextSteps": {
+      "title": "Para transformar em leitura real",
+      "items": {
+        "validateColumns": "Validar se as colunas sugeridas existem na operação real.",
+        "confirmFields": "Confirmar quais campos representam início, fim, status e contexto.",
+        "runHistoricalReading": "Rodar uma leitura com dados históricos exportados quando for possível.",
+        "compareSynthetic": "Comparar o cenário sintético com o comportamento real do fluxo."
+      },
+      "selectedTemplate": "Template escolhido"
+    },
+    "metrics": {
+      "stages": "etapas simuladas",
+      "fields": "colunas sugeridas",
+      "signals": "sinais observáveis",
+      "realData": "dados reais enviados"
+    },
+    "cta": {
+      "eyebrow": "Gostou da leitura sintética?",
+      "title": "O próximo passo é aplicar a leitura em um fluxo real.",
+      "description": "Podemos começar com 1 fluxo crítico, uma exportação simples ou CSV histórico. A simulação ajuda a alinhar o que observar antes de pedir dados sensíveis.",
+      "button": "Quero simular meu fluxo real"
+    },
+    "options": {
+      "persistence": {
+        "twoDays": "2 dias",
+        "fourDays": "4 dias",
+        "sevenDays": "7 dias",
+        "intermittentWeeks": "Aparece e some há semanas"
+      },
+      "recovery": {
+        "normalizesFast": "Normaliza rápido",
+        "sometimesNormalizes": "Às vezes normaliza",
+        "needsIntervention": "Costuma precisar de intervenção",
+        "unclearCriterion": "Não existe critério claro"
+      },
+      "propagation": {
+        "localized": "Ainda parece localizado",
+        "secondarySignal": "Começou a afetar outro sinal",
+        "multipleSteps": "Já afeta múltiplas etapas"
+      }
+    },
+    "templates": {
+      "checkoutPayment": {
+        "domain": "E-commerce",
+        "title": "Checkout e pagamento",
+        "description": "Simule perda de consistência entre início do checkout, escolha de pagamento e confirmação do pedido.",
+        "defaultContext": "Pix + Mobile",
+        "stages": {
+          "cartCreated": "Carrinho criado",
+          "checkoutStarted": "Checkout iniciado",
+          "paymentSelected": "Pagamento selecionado",
+          "paymentApproved": "Pagamento aprovado",
+          "orderConfirmed": "Pedido confirmado"
+        },
+        "signals": {
+          "approvalTime": "Tempo até aprovação",
+          "abandonmentRate": "Taxa de abandono",
+          "paymentRetries": "Retries de pagamento",
+          "exposedValue": "Valor exposto"
+        },
+        "degradationOptions": {
+          "approvalTimeIncrease": "Aumento gradual no tempo de aprovação",
+          "paymentRetriesIncrease": "Mais retries antes da confirmação",
+          "mobileCompletionDrop": "Queda de conclusão no mobile"
+        }
+      },
+      "chatbotHandoff": {
+        "domain": "CX / Atendimento",
+        "title": "Chatbot e handoff humano",
+        "description": "Simule aumento de fallback, mensagens não resolvidas e transbordo para atendimento humano.",
+        "defaultContext": "WhatsApp + novos clientes",
+        "stages": {
+          "messageReceived": "Mensagem recebida",
+          "intentDetected": "Intenção identificada",
+          "automatedResponse": "Resposta automatizada",
+          "resolutionOrFallback": "Resolução ou fallback",
+          "humanHandoff": "Handoff humano",
+          "closed": "Encerramento"
+        },
+        "signals": {
+          "handoffRate": "Taxa de handoff",
+          "resolutionTime": "Tempo de resolução",
+          "unresolvedMessages": "Mensagens não resolvidas",
+          "fallbackRate": "Fallback rate"
+        },
+        "degradationOptions": {
+          "handoffIncrease": "Aumento gradual de handoff",
+          "unresolvedIncrease": "Mais mensagens sem resolução",
+          "resolutionTimeIncrease": "Tempo de resolução crescendo por vários dias"
+        }
+      },
+      "deliveryLifecycle": {
+        "domain": "Operação / Logística",
+        "title": "Ciclo de entrega",
+        "description": "Simule degradação entre pedido confirmado, envio, entrega estimada e entrega real.",
+        "defaultContext": "Sellers médios + Nordeste",
+        "stages": {
+          "orderConfirmed": "Pedido confirmado",
+          "pickingStarted": "Separação iniciada",
+          "orderShipped": "Pedido enviado",
+          "estimatedDelivery": "Entrega prevista",
+          "delivered": "Entrega concluída"
+        },
+        "signals": {
+          "deliveryDelay": "Atraso de entrega",
+          "shippingTime": "Tempo até envio",
+          "atRiskOrders": "Pedidos em risco",
+          "exposedValue": "Valor exposto"
+        },
+        "degradationOptions": {
+          "deliveryDelayIncrease": "Aumento gradual de atrasos",
+          "preShippingBacklog": "Acúmulo antes do envio",
+          "slowerRecovery": "Recuperação cada vez mais lenta"
+        }
+      },
+      "billingRecovery": {
+        "domain": "SaaS B2B",
+        "title": "Billing e recuperação de cobrança",
+        "description": "Simule falhas de cobrança, tentativas de recuperação e risco de churn operacional.",
+        "defaultContext": "Plano Pro + contas médias",
+        "stages": {
+          "invoiceCreated": "Cobrança gerada",
+          "firstAttempt": "Primeira tentativa",
+          "failureOrSuccess": "Falha ou sucesso",
+          "retry": "Retentativa",
+          "recovered": "Regularização",
+          "accountAtRisk": "Conta em risco"
+        },
+        "signals": {
+          "billingFailures": "Falhas de cobrança",
+          "recoveryTime": "Tempo até recuperação",
+          "retriesPerAccount": "Retries por conta",
+          "exposedRevenue": "Receita exposta"
+        },
+        "degradationOptions": {
+          "retryFailuresIncrease": "Mais falhas em retentativas",
+          "slowerRecovery": "Recuperação mais lenta",
+          "accountsAtRiskIncrease": "Aumento de contas em risco"
+        }
+      }
+    }
   }
 }

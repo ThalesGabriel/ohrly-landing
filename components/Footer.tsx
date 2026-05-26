@@ -55,9 +55,9 @@ export default function Footer() {
 
                         <a
                             className="transition hover:text-cyan-700 dark:hover:text-cyan-300"
-                            href="mailto:contato@ohrly.com.br"
+                            href="mailto:taraujo@ohrly.com.br"
                         >
-                            contato@ohrly.com.br
+                            taraujo@ohrly.com.br
                         </a>
                     </div>
                 </div>
