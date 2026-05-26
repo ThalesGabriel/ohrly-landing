@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -88,14 +89,14 @@ export const metadata: Metadata = {
   category: "technology",
 
   icons: {
-  icon: [
-    { url: "/favicon.ico" },
-    { url: "/favicon.png", type: "image/png", sizes: "32x32" },
-  ],
-  apple: [
-    { url: "/apple-touch-icon.png", sizes: "180x180" },
-  ],
-},
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon.png", type: "image/png", sizes: "32x32" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180" },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -107,10 +108,13 @@ export default function RootLayout({
     <html
       lang="pt-BR"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">
-        {children}
-        <Analytics />
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        <ThemeProvider>
+          {children}
+          <Analytics />
+        </ThemeProvider>
       </body>
     </html>
   );

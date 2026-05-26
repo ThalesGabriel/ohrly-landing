@@ -1,12 +1,10 @@
 "use client";
 
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
+import OhrlyPageShell from "@/components/layout/OhrlyPageShell";
 import {
     ArrowRight,
     BarChart3,
     Boxes,
-    Braces,
     CheckCircle2,
     ChevronUp,
     CircleDollarSign,
@@ -14,14 +12,12 @@ import {
     Code2,
     Gauge,
     GitBranch,
-    Headphones,
     Hourglass,
     Lightbulb,
     LineChart,
     MonitorSmartphone,
     PackageCheck,
     PlayCircle,
-    Radar,
     Search,
     ShieldCheck,
     ShoppingCart,
@@ -118,7 +114,7 @@ function GlowCard({
     return (
         <div
             className={cn(
-                "relative overflow-hidden rounded-2xl border border-cyan-300/15 bg-slate-950/70 shadow-2xl shadow-cyan-950/20 backdrop-blur",
+                "relative overflow-hidden rounded-2xl border border-cyan-300/15 bg-white/80 dark:bg-slate-950/70 shadow-2xl shadow-cyan-950/20 backdrop-blur",
                 "before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_35%)]",
                 className,
             )}
@@ -130,7 +126,7 @@ function GlowCard({
 
 function Pill({ children }: { children: React.ReactNode }) {
     return (
-        <span className="inline-flex items-center gap-2 rounded-full border border-cyan-300/15 bg-cyan-300/5 px-3 py-1 text-xs text-slate-300">
+        <span className="inline-flex items-center gap-2 rounded-full border border-cyan-700/15 bg-cyan-50 px-3 py-1 text-xs text-slate-600 dark:border-cyan-300/15 dark:bg-cyan-300/5 dark:text-slate-600 dark:text-white">
             {children}
         </span>
     );
@@ -152,9 +148,9 @@ function SecondaryButton({ children }: { children: React.ReactNode }) {
     return (
         <a
             href="/demo"
-            className="inline-flex h-14 items-center justify-center gap-3 rounded-xl border border-slate-700/80 bg-slate-950/40 px-6 text-sm font-semibold text-slate-200 transition hover:border-cyan-300/40 hover:bg-cyan-300/5"
+            className="inline-flex h-14 items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white/70 px-6 text-sm font-semibold text-slate-600 dark:text-slate-300 transition hover:border-cyan-500/40 hover:bg-cyan-50 hover:text-cyan-700 dark:border-slate-700/80 dark:bg-slate-950/40 dark:hover:border-cyan-300/40 dark:hover:bg-cyan-300/5 dark:hover:text-cyan-600 dark:text-cyan-300"
         >
-            <PlayCircle className="h-5 w-5 text-cyan-300" />
+            <PlayCircle className="h-5 w-5 text-cyan-500 dark:text-cyan-600 dark:text-cyan-300" />
             {children}
         </a>
     );
@@ -265,11 +261,11 @@ function CompactReportExampleSection() {
         <section className="py-6">
             <GlowCard className="p-6 lg:p-8">
                 <div>
-                        <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-100">
+                        <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
                         De um CSV bruto para uma leitura de decisão.
                     </h2>
 
-                    <p className="mt-4 text-sm leading-6 text-slate-400">
+                    <p className="mt-4 text-sm leading-6 text-slate-800 dark:text-slate-400">
                         Usamos um dataset sintético de retenção no fluxo de boleto
                         para simular como o Ohrly interpreta um fluxo crítico: primeiro
                         entende o arquivo, depois aplica um contrato comportamental e,
@@ -278,19 +274,19 @@ function CompactReportExampleSection() {
 
                 </div>
                 <div className="grid gap-8 lg:grid-cols-3 lg:items-start mt-5">
-                    <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-5">
+                    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/70 p-5">
                         <div>
                             <div className="flex items-center justify-between flex-1">
                                 <div>
-                                    <p className="text-xs text-cyan-300">1. O que entrou</p>
+                                    <p className="text-xs text-cyan-600 dark:text-cyan-300">1. O que entrou</p>
                                 </div>
                                 <div>
-                                    <span className="rounded-full border border-slate-700 bg-slate-900 px-3 py-1 text-xs font-medium text-slate-300">
+                                    <span className="rounded-full border border-slate-700 bg-slate-100 dark:bg-slate-900 px-3 py-1 text-xs font-medium text-slate-600 dark:text-slate-300">
                                         CSV
                                     </span>
                                 </div>
                             </div>
-                            <h3 className="mt-3 text-xl font-semibold text-slate-100">
+                            <h3 className="mt-3 text-xl font-semibold text-slate-900 dark:text-slate-100">
                                 Dataset de atendimento e retenção em boleto
                             </h3>
                         </div>
@@ -299,13 +295,13 @@ function CompactReportExampleSection() {
                             {inputStats.map((item) => (
                                 <div
                                     key={item.label}
-                                    className="rounded-xl border border-slate-800 bg-slate-900/40 p-4"
+                                    className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-900/40 p-4"
                                 >
-                                    <p className="text-xs text-cyan-300">{item.label}</p>
-                                    <p className="mt-2 text-2xl font-semibold text-slate-100">
+                                    <p className="text-xs text-cyan-600 dark:text-cyan-300">{item.label}</p>
+                                    <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-slate-100">
                                         {item.value}
                                     </p>
-                                    <p className="mt-2 text-xs leading-5 text-slate-400">
+                                    <p className="mt-2 text-xs leading-5 text-slate-800 dark:text-slate-400">
                                         {item.description}
                                     </p>
                                 </div>
@@ -313,19 +309,19 @@ function CompactReportExampleSection() {
                         </div>
                     </div>
 
-                    <div className="rounded-2xl border border-cyan-300/15 bg-slate-950/70 p-5">
+                    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/70 p-5">
                         <div>
                             <div className="flex items-center justify-between flex-1">
                                 <div>
-                                    <p className="text-xs text-cyan-300">2. Como o Ohrly interpretou</p>
+                                    <p className="text-xs text-cyan-600 dark:text-cyan-300">2. Como o Ohrly interpretou</p>
                                 </div>
                                 <div>
-                                    <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-xs font-medium text-cyan-300">
+                                    <span className="rounded-full border border-cyan-700 bg-cyan-300/10 px-3 py-1 text-xs font-medium text-cyan-600 dark:text-cyan-300">
                                         boleto_retention_flow
                                     </span>
                                 </div>
                             </div>
-                            <h3 className="mt-3 text-xl font-semibold text-slate-100">
+                            <h3 className="mt-3 text-xl font-semibold text-slate-900 dark:text-slate-100">
                                 Contrato comportamental do fluxo
                             </h3>
                         </div>
@@ -334,13 +330,13 @@ function CompactReportExampleSection() {
                             {configStats.map((item) => (
                                 <div
                                     key={item.label}
-                                    className="rounded-xl border border-cyan-300/10 bg-cyan-300/5 p-4"
+                                    className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-900/40 p-4"
                                 >
-                                    <p className="text-xs text-cyan-300">{item.label}</p>
-                                    <p className="mt-2 text-2xl font-semibold text-slate-100">
+                                    <p className="text-xs text-cyan-600 dark:text-cyan-300">{item.label}</p>
+                                    <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-slate-100">
                                         {item.value}
                                     </p>
-                                    <p className="mt-2 text-xs leading-5 text-slate-400">
+                                    <p className="mt-2 text-xs leading-5 text-slate-800 dark:text-slate-400">
                                         {item.description}
                                     </p>
                                 </div>
@@ -348,19 +344,19 @@ function CompactReportExampleSection() {
                         </div>
                     </div>
                     <div>
-                        <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-5">
+                        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/70 p-5">
                             <div>
                                 <div className="flex items-center justify-between flex-1">
                                     <div>
-                                        <p className="text-xs text-cyan-300">3. O que saiu</p>
+                                        <p className="text-xs text-cyan-600 dark:text-cyan-300">3. O que saiu</p>
                                     </div>
                                     <div>
-                                        <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-300">
+                                        <span className="rounded-full border border-emerald-700 bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-600 dark:text-emerald-300">
                                             Alta confiança
                                         </span>
                                     </div>
                                 </div>
-                                <h3 className="mt-3 text-xl font-semibold text-slate-100">
+                                <h3 className="mt-3 text-xl font-semibold text-slate-900 dark:text-slate-100">
                                     Pressão com propagação
                                 </h3>
                             </div>
@@ -370,13 +366,13 @@ function CompactReportExampleSection() {
                                 {outputStats.map((item) => (
                                     <div
                                         key={item.label}
-                                        className={`rounded-xl border p-4 ${item.className}`}
+                                        className={`rounded-xl border p-4 border-slate-200 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-900/40`}
                                     >
-                                        <p className="text-xs text-slate-300">{item.label}</p>
-                                        <p className="mt-2 text-2xl font-semibold text-slate-100">
+                                        <p className="text-xs text-cyan-600 dark:text-cyan-300">{item.label}</p>
+                                        <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-slate-100">
                                             {item.value}
                                         </p>
-                                        <p className="mt-2 text-xs leading-5 text-slate-300">
+                                        <p className="mt-2 text-xs leading-5 text-slate-600 dark:text-slate-300">
                                             {item.description}
                                         </p>
                                     </div>
@@ -390,13 +386,13 @@ function CompactReportExampleSection() {
                     <div className="rounded-2xl border border-violet-300/20 bg-violet-300/10 p-5">
                         <div className="flex flex-wrap items-center justify-between gap-3">
                             <div>
-                                <p className="text-xs text-violet-200">4. O que fazer com isso</p>
-                                <h3 className="mt-1 text-xl font-semibold text-slate-100">
+                                <p className="text-xs text-violet-800 dark:text-violet-200">4. O que fazer com isso</p>
+                                <h3 className="mt-1 text-xl font-semibold text-slate-900 dark:text-slate-100">
                                     Ações sugeridas para priorização
                                 </h3>
                             </div>
 
-                            <span className="rounded-full border border-violet-300/20 bg-violet-300/10 px-3 py-1 text-xs font-medium text-violet-200">
+                            <span className="rounded-full border border-violet-700 bg-violet-300/10 px-3 py-1 text-xs font-medium text-violet-800 dark:text-violet-200">
                                 Plano de investigação
                             </span>
                         </div>
@@ -405,33 +401,33 @@ function CompactReportExampleSection() {
                             {actionItems.map((item) => (
                                 <div
                                     key={item.title}
-                                    className="rounded-xl border border-slate-800 bg-slate-950/60 p-4"
+                                    className="rounded-xl border border-violet-300 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-950/60 p-4"
                                 >
                                     <div className="flex items-center justify-between gap-3">
-                                        <p className="text-sm font-semibold text-slate-100">
+                                        <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
                                             {item.title}
                                         </p>
 
                                         <span
                                             className={
                                                 item.priority === "Alta"
-                                                    ? "rounded-full bg-red-400/10 px-2 py-1 text-[10px] font-medium text-red-300"
-                                                    : "rounded-full bg-yellow-300/10 px-2 py-1 text-[10px] font-medium text-yellow-200"
+                                                    ? "rounded-full border border-red-700 bg-red-400/10 px-2 py-1 text-[10px] font-medium text-red-700 dark:text-red-300"
+                                                    : "rounded-full border border-yellow-700 bg-yellow-300/10 px-2 py-1 text-[10px] font-medium text-yellow-800 dark:text-yellow-200"
                                             }
                                         >
                                             {item.priority}
                                         </span>
                                     </div>
 
-                                    <p className="mt-3 text-xs leading-5 text-slate-400">
+                                    <p className="mt-3 text-xs leading-5 text-slate-800 dark:text-slate-400">
                                         {item.description}
                                     </p>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="mt-5 rounded-xl border border-violet-300/20 bg-slate-950/50 p-4">
-                            <p className="text-sm leading-6 text-slate-300">
+                        <div className="mt-5 rounded-xl border border-violet-300 bg-slate-50/60 dark:bg-slate-950/60 p-4">
+                            <p className="text-sm leading-6 text-slate-600 dark:text-slate-300">
                                 O Ohrly não decide pelo time. Ele organiza a investigação:
                                 mostra onde a pressão apareceu, quais sinais são mais confiáveis
                                 e quais hipóteses merecem prioridade na próxima conversa.
@@ -441,41 +437,41 @@ function CompactReportExampleSection() {
 
                     <div className="flex flex-col justify-between h-[100%]">
                         <div className="grid gap-4 lg:grid-cols-2">
-                            <div className="rounded-2xl border border-yellow-300/20 bg-yellow-300/10 p-5">
-                                <p className="text-xs text-yellow-200">Episódio principal</p>
-                                <p className="mt-2 text-2xl font-semibold text-slate-100">
+                            <div className="rounded-2xl border border-yellow-400 dark:border-yellow-300/20 bg-yellow-300/10 p-5">
+                                <p className="text-xs text-yellow-800 dark:text-yellow-200">Episódio principal</p>
+                                <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-slate-100">
                                     retention_rate · 5 dias
                                 </p>
-                                <p className="mt-3 text-sm leading-6 text-slate-300">
+                                <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
                                     1.047 eventos expostos, RPI 68,93 e janela de decisão
                                     consumida em 60%.
                                 </p>
                             </div>
 
-                            <div className="rounded-2xl border border-cyan-300/20 bg-cyan-300/10 p-5">
-                                <p className="text-xs text-cyan-300">Leitura final</p>
-                                <p className="mt-2 text-2xl font-semibold text-slate-100">
+                            <div className="rounded-2xl border border-cyan-400 dark:border-cyan-300/20 bg-cyan-300/10 p-5">
+                                <p className="text-xs text-cyan-600 dark:text-cyan-300">Leitura final</p>
+                                <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-slate-100">
                                     Esperar deixou de ser neutro.
                                 </p>
-                                <p className="mt-3 text-sm leading-6 text-slate-300">
+                                <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
                                     A degradação não ficou isolada: apareceu em retenção,
                                     handoff, reclamação, falha no boleto, resolução e tempo humano.
                                 </p>
                             </div>
                         </div>
 
-                        <div className="rounded-xl border border-cyan-300/15 bg-cyan-300/5 p-5">
-                            <p className="text-sm font-medium text-cyan-300">
+                        <div className="rounded-xl border border-cyan-400 dark:border-cyan-300/20 bg-cyan-300/5 p-5">
+                            <p className="text-sm font-medium text-cyan-600 dark:text-cyan-300">
                                 Diante desse contexto, o que isso quer dizer?
                             </p>
 
-                            <p className="mt-3 text-lg font-semibold leading-snug text-slate-100">
+                            <p className="mt-3 text-lg font-semibold leading-snug text-slate-900 dark:text-slate-100">
                                 O fluxo não apresentou apenas uma oscilação isolada.
                                 Ele acumulou pressão operacional em múltiplos sinais,
                                 com propagação e alta confiança estatística.
                             </p>
 
-                            <p className="mt-4 text-sm leading-6 text-slate-400">
+                            <p className="mt-4 text-sm leading-6 text-slate-800 dark:text-slate-400">
                                 Em uma call, isso ajuda o time a sair do “acho que piorou”
                                 para uma conversa baseada em evidências: o que mudou,
                                 há quanto tempo, onde concentrou e quantos eventos passaram
@@ -500,7 +496,7 @@ function MiniChart() {
             width: "34%",
             dot: "bg-emerald-400",
             line: "from-emerald-400/70 to-emerald-400/20",
-            text: "text-emerald-300",
+            text: "text-emerald-600 dark:text-emerald-300",
             description: "Comportamento dentro do esperado",
         },
         {
@@ -510,7 +506,7 @@ function MiniChart() {
             width: "28%",
             dot: "bg-yellow-300",
             line: "from-yellow-300/70 to-yellow-300/20",
-            text: "text-yellow-200",
+            text: "text-yellow-600 dark:text-yellow-300",
             description: "Desvio persistente começando",
         },
         {
@@ -520,14 +516,14 @@ function MiniChart() {
             width: "38%",
             dot: "bg-red-400",
             line: "from-red-400/80 to-red-400/25",
-            text: "text-red-300",
+            text: "text-red-600 dark:text-red-300",
             description: "Perda sustentada de consistência",
         },
     ];
 
     return (
         <div className="mt-6">
-            <div className="mb-3 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-600 dark:text-slate-300">
                 <span>Evolução do estado</span>
 
                 <div className="flex items-center gap-4">
@@ -548,9 +544,9 @@ function MiniChart() {
                 </div>
             </div>
 
-            <div className="rounded-xl border border-slate-800/80 bg-slate-950/70 p-4">
+            <div className="rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/80 dark:bg-slate-950/70 p-4">
                 <div className="relative">
-                    <div className="absolute left-0 right-0 top-[18px] h-px bg-slate-800" />
+                    <div className="absolute left-0 right-0 top-[24px] h-px bg-slate-200 dark:bg-slate-800" />
 
                     <div className="relative flex w-full">
                         {states.map((state, index) => (
@@ -561,7 +557,7 @@ function MiniChart() {
                             >
                                 <div className="flex items-center">
                                     <div
-                                        className={`z-10 h-4 w-4 rounded-full border-2 border-slate-950 ${state.dot} shadow-lg`}
+                                        className={`z-10 h-4 w-4 rounded-full border-2 border-slate-100 dark:border-slate-950 ${state.dot} shadow-lg`}
                                     />
 
                                     <div
@@ -574,14 +570,14 @@ function MiniChart() {
                                         {state.label}
                                     </p>
 
-                                    <p className="mt-1 text-[11px] leading-4 text-slate-400">
+                                    <p className="mt-1 text-[11px] leading-4 text-slate-600 dark:text-slate-300">
                                         {state.description}
                                     </p>
 
-                                    <p className="mt-3 text-[10px] text-slate-500">
+                                    <p className="mt-3 text-[10px] text-slate-600 dark:text-slate-300">
                                         {state.from}
                                         {index === states.length - 1 && (
-                                            <span className="text-slate-400"> → {state.to}</span>
+                                            <span className="text-slate-600 dark:text-slate-300"> → {state.to}</span>
                                         )}
                                     </p>
                                 </div>
@@ -591,7 +587,7 @@ function MiniChart() {
                 </div>
 
                 <div className="mt-5 rounded-lg border border-red-400/20 bg-red-400/10 px-3 py-2">
-                    <p className="text-xs leading-5 text-slate-300">
+                    <p className="text-xs leading-5 text-slate-600 dark:text-slate-300 text-center">
                         O fluxo saiu de uma variação normal, entrou em atenção e permanece
                         em degradação sustentada há 4 dias.
                     </p>
@@ -604,10 +600,10 @@ function MiniChart() {
 function ReadingExample() {
     return (
         <GlowCard className="p-6 lg:p-8">
-            <div className="mb-5 flex items-center justify-between gap-4 border-b border-slate-800 pb-4">
+            <div className="mb-5 flex items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
                 <div className="flex items-center gap-3">
-                    <Sparkles className="h-5 w-5 text-cyan-300" />
-                    <p className="text-sm font-semibold text-slate-100">Exemplo de leitura Ohrly</p>
+                    <Sparkles className="h-5 w-5 text-cyan-600 dark:text-cyan-300" />
+                    <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">Exemplo de leitura Ohrly</p>
                 </div>
                 <Pill>
                     <span className="h-2 w-2 rounded-full bg-emerald-400" />
@@ -616,10 +612,10 @@ function ReadingExample() {
             </div>
 
             <div>
-                <h2 className="text-2xl font-semibold tracking-tight text-slate-100">
+                <h2 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
                     Fluxo de pagamento <span className="text-red-400">- Degradação sustentada</span>
                 </h2>
-                <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-300">
+                <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300">
                     O fluxo de pagamento começou a perder consistência há 4 dias. O tempo de aprovação está 2,8x acima do esperado para Pix mobile em dias úteis. O comportamento ultrapassou o ciclo natural de recuperação e começou a se propagar para novos sinais do pagamento.
                 </p>
             </div>
@@ -628,20 +624,20 @@ function ReadingExample() {
                 {statusCards.map((card) => {
                     const Icon = card.icon;
                     return (
-                        <div key={card.label} className="rounded-xl border border-slate-800 bg-slate-900/45 p-4">
+                        <div key={card.label} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-900/40 p-4">
                             <div className="flex items-start gap-3">
                                 <Icon
                                     className={cn(
                                         "mt-1 h-5 w-5",
                                         card.tone === "red" && "text-red-400",
                                         card.tone === "yellow" && "text-yellow-300",
-                                        card.tone === "green" && "text-emerald-400",
-                                        (!card.tone || card.tone === "cyan") && "text-cyan-300",
+                                        card.tone === "green" && "text-slate-900 dark:text-emerald-400",
+                                        (!card.tone || card.tone === "cyan") && "text-cyan-600 dark:text-cyan-300",
                                     )}
                                 />
                                 <div>
-                                    <p className="text-xs text-slate-400">{card.label}</p>
-                                    <p className="mt-1 text-sm font-semibold text-slate-100">{card.value}</p>
+                                    <p className="text-xs text-slate-800 dark:text-slate-400">{card.label}</p>
+                                    <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-slate-100">{card.value}</p>
                                 </div>
                             </div>
                         </div>
@@ -666,16 +662,16 @@ function SharedReadingSection() {
         <GlowCard className="p-6 lg:p-8" >
             <div className="grid gap-8 lg:grid-cols-[1.05fr_1fr] lg:items-center" id="como-funciona">
                 <div>
-                    <h2 className="text-2xl font-semibold text-slate-100">Você já tem dados. O que falta é uma leitura comum.</h2>
+                    <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Você já tem dados. O que falta é uma leitura comum.</h2>
                     <div className="mt-8 grid gap-4 sm:grid-cols-2">
                         {items.map((item) => {
                             const Icon = item.icon;
                             return (
                                 <div key={item.title} className="flex items-center gap-4">
-                                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-cyan-300/10 text-cyan-300">
+                                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-cyan-300/10 text-cyan-600 dark:text-cyan-300">
                                         <Icon className="h-5 w-5" />
                                     </div>
-                                    <p className="text-sm text-slate-200">{item.title}</p>
+                                    <p className="text-sm text-slate-800 dark:text-slate-200">{item.title}</p>
                                 </div>
                             );
                         })}
@@ -684,13 +680,13 @@ function SharedReadingSection() {
                 <div>
                     <div className="flex items-center gap-[10px]">
                         <Lightbulb />
-                        <p className="text-sm leading-6 text-slate-300">
+                        <p className="text-sm leading-6 text-slate-600 dark:text-slate-300">
                             Esses sinais muitas vezes fazem parte do mesmo problema, mas aparecem separados. O Ohrly conecta esses sinais em uma resposta simples:
                         </p>
                     </div>
                     <div className="mt-4 rounded-2xl border border-cyan-300/25 bg-cyan-300/8 p-8 shadow-lg shadow-cyan-950/20">
-                        <p className="text-4xl leading-none text-cyan-300">“</p>
-                        <p className="text-2xl font-semibold leading-snug text-slate-100">
+                        <p className="text-4xl leading-none text-cyan-600 dark:text-cyan-300">“</p>
+                        <p className="text-2xl font-semibold leading-snug text-slate-900 dark:text-slate-100">
                             Esse fluxo ainda está saudável ou começou a perder consistência?
                         </p>
                     </div>
@@ -698,9 +694,9 @@ function SharedReadingSection() {
             </div>
 
             <div className="text-center mt-10">
-                <p className="text-sm text-slate-200">Você recebe</p>
-                <h2 className="mt-1 text-3xl font-semibold tracking-tight text-slate-100">
-                    Uma leitura <span className="text-cyan-300">comportamental</span> do seu fluxo
+                <p className="text-sm text-slate-800 dark:text-slate-200">Você recebe</p>
+                <h2 className="mt-1 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+                    Uma leitura <span className="text-cyan-600 dark:text-cyan-300">comportamental</span> do seu fluxo
                 </h2>
             </div>
             <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
@@ -708,10 +704,10 @@ function SharedReadingSection() {
                     const Icon = item.icon;
                     return (
                         <GlowCard key={item.title} className="p-5 text-center">
-                            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-cyan-300/8 text-cyan-300">
+                            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-cyan-300/8 text-cyan-600 dark:text-cyan-300">
                                 <Icon className="h-24 w-24" />
                             </div>
-                            <p className="mt-5 text-sm font-medium leading-5 text-slate-200">{item.title}</p>
+                            <p className="mt-5 text-sm font-medium leading-5 text-slate-800 dark:text-slate-200">{item.title}</p>
                         </GlowCard>
                     );
                 })}
@@ -739,24 +735,24 @@ function DashboardComparison() {
         <section className="py-6" id="not-dash">
             <GlowCard className="p-6 lg:p-8">
                 <div className="mx-auto max-w-3xl text-center">
-                    <p className="text-sm font-medium text-cyan-300">
+                    <p className="text-sm font-medium text-cyan-600 dark:text-cyan-300">
                         Não é mais um dashboard
                     </p>
 
-                    <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-100">
+                    <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
                         O Ohrly olha para o fluxo, não só para o sistema
                     </h2>
 
-                    <p className="mt-4 text-sm leading-6 text-slate-400">
+                    <p className="mt-4 text-sm leading-6 text-slate-800 dark:text-slate-400">
                         O sistema pode continuar de pé, sem erro crítico e dentro do SLA.
                         Ainda assim, o comportamento do fluxo pode já ter começado a piorar.
                     </p>
                 </div>
 
                 <div className="mt-8 grid gap-5 lg:grid-cols-[1fr_auto_1fr] lg:items-stretch">
-                    <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-6">
+                    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/70 p-6">
                         <div className="flex items-center gap-3">
-                            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-800/80 text-slate-400">
+                            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-200/80 dark:bg-slate-800/80 text-slate-800 dark:text-slate-400">
                                 <Gauge className="h-5 w-5" />
                             </div>
 
@@ -764,7 +760,7 @@ function DashboardComparison() {
                                 <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
                                     Ferramentas tradicionais
                                 </p>
-                                <h3 className="mt-1 text-xl font-semibold text-slate-100">
+                                <h3 className="mt-1 text-xl font-semibold text-slate-900 dark:text-slate-100">
                                     O sistema caiu?
                                 </h3>
                             </div>
@@ -774,19 +770,19 @@ function DashboardComparison() {
                             {traditionalSignals.map((signal) => (
                                 <div
                                     key={signal}
-                                    className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-900/40 px-4 py-3"
+                                    className="flex items-center justify-between rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-900/40 px-4 py-3"
                                 >
-                                    <span className="text-sm text-slate-300">{signal}</span>
-                                    <span className="rounded-full bg-emerald-400/10 px-2 py-1 text-xs font-medium text-emerald-300">
+                                    <span className="text-sm text-slate-600 dark:text-slate-300">{signal}</span>
+                                    <span className="rounded-full bg-emerald-400/10 px-2 py-1 text-xs font-medium text-emerald-600 dark:text-emerald-300">
                                         OK
                                     </span>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="mt-6 rounded-xl border border-slate-800 bg-slate-950/80 p-4">
+                        <div className="mt-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-900/40  p-4">
                             <p className="text-xs text-slate-500">Leitura gerada</p>
-                            <p className="mt-2 text-lg font-semibold text-slate-300">
+                            <p className="mt-2 text-lg font-semibold text-slate-600 dark:text-slate-300">
                                 Nenhum incidente detectado.
                             </p>
                         </div>
@@ -795,7 +791,7 @@ function DashboardComparison() {
                     <div className="hidden items-center lg:flex">
                         <div className="relative flex h-full min-h-80 items-center">
                             <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-cyan-300/30 to-transparent" />
-                            <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full border border-cyan-300/30 bg-slate-950 text-xs font-semibold text-cyan-300 shadow-lg shadow-cyan-950/40">
+                            <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full border dark:border-cyan-300/30 bg-slate-50 dark:bg-slate-950 text-xs font-semibold text-cyan-600 dark:text-cyan-300 shadow-lg shadow-cyan-950/40">
                                 mas
                             </div>
                         </div>
@@ -803,15 +799,15 @@ function DashboardComparison() {
 
                     <div className="rounded-2xl border border-cyan-300/25 bg-cyan-300/8 p-6 shadow-lg shadow-cyan-950/20">
                         <div className="flex items-center gap-3">
-                            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-300/10 text-cyan-300">
+                            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-300/10 text-cyan-600 dark:text-cyan-300">
                                 <GitBranch className="h-5 w-5" />
                             </div>
 
                             <div>
-                                <p className="text-xs uppercase tracking-[0.2em] text-cyan-300/80">
+                                <p className="text-xs uppercase tracking-[0.2em] text-cyan-600 dark:text-cyan-300/80">
                                     Ohrly
                                 </p>
-                                <h3 className="mt-1 text-xl font-semibold text-slate-100">
+                                <h3 className="mt-1 text-xl font-semibold text-slate-900 dark:text-slate-100">
                                     O fluxo ainda funciona bem?
                                 </h3>
                             </div>
@@ -821,15 +817,15 @@ function DashboardComparison() {
                             {ohrlySignals.map((signal, index) => (
                                 <div
                                     key={signal}
-                                    className="flex items-center justify-between rounded-xl border border-cyan-300/10 bg-slate-950/50 px-4 py-3"
+                                    className="flex items-center justify-between rounded-xl border border-cyan-700/10 dark:border-cyan-300/10 bg-slate-50 dark:bg-slate-950/50 px-4 py-3"
                                 >
-                                    <span className="text-sm text-slate-200">{signal}</span>
+                                    <span className="text-sm text-slate-800 dark:text-slate-200">{signal}</span>
 
                                     <span
                                         className={
                                             index < 2
-                                                ? "rounded-full bg-yellow-300/10 px-2 py-1 text-xs font-medium text-yellow-200"
-                                                : "rounded-full bg-red-400/10 px-2 py-1 text-xs font-medium text-red-300"
+                                                ? "rounded-full border border-yellow-600 dark:border-yellow-300 bg-yellow-300/10 px-2 py-1 text-xs font-medium text-yellow-800 dark:text-yellow-200"
+                                                : "rounded-full border border-red-600 dark:border-red-300 bg-red-400/10 px-2 py-1 text-xs font-medium text-red-800 dark:text-red-200"
                                         }
                                     >
                                         {index < 2 ? "atenção" : "degradando"}
@@ -839,16 +835,16 @@ function DashboardComparison() {
                         </div>
 
                         <div className="mt-6 rounded-xl border border-cyan-300/20 bg-cyan-300/10 p-4">
-                            <p className="text-xs text-cyan-300">Leitura gerada</p>
-                            <p className="mt-2 text-lg font-semibold leading-snug text-slate-100">
+                            <p className="text-xs text-cyan-600 dark:text-cyan-300">Leitura gerada</p>
+                            <p className="mt-2 text-lg font-semibold leading-snug text-slate-900 dark:text-slate-100">
                                 O fluxo ainda está de pé, mas perdeu consistência há 4 dias.
                             </p>
                         </div>
                     </div>
                 </div>
 
-                <div className="mx-auto mt-7 max-w-3xl rounded-2xl border border-slate-800 bg-slate-950/60 p-5 text-center">
-                    <p className="text-sm leading-6 text-slate-300">
+                <div className="mx-auto mt-7 max-w-3xl rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-950/60 p-5 text-center">
+                    <p className="text-sm leading-6 text-slate-600 dark:text-slate-300">
                         A diferença não é ver mais gráficos. É entender quando um fluxo
                         continua funcionando, mas já começou a gerar mais espera, retries,
                         abandono, fallback, atendimento humano e retrabalho.
@@ -873,10 +869,10 @@ function HowItWorks() {
                                 </div>
                                 <div>
                                     <div className="flex items-center gap-[10px]">
-                                        <Icon className="h-15 w-15 text-cyan-300" />
-                                        <h2 className="text-2xl font-semibold text-slate-100">{step.title}</h2>
+                                        <Icon className="h-12 w-12 text-cyan-500 dark:text-cyan-300" />
+                                        <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">{step.title}</h2>
                                     </div>
-                                    <p className="mt-3 text-lg leading-6 text-slate-300">{step.description}</p>
+                                    <p className="mt-3 text-lg leading-6 text-slate-600 dark:text-slate-300">{step.description}</p>
                                 </div>
                             </div>
                         </GlowCard>
@@ -890,17 +886,17 @@ function HowItWorks() {
 function PersonasSection() {
     return (
         <section id="para-quem" className="py-12">
-            <h2 className="text-center text-2xl font-semibold text-slate-100">Para quem é</h2>
+            <h2 className="text-center text-2xl font-semibold text-slate-900 dark:text-slate-100">Para quem é</h2>
             <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 {personas.map((persona) => {
                     const Icon = persona.icon;
                     return (
                         <GlowCard key={persona.title} className="p-5">
                             <div className="flex gap-4">
-                                <Icon className="h-8 w-8 shrink-0 text-cyan-300" />
+                                <Icon className="h-8 w-8 shrink-0 text-cyan-600 dark:text-cyan-300" />
                                 <div>
-                                    <h3 className="font-semibold text-slate-100">{persona.title}</h3>
-                                    <p className="mt-2 text-xs leading-5 text-slate-200">{persona.description}</p>
+                                    <h3 className="font-semibold text-slate-900 dark:text-slate-100">{persona.title}</h3>
+                                    <p className="mt-2 text-xs leading-5 text-slate-800 dark:text-slate-200">{persona.description}</p>
                                 </div>
                             </div>
                         </GlowCard>
@@ -921,15 +917,15 @@ function CTA() {
                     <div className="h-4 w-4 rounded-full bg-cyan-300 shadow-lg shadow-cyan-300/60" />
                 </div>
                 <div>
-                    <h2 className="max-w-xl text-3xl font-semibold tracking-tight text-slate-100 lg:text-4xl">
+                    <h2 className="max-w-xl text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 lg:text-4xl">
                         Quer descobrir se um fluxo seu já começou a piorar?
                     </h2>
-                    <p className="mt-4 text-base text-slate-400">Rode um piloto simples com 1 fluxo crítico.</p>
+                    <p className="mt-4 text-base text-slate-800 dark:text-slate-400">Rode um piloto simples com 1 fluxo crítico.</p>
                 </div>
                 <div className="lg:min-w-72">
                     <PrimaryButton>Quero analisar um fluxo</PrimaryButton>
-                    <p className="mt-5 flex items-center gap-2 text-xs text-slate-400">
-                        <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                    <p className="mt-5 flex items-center gap-2 text-xs text-slate-800 dark:text-slate-400">
+                        <CheckCircle2 className="h-4 w-4 text-green-500" />
                         Você não precisa mudar sua arquitetura para começar.
                     </p>
                 </div>
@@ -947,7 +943,6 @@ function ScrollToTopButton() {
         }
 
         handleScroll();
-
         window.addEventListener("scroll", handleScroll, { passive: true });
 
         return () => {
@@ -968,7 +963,9 @@ function ScrollToTopButton() {
             aria-label="Voltar ao topo"
             onClick={scrollToTop}
             className={cn(
-                "cursor-pointer fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-cyan-300/25 bg-slate-950/80 text-cyan-300 shadow-2xl shadow-cyan-950/40 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/50 hover:bg-cyan-300/10",
+                "fixed bottom-6 right-6 z-50 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border shadow-2xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1",
+                "border-cyan-700/20 bg-white/90 text-cyan-700 shadow-slate-300/50 hover:border-cyan-700/40 hover:bg-cyan-50",
+                "dark:border-cyan-300/25 dark:bg-slate-950/80 dark:text-cyan-600 dark:text-cyan-300 dark:shadow-cyan-950/40 dark:hover:border-cyan-300/50 dark:hover:bg-cyan-300/10",
                 isVisible
                     ? "pointer-events-auto translate-y-0 opacity-100"
                     : "pointer-events-none translate-y-4 opacity-0",
@@ -981,28 +978,30 @@ function ScrollToTopButton() {
 
 export default function OhrlyLandingPage() {
     return (
-        <main className="min-h-screen overflow-x-hidden bg-[#020b12] text-slate-100">
-            <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(34,211,238,0.12),transparent_28%),radial-gradient(circle_at_80%_0%,rgba(14,165,233,0.10),transparent_28%),linear-gradient(180deg,#020b12_0%,#020812_55%,#020b12_100%)]" />
-            <div className="pointer-events-none fixed inset-0 opacity-[0.06] [background-image:linear-gradient(rgba(255,255,255,.7)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.7)_1px,transparent_1px)] [background-size:44px_44px]" />
-
-            <div className="relative mx-auto px-5 py-6 sm:px-8 lg:px-10">
-
-                <Header />
-
+        <OhrlyPageShell>
+            <div className="px-5 sm:px-8 lg:px-10">
                 <section className="grid gap-10 pt-16 pb-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:pt-12">
                     <div>
-                        <h1 className="max-w-2xl text-5xl font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl">
-                            Descubra onde seus fluxos digitais pioram <span className="text-cyan-300">antes do impacto se consolidar</span>
+                        <h1 className="max-w-2xl text-5xl font-semibold leading-[1.05] tracking-tight text-slate-950 sm:text-6xl lg:text-7xl dark:text-white">
+                            Descubra onde seus fluxos digitais pioram{" "}
+                            <span className="text-cyan-600 dark:text-cyan-300">
+                                antes do impacto se consolidar
+                            </span>
                         </h1>
-                        <p className="mt-8 max-w-xl text-base leading-7 text-slate-300 sm:text-lg">
-                            Analise checkout, pagamento, entrega, atendimento ou onboarding e receba uma leitura clara sobre o que mudou, há quanto tempo mudou e onde sua operação pode estar perdendo consistência.
+
+                        <p className="mt-8 max-w-xl text-base leading-7 text-slate-600 dark:text-slate-300 sm:text-lg">
+                            Analise checkout, pagamento, entrega, atendimento ou onboarding
+                            e receba uma leitura clara sobre o que mudou, há quanto tempo
+                            mudou e onde sua operação pode estar perdendo consistência.
                         </p>
+
                         <div className="mt-10 flex flex-col gap-4 sm:flex-row">
                             <PrimaryButton>Quero analisar um fluxo</PrimaryButton>
                             <SecondaryButton>Ver demonstração</SecondaryButton>
                         </div>
-                        <p className="mt-8 flex items-center gap-2 text-sm text-slate-300">
-                            <ShieldCheck className="h-4 w-4 text-emerald-400" />
+
+                        <p className="mt-8 flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                            <ShieldCheck className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
                             Comece com 1 fluxo crítico. Não precisa de integração.
                         </p>
                     </div>
@@ -1016,10 +1015,9 @@ export default function OhrlyLandingPage() {
                 <SharedReadingSection />
                 <PersonasSection />
                 <CTA />
-                <Footer />
             </div>
 
             <ScrollToTopButton />
-        </main>
+        </OhrlyPageShell>
     );
 }

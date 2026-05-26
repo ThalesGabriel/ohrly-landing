@@ -1,7 +1,7 @@
 "use client";
 
+import OhrlyPageShell from "@/components/layout/OhrlyPageShell";
 import {
-    ArrowLeft,
     ArrowRight,
     BarChart3,
     CheckCircle2,
@@ -13,9 +13,6 @@ import {
     UploadCloud,
 } from "lucide-react";
 import { useState } from "react";
-import Link from "next/link";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 
 type FormState = {
     name: string;
@@ -40,8 +37,12 @@ function GlowCard({
     return (
         <div
             className={cn(
-                "relative overflow-hidden rounded-2xl border border-cyan-300/15 bg-slate-950/70 shadow-2xl shadow-cyan-950/20 backdrop-blur",
-                "before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_35%)]",
+                "relative overflow-hidden rounded-2xl border shadow-xl backdrop-blur transition-colors",
+                "border-slate-200 bg-white/80 shadow-slate-200/60",
+                "dark:border-cyan-300/15 dark:bg-slate-950/70 dark:shadow-2xl dark:shadow-cyan-950/20",
+                "before:pointer-events-none before:absolute before:inset-0",
+                "before:bg-[radial-gradient(circle_at_top_left,rgba(8,145,178,0.08),transparent_35%)]",
+                "dark:before:bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_35%)]",
                 className,
             )}
         >
@@ -59,7 +60,10 @@ function Field({
 }) {
     return (
         <label className="grid gap-2">
-            <span className="text-sm font-medium text-slate-200">{label}</span>
+            <span className="text-sm font-medium text-slate-800 dark:text-slate-200">
+                {label}
+            </span>
+
             {children}
         </label>
     );
@@ -70,8 +74,11 @@ function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
         <input
             {...props}
             className={cn(
-                "h-12 rounded-xl border border-slate-800 bg-slate-950/70 px-4 text-sm text-slate-100 outline-none transition",
-                "placeholder:text-slate-600 focus:border-cyan-300/50 focus:bg-slate-950 focus:ring-4 focus:ring-cyan-300/10",
+                "h-12 rounded-xl border px-4 text-sm outline-none transition",
+                "border-slate-200 bg-white/80 text-slate-950 placeholder:text-slate-400",
+                "focus:border-cyan-600/50 focus:bg-white focus:ring-4 focus:ring-cyan-300/20",
+                "dark:border-slate-800 dark:bg-slate-950/70 dark:text-slate-100 dark:placeholder:text-slate-600",
+                "dark:focus:border-cyan-300/50 dark:focus:bg-slate-950 dark:focus:ring-cyan-300/10",
                 props.className,
             )}
         />
@@ -83,8 +90,11 @@ function Select(props: React.SelectHTMLAttributes<HTMLSelectElement>) {
         <select
             {...props}
             className={cn(
-                "h-12 rounded-xl border border-slate-800 bg-slate-950/70 px-4 text-sm text-slate-100 outline-none transition",
-                "focus:border-cyan-300/50 focus:bg-slate-950 focus:ring-4 focus:ring-cyan-300/10",
+                "h-12 rounded-xl border px-4 text-sm outline-none transition",
+                "border-slate-200 bg-white/80 text-slate-950",
+                "focus:border-cyan-600/50 focus:bg-white focus:ring-4 focus:ring-cyan-300/20",
+                "dark:border-slate-800 dark:bg-slate-950/70 dark:text-slate-100",
+                "dark:focus:border-cyan-300/50 dark:focus:bg-slate-950 dark:focus:ring-cyan-300/10",
                 props.className,
             )}
         />
@@ -96,8 +106,11 @@ function Textarea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
         <textarea
             {...props}
             className={cn(
-                "min-h-36 resize-none rounded-xl border border-slate-800 bg-slate-950/70 px-4 py-3 text-sm leading-6 text-slate-100 outline-none transition",
-                "placeholder:text-slate-600 focus:border-cyan-300/50 focus:bg-slate-950 focus:ring-4 focus:ring-cyan-300/10",
+                "min-h-36 resize-none rounded-xl border px-4 py-3 text-sm leading-6 outline-none transition",
+                "border-slate-200 bg-white/80 text-slate-950 placeholder:text-slate-400",
+                "focus:border-cyan-600/50 focus:bg-white focus:ring-4 focus:ring-cyan-300/20",
+                "dark:border-slate-800 dark:bg-slate-950/70 dark:text-slate-100 dark:placeholder:text-slate-600",
+                "dark:focus:border-cyan-300/50 dark:focus:bg-slate-950 dark:focus:ring-cyan-300/10",
                 props.className,
             )}
         />
@@ -123,15 +136,16 @@ function ContactForm() {
 
     return (
         <GlowCard className="p-6 lg:p-8">
-            <div className="mb-6 border-b border-slate-800 pb-5">
+            <div className="mb-6 border-b border-slate-200 pb-5 dark:border-slate-800">
                 <div className="flex items-center gap-3">
-                    <Sparkles className="h-5 w-5 text-cyan-300" />
-                    <p className="text-sm font-semibold text-slate-100">
+                    <Sparkles className="h-5 w-5 text-cyan-600 dark:text-cyan-300" />
+
+                    <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
                         Solicitar uma conversa
                     </p>
                 </div>
 
-                <p className="mt-3 text-sm leading-6 text-slate-400">
+                <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
                     Conte um pouco sobre o fluxo que você gostaria de analisar.
                     A ideia é começar simples: um fluxo crítico, dados históricos e
                     uma leitura comportamental.
@@ -235,7 +249,7 @@ function ContactForm() {
                     <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                 </button>
 
-                <p className="text-xs leading-5 text-slate-500">
+                <p className="text-xs leading-5 text-slate-500 dark:text-slate-500">
                     Ao enviar, você compartilha essas informações para avaliarmos
                     se faz sentido rodar uma leitura inicial do seu fluxo.
                 </p>
@@ -273,22 +287,23 @@ function InfoPanel() {
     ];
 
     return (
-        <div className="grid gap-4 grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {items.map((item) => {
                 const Icon = item.icon;
 
                 return (
                     <GlowCard key={item.title} className="p-5">
                         <div className="flex gap-4">
-                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-cyan-300/10 text-cyan-300">
+                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-cyan-300/10 text-cyan-600 dark:text-cyan-300">
                                 <Icon className="h-5 w-5" />
                             </div>
 
                             <div>
-                                <h3 className="font-semibold text-slate-100">
+                                <h3 className="font-semibold text-slate-900 dark:text-slate-100">
                                     {item.title}
                                 </h3>
-                                <p className="mt-2 text-sm leading-6 text-slate-400">
+
+                                <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">
                                     {item.description}
                                 </p>
                             </div>
@@ -302,74 +317,66 @@ function InfoPanel() {
 
 export default function FaleConoscoPage() {
     return (
-        <main className="min-h-screen overflow-x-hidden bg-[#020b12] text-slate-100">
-            <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(34,211,238,0.12),transparent_28%),radial-gradient(circle_at_80%_0%,rgba(14,165,233,0.10),transparent_28%),linear-gradient(180deg,#020b12_0%,#020812_55%,#020b12_100%)]" />
-            <div className="pointer-events-none fixed inset-0 opacity-[0.06] [background-image:linear-gradient(rgba(255,255,255,.7)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.7)_1px,transparent_1px)] [background-size:44px_44px]" />
-
-            <div className="relative  mx-auto py-6">
-                <div className="px-5 sm:px-8 lg:px-10">
-                    <Header />
-                </div>
-
-                <section className="mx-auto grid gap-10 px-5 py-10 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-10 lg:py-14">
-                    <div>
-                        <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/15 bg-cyan-300/5 px-3 text-xs text-slate-300">
-                            <MessageSquare className="h-3.5 w-3.5 text-cyan-300" />
-                            Fale conosco
-                        </div>
-
-                        <h1 className="mt-6 max-w-2xl text-5xl font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl">
-                            Vamos aplicar uma leitura Ohrly em um fluxo real seu?
-                        </h1>
-
-                        <p className="mt-6 max-w-xl text-base leading-7 text-slate-300 sm:text-lg">
-                            Conte qual fluxo você quer entender. A partir disso, podemos
-                            avaliar se faz sentido rodar um piloto simples com dados
-                            históricos para identificar perda de consistência, pressão de
-                            recuperação e contextos afetados.
-                        </p>
-
-                        <div className="mt-8 grid gap-3 text-sm text-slate-300">
-                            <p className="flex items-center gap-3">
-                                <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-                                Ideal para testar 1 fluxo crítico.
-                            </p>
-                            <p className="flex items-center gap-3">
-                                <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-                                Pode começar com exportação ou CSV.
-                            </p>
-                            <p className="flex items-center gap-3">
-                                <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-                                Foco em leitura operacional, não em dashboard genérico.
-                            </p>
-                        </div>
-
-                        <div className="mt-8 rounded-2xl border border-cyan-300/15 bg-slate-950/60 p-5">
-                            <div className="flex items-center gap-3">
-                                <Mail className="h-5 w-5 text-cyan-300" />
-                                <p className="text-sm font-medium text-slate-100">
-                                    Prefere e-mail direto?
-                                </p>
-                            </div>
-
-                            <a
-                                href="mailto:contato@ohrly.com.br"
-                                className="mt-3 inline-flex text-sm text-cyan-300 transition hover:text-cyan-200"
-                            >
-                                taraujo@ohrly.com.br
-                            </a>
-                        </div>
+        <OhrlyPageShell>
+            <section className="mx-auto grid gap-10 px-5 py-10 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-10 lg:py-14">
+                <div>
+                    <div className="inline-flex items-center gap-2 rounded-full border border-cyan-700/15 bg-cyan-50 px-3 py-1 text-xs text-slate-600 dark:border-cyan-300/15 dark:bg-cyan-300/5 dark:text-slate-300">
+                        <MessageSquare className="h-3.5 w-3.5 text-cyan-600 dark:text-cyan-300" />
+                        Fale conosco
                     </div>
 
-                    <ContactForm />
-                </section>
+                    <h1 className="mt-6 max-w-2xl text-5xl font-semibold leading-[1.05] tracking-tight text-slate-950 sm:text-6xl dark:text-white">
+                        Vamos aplicar uma leitura Ohrly em um fluxo real seu?
+                    </h1>
 
-                <section className="mx-auto px-5 pb-16 sm:px-8 lg:px-10">
-                    <InfoPanel />
-                </section>
+                    <p className="mt-6 max-w-xl text-base leading-7 text-slate-600 sm:text-lg dark:text-slate-300">
+                        Conte qual fluxo você quer entender. A partir disso, podemos
+                        avaliar se faz sentido rodar um piloto simples com dados
+                        históricos para identificar perda de consistência, pressão de
+                        recuperação e contextos afetados.
+                    </p>
 
-                <Footer />
-            </div>
-        </main>
+                    <div className="mt-8 grid gap-3 text-sm text-slate-600 dark:text-slate-300">
+                        <p className="flex items-center gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-emerald-500 dark:text-emerald-400" />
+                            Ideal para testar 1 fluxo crítico.
+                        </p>
+
+                        <p className="flex items-center gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-emerald-500 dark:text-emerald-400" />
+                            Pode começar com exportação ou CSV.
+                        </p>
+
+                        <p className="flex items-center gap-3">
+                            <CheckCircle2 className="h-5 w-5 text-emerald-500 dark:text-emerald-400" />
+                            Foco em leitura operacional, não em dashboard genérico.
+                        </p>
+                    </div>
+
+                    <div className="mt-8 rounded-2xl border border-slate-200 bg-white/70 p-5 shadow-sm shadow-slate-200/60 dark:border-cyan-300/15 dark:bg-slate-950/60 dark:shadow-none">
+                        <div className="flex items-center gap-3">
+                            <Mail className="h-5 w-5 text-cyan-600 dark:text-cyan-300" />
+
+                            <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
+                                Prefere e-mail direto?
+                            </p>
+                        </div>
+
+                        <a
+                            href="mailto:contato@ohrly.com.br"
+                            className="mt-3 inline-flex text-sm text-cyan-600 transition hover:text-cyan-700 dark:text-cyan-300 dark:hover:text-cyan-200"
+                        >
+                            taraujo@ohrly.com.br
+                        </a>
+                    </div>
+                </div>
+
+                <ContactForm />
+            </section>
+
+            <section className="mx-auto px-5 pb-16 sm:px-8 lg:px-10">
+                <InfoPanel />
+            </section>
+        </OhrlyPageShell>
     );
 }
