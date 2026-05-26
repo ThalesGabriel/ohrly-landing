@@ -180,7 +180,7 @@ function Pill({ children }: { children: React.ReactNode }) {
 function PrimaryButton({ children }: { children: React.ReactNode }) {
     return (
         <Link
-            href="/contact"
+            href="/demo"
             className="group inline-flex h-14 items-center justify-center gap-3 rounded-xl bg-cyan-300 px-6 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-500/20 transition hover:-translate-y-0.5 hover:bg-cyan-200"
         >
             {children}

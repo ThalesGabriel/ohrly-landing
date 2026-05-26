@@ -8,7 +8,7 @@
     "description": "A behavioral reading layer to understand when digital flows are still working, but have already started losing consistency.",
     "product": "Product",
     "contact": "Contact",
-    "analyzeFlow": "Analyze a flow",
+    "analyzeFlow": "Simulate a flow",
     "rights": "All rights reserved.",
     "tagline": "Ohrly does not eliminate incidents. It eliminates the silence before them."
   },
@@ -17,7 +17,7 @@
       "titleStart": "Discover where your digital flows start getting worse",
       "titleHighlight": "before the impact becomes consolidated",
       "description": "Analyze checkout, payment, delivery, support or onboarding and receive a clear reading of what changed, how long ago it changed and where your operation may be losing consistency.",
-      "primaryCta": "Analyze a flow",
+      "primaryCta": "Simulate a flow",
       "secondaryCta": "View demo",
       "note": "Start with 1 critical flow. No integration required."
     },
@@ -242,7 +242,7 @@
     "cta": {
       "title": "Want to discover whether one of your flows has already started getting worse?",
       "description": "Run a simple pilot with 1 critical flow.",
-      "button": "Analyze a flow",
+      "button": "Simulate a flow",
       "note": "You do not need to change your architecture to get started."
     }
   },
@@ -434,10 +434,10 @@
       "realData": "real data sent"
     },
     "cta": {
-      "eyebrow": "Liked the synthetic reading?",
-      "title": "The next step is to apply the reading to a real flow.",
-      "description": "We can start with one critical flow, a simple export, or a historical CSV. The simulation helps align what to observe before asking for sensitive data.",
-      "button": "I want to simulate my real flow"
+      "eyebrow": "Liked the demo reading?",
+      "title": "The next step is to apply the reading to a synthetic flow.",
+      "description": "We can start with one critical flow. Before we can reach out to real, and sensitive, data, we can create a synthetic one just for you.",
+      "button": "I want to create a synthetic flow"
     },
     "options": {
       "persistence": {

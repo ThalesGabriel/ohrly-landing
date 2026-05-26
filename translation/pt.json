@@ -17,7 +17,7 @@
       "titleStart": "Descubra onde seus fluxos digitais pioram",
       "titleHighlight": "antes do impacto se consolidar",
       "description": "Analise checkout, pagamento, entrega, atendimento ou onboarding e receba uma leitura clara sobre o que mudou, há quanto tempo mudou e onde sua operação pode estar perdendo consistência.",
-      "primaryCta": "Quero analisar um fluxo",
+      "primaryCta": "Quero simular um fluxo",
       "secondaryCta": "Ver demonstração",
       "note": "Comece com 1 fluxo crítico. Não precisa de integração."
     },
@@ -434,10 +434,10 @@
       "realData": "dados reais enviados"
     },
     "cta": {
-      "eyebrow": "Gostou da leitura sintética?",
-      "title": "O próximo passo é aplicar a leitura em um fluxo real.",
-      "description": "Podemos começar com 1 fluxo crítico, uma exportação simples ou CSV histórico. A simulação ajuda a alinhar o que observar antes de pedir dados sensíveis.",
-      "button": "Quero simular meu fluxo real"
+      "eyebrow": "Gostou da leitura demo?",
+      "title": "O próximo passo é aplicar a leitura em um fluxo sintético.",
+      "description": "Podemos começar com um fluxo crítico. Antes de termos acesso a dados reais e sensíveis, podemos criar um fluxo sintético especialmente para você.",
+      "button": "Quero simular um fluxo sintético"
     },
     "options": {
       "persistence": {
