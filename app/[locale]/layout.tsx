@@ -21,26 +21,31 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.ohrly.com.br"),
 
   title: {
-    default: "Ohrly | Observabilidade comportamental para fluxos digitais",
+    default: "Ohrly | Behavioral observability for digital flows",
     template: "%s | Ohrly",
   },
 
   description:
-    "A Ohrly ajuda empresas a identificar quando fluxos digitais começam a perder consistência antes que a degradação vire incidente, retrabalho ou perda operacional.",
+    "Ohrly helps teams identify when digital flows start losing efficiency before silent degradation becomes incidents, rework, operational cost, or revenue impact.",
 
   applicationName: "Ohrly",
 
   keywords: [
-    "observabilidade comportamental",
-    "fluxos digitais",
-    "degradação operacional",
-    "operação digital",
-    "chatbot",
-    "WhatsApp",
-    "atendimento digital",
-    "monitoramento de fluxos",
-    "incidentes",
-    "eficiência operacional",
+    "behavioral observability",
+    "digital flows",
+    "operational degradation",
+    "digital operations",
+    "synthetic data",
+    "checkout monitoring",
+    "payment flows",
+    "customer support automation",
+    "chatbot operations",
+    "WhatsApp automation",
+    "flow monitoring",
+    "operational efficiency",
+    "incident prevention",
+    "workflow analytics",
+    "business observability",
   ],
 
   authors: [{ name: "Ohrly" }],
@@ -49,31 +54,36 @@ export const metadata: Metadata = {
 
   alternates: {
     canonical: "/",
+    languages: {
+      en: "/en",
+      pt: "/pt",
+    },
   },
 
   openGraph: {
-    title: "Ohrly | Observabilidade comportamental para fluxos digitais",
+    title: "Ohrly | Behavioral observability for digital flows",
     description:
-      "Identifique quando um fluxo digital ainda funciona, mas já começou a acumular atraso, retrabalho, transbordo ou perda de conversão.",
+      "Identify when a digital flow still works, but is already accumulating delays, rework, handoffs, retries, or conversion loss.",
     url: "/",
     siteName: "Ohrly",
-    locale: "pt_BR",
+    locale: "en_US",
+    alternateLocale: ["pt_BR"],
     type: "website",
     images: [
       {
         url: "/images/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Ohrly — Observabilidade comportamental para fluxos digitais",
+        alt: "Ohrly — Behavioral observability for digital flows",
       },
     ],
   },
 
   twitter: {
     card: "summary_large_image",
-    title: "Ohrly | Observabilidade comportamental para fluxos digitais",
+    title: "Ohrly | Behavioral observability for digital flows",
     description:
-      "Transforme sinais silenciosos de degradação em janelas de decisão operacional.",
+      "Turn silent degradation signals into operational decision windows before impact becomes obvious.",
     images: ["/images/og-image.png"],
   },
 
@@ -96,11 +106,15 @@ export const metadata: Metadata = {
       { url: "/favicon.ico" },
       { url: "/favicon.png", type: "image/png", sizes: "32x32" },
     ],
-    apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180" },
-    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
 };
+
+function getHtmlLang(locale: string) {
+  if (locale === "pt") return "pt-BR";
+  if (locale === "en") return "en";
+  return locale;
+}
 
 export default async function RootLayout({
   children,
@@ -117,7 +131,7 @@ export default async function RootLayout({
 
   return (
     <html
-      lang="pt-BR"
+      lang={getHtmlLang(locale)}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
