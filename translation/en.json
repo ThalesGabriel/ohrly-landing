@@ -1,562 +1,636 @@
 {
-  "nav": {
-    "home": "Home",
-    "demo": "Demo",
-    "contact": "Contact"
-  },
-  "footer": {
-    "description": "A behavioral reading layer to understand when digital flows are still working, but have already started losing consistency.",
-    "product": "Product",
-    "contact": "Contact",
-    "analyzeFlow": "Simulate a flow",
-    "rights": "All rights reserved.",
-    "tagline": "Ohrly does not eliminate incidents. It eliminates the silence before them."
-  },
-  "home": {
-    "hero": {
-      "titleStart": "Discover where your digital flows start getting worse",
-      "titleHighlight": "before the impact becomes consolidated",
-      "description": "Analyze checkout, payment, delivery, support or onboarding and receive a clear reading of what changed, how long ago it changed and where your operation may be losing consistency.",
-      "primaryCta": "Simulate a flow",
-      "secondaryCta": "View demo",
-      "note": "Start with 1 critical flow. No integration required."
+    "nav": {
+        "home": "Home",
+        "simulations": "Simulations",
+        "request": "Request",
+        "reports": "Reports"
     },
-    "readingExample": {
-      "badge": "Ohrly reading example",
-      "generated": "Diagnosis generated now",
-      "title": "Payment flow",
-      "state": "Sustained degradation",
-      "description": "The payment flow started losing consistency 4 days ago. Approval time is 2.8x above the expected baseline for Pix mobile on business days. The behavior exceeded the natural recovery cycle and started propagating to new payment signals.",
-      "evolution": "State evolution",
-      "healthy": "Healthy",
-      "attention": "Attention",
-      "degradation": "Degradation",
-      "healthyDescription": "Behavior within expected range",
-      "attentionDescription": "Persistent deviation starting",
-      "degradationDescription": "Sustained loss of consistency",
-      "sevenDaysAgo": "7 days ago",
-      "fiveDaysAgo": "5 days ago",
-      "threeDaysAgo": "3 days ago",
-      "today": "Today",
-      "timelineNote": "The flow moved from normal variation into attention and remains in sustained degradation for 4 days."
-    },
-    "statusCards": {
-      "stateLabel": "State",
-      "stateValue": "Sustained degradation",
-      "persistenceLabel": "Persistence",
-      "persistenceValue": "4 days",
-      "pressureLabel": "Recovery pressure",
-      "pressureValue": "High",
-      "contextLabel": "Affected context",
-      "contextValue": "Pix + Mobile",
-      "secondarySignalLabel": "Secondary signal",
-      "secondarySignalValue": "Retries increasing",
-      "exposedValueLabel": "Exposed value",
-      "exposedValueValue": "R$ 184k"
-    },
-    "howItWorks": {
-      "step1Title": "Choose a critical flow",
-      "step1Description": "Checkout, payment, delivery, support, onboarding or another important flow.",
-      "step2Title": "Send historical data",
-      "step2Description": "You can start with a spreadsheet, export or existing events.",
-      "step3Title": "Receive an operational reading",
-      "step3Description": "Ohrly shows where the flow moved away from expected behavior, how long ago and what deserves attention."
-    },
-    "compactReport": {
-      "title": "From a raw CSV to a decision reading.",
-      "description": "We used a synthetic retention dataset for a boleto flow to simulate how Ohrly interprets a critical flow: first it understands the file, then applies a behavioral contract and finally generates an operational reading.",
-      "inputTitle": "Support and retention dataset for boleto",
-      "inputSubtitle": "1. What went in",
-      "configTitle": "Flow behavioral contract",
-      "configSubtitle": "2. How Ohrly interpreted it",
-      "outputTitle": "Pressure with propagation",
-      "outputSubtitle": "3. What came out",
-      "highConfidence": "High confidence",
-      "actionsSubtitle": "4. What to do with it",
-      "actionsTitle": "Suggested actions for prioritization",
-      "investigationPlan": "Investigation plan",
-      "ohrlyRole": "Ohrly does not decide for the team. It organizes the investigation: shows where pressure appeared, which signals are more reliable and which hypotheses deserve priority in the next conversation.",
-      "mainEpisode": {
-        "title": "Main episode",
-        "days": "5 days",
-        "description": "1.047 exposed events expostos, RPI 68.93 and 60% of consumed decision window."
-      },
-      "finalReading": "Final reading",
-      "waitingIsNotNeutral": "Waiting is no longer neutral.",
-      "finalReadingDescription": "The degradation was not isolated: it appeared in retention, handoff, complaint, boleto failure, resolution and human time.",
-      "whatItMeans": "Given this context, what does it mean?",
-      "meaningTitle": "The flow did not show only an isolated fluctuation. It accumulated operational pressure across multiple signals, with propagation and high statistical confidence.",
-      "meaningDescription": "In a call, this helps the team move from “I think it got worse” to an evidence-based conversation: what changed, how long ago, where it concentrated and how many events went through degradation periods.",
-      "inputStats": {
-        "availableEvents": {
-          "label": "Available events",
-          "value": "59,863",
-          "description": "conversations in the analyzed dataset"
+    "syntheticRequest": {
+        "meta": {
+            "formspreeSubject": "New synthetic interpretation request - Ohrly"
         },
-        "fileColumns": {
-          "label": "File columns",
-          "value": "18",
-          "description": "raw fields available in the CSV"
+        "hero": {
+            "badge": "Guided request",
+            "title": "Request an interpretation with synthetic data.",
+            "description": "Describe your real flow in a simple way and receive a synthetic interpretation and a full report later, directly in your email.",
+            "securityNote": "No sensitive data in the first contact."
         },
-        "mappedFields": {
-          "label": "Mapped fields",
-          "value": "18",
-          "description": "entity, context, metrics and impact signals"
+        "steps": {
+            "describeFlow": "Describe the flow",
+            "indicateSignals": "Indicate the signals",
+            "receiveReport": "Receive the report"
         },
-        "analyzedPeriod": {
-          "label": "Analyzed period",
-          "value": "54 days",
-          "description": "from 01/06/2025 to 02/28/2025"
+        "signals": {
+            "approvalTimeGrowth": "Approval time increasing",
+            "retryGrowth": "Retry increase",
+            "completionDrop": "Completion drop",
+            "humanHandoffGrowth": "More human handoff",
+            "unresolvedMessages": "Unresolved messages",
+            "slowRecovery": "Slower recovery",
+            "intermediateQueue": "Buildup in an intermediate step"
+        },
+        "defaultFields": {
+            "orderId": {
+                "name": "order_id",
+                "role": "Identify each order in the flow"
+            },
+            "paymentApprovedAt": {
+                "name": "payment_approved_at",
+                "role": "Measure time to approval"
+            },
+            "paymentMethod": {
+                "name": "payment_method",
+                "role": "Compare behavior by context"
+            }
+        },
+        "form": {
+            "title": "Tell us a bit about the flow",
+            "description": "You do not need to send a real dataset. Describe the flow, the expected signals and the fields that would help the simulation.",
+            "flowName": "Flow name",
+            "flowNamePlaceholder": "Ex.: Checkout with slow approval",
+            "descriptionLabel": "Description",
+            "descriptionPlaceholder": "Describe the flow, the main steps and what happens today.",
+            "affectedContext": "Affected context",
+            "affectedContextPlaceholder": "Ex.: Pix + Mobile, WhatsApp + new customers",
+            "simulationGoal": "Simulation goal",
+            "simulationGoalPlaceholder": "What decision do you expect this reading to support? Ex.: understanding whether it is worth investigating Pix approval on mobile before requesting real data.",
+            "signalsTitle": "Which signals would you like to simulate?",
+            "signalsDescription": "Select the signals that make sense for your flow.",
+            "fieldsTitle": "Fields that may be important",
+            "fieldsDescription": "List the main fields that help explain the behavior of the flow and briefly describe the role of each one.",
+            "fieldColumn": "Field",
+            "fieldRoleColumn": "Role in the simulation",
+            "fieldNamePlaceholder": "Ex.: order_id",
+            "fieldRolePlaceholder": "Ex.: Identify each order in the flow",
+            "removeFieldAria": "Remove field",
+            "addField": "Add field",
+            "emailSectionTitle": "Where should we send the report?",
+            "email": "Email",
+            "emailPlaceholder": "you@company.com",
+            "syntheticDisclaimer": "This request uses synthetic data generated by Ohrly. We do not analyze or diagnose your real operation in this first contact.",
+            "successMessage": "Request sent successfully. We will prepare the synthetic interpretation and send the report by email.",
+            "errorMessage": "We could not send your request right now. Please try again in a few moments.",
+            "submit": "Request interpretation",
+            "submitting": "Sending...",
+            "viewExample": "View ready example"
+        },
+        "sidePanel": {
+            "title": "What you will receive",
+            "benefits": {
+                "syntheticReading": {
+                    "title": "Synthetic flow reading",
+                    "description": "A clear analysis of the simulated behavior of your flow."
+                },
+                "observableSignals": {
+                    "title": "Observable signals and affected context",
+                    "description": "The most relevant signals and the contexts that most influence the result."
+                },
+                "operationalState": {
+                    "title": "Operational state hypothesis",
+                    "description": "An objective hypothesis about the operational state based on the signals."
+                },
+                "emailReport": {
+                    "title": "Report sent by email",
+                    "description": "A complete report ready to share with your team."
+                }
+            },
+            "idealTitle": "Ideal to start without a real dataset",
+            "idealItems": {
+                "describeFlow": "You describe the flow",
+                "generateSyntheticData": "Ohrly generates synthetic data",
+                "receiveByEmail": "You receive the reading by email"
+            }
+        },
+        "outputPreview": {
+            "label": "Output example",
+            "title": "Checkout with slow approval",
+            "description": "The simulation suggests operational attention in Pix + Mobile, with increasing recovery pressure.",
+            "stateLabel": "State",
+            "stateValue": "Attention",
+            "rpiLabel": "RPI",
+            "contextLabel": "Context",
+            "contextValue": "Pix + Mobile",
+            "normal": "Normal",
+            "attention": "Attention",
+            "degradation": "Degradation"
+        },
+        "process": {
+            "items": {
+                "youDescribe": {
+                    "title": "You describe:",
+                    "description": "the flow and the context"
+                },
+                "ohrlySimulates": {
+                    "title": "Ohrly simulates:",
+                    "description": "behavior and signals"
+                },
+                "youReceive": {
+                    "title": "You receive:",
+                    "description": "a decision-oriented reading"
+                }
+            },
+            "closing": "Our goal is to make the problem legible before asking for real data."
         }
-      },
-      "configStats": {
-        "contexts": {
-          "label": "Contexts",
-          "value": "3",
-          "description": "intent, subject_tag and channel"
+    },
+    "home": {
+        "hero": {
+            "badge": "Ready-made examples of digital flows",
+            "title": "Digital flows can create loss before they look broken.",
+            "description": "Checkout, payment, support and delivery can keep working while accumulating noise, bottlenecks and efficiency loss.",
+            "supportingText": "Ohrly shows these signals in a simple reading before the impact becomes complaints, rework or a clear drop in results.",
+            "cta": "View ready examples",
+            "securityNote": "No integration. No real data in the first contact.",
+            "previewState": "Operational attention",
+            "previewRpiLabel": "RPI",
+            "previewContextLabel": "Context",
+            "previewContext": "Pix + Mobile"
         },
-        "configuredMetrics": {
-          "label": "Configured metrics",
-          "value": "8",
-          "description": "retention, resolution, failure, handoff, complaint and time metrics"
+        "audience": {
+            "title": "This may be for you if...",
+            "description": "you have several flows that evolve constantly and want them to stay consistent throughout those changes",
+            "items": {
+                "checkout": "Checkout",
+                "payment": "Payment",
+                "support": "Support",
+                "delivery": "Delivery"
+            }
         },
-        "baseline": {
-          "label": "Baseline",
-          "value": "7 windows",
-          "description": "contextual rolling baseline with hierarchical fallback"
+        "examples": {
+            "title": "Choose an example to explore",
+            "description": "Start with a ready-made reading. Then adapt it to your own flow.",
+            "selectedReading": "Example reading",
+            "selectedButton": "Selected reading",
+            "viewReading": "View reading",
+            "adaptExample": "Adapt this example",
+            "whyItMatters": "Why it matters:",
+            "rpiComposition": {
+                "title": "RPI composition",
+                "description": "The index combines signals that help estimate the flow's recovery pressure.",
+                "tooltip": "RPI is not an incident probability. It estimates how much pressure the flow is accumulating to return to expected behavior.",
+                "persistence": {
+                    "label": "Persistence",
+                    "tooltip": "Measures how long the signal remained outside expected behavior. The longer it persists, the less it looks like noise."
+                },
+                "magnitude": {
+                    "label": "Magnitude",
+                    "tooltip": "Measures how far behavior moved away from what was expected. A small persistent deviation has a different weight than a very intense deviation."
+                },
+                "propagation": {
+                    "label": "Propagation",
+                    "tooltip": "Measures whether the signal is isolated or starting to affect other steps, metrics or contexts in the flow."
+                }
+            },
+            "metrics": {
+                "state": "State",
+                "recoveryPressure": "Recovery pressure",
+                "context": "Context",
+                "stateTooltip": "When a flow still works but already shows persistent signs of worsening that deserve attention.",
+                "rpiTooltip": "Index that estimates how much pressure the flow is accumulating to return to expected behavior."
+            },
+            "items": {
+                "checkoutSlowApproval": {
+                    "title": "Checkout with slow approval",
+                    "domain": "Synthetic e-commerce example",
+                    "description": "Payment keeps working, but confirmation time starts to increase.",
+                    "summary": "The flow still works, but shows persistent operational noise in the Pix + Mobile context.",
+                    "context": "Pix + Mobile",
+                    "state": "Operational attention",
+                    "persistenceLabel": "4 days",
+                    "persistenceLevel": "High",
+                    "persistenceDescription": "The signal persisted long enough to stop looking like a one-off fluctuation.",
+                    "magnitudeLabel": "1.8x",
+                    "magnitudeLevel": "Moderate",
+                    "magnitudeDescription": "Approval time stayed above the expected behavior for this context.",
+                    "propagationLabel": "Initial",
+                    "propagationLevel": "Low",
+                    "propagationDescription": "The signal is still concentrated, but starts appearing in payment retries.",
+                    "whyItMatters": "When this kind of signal persists, the operation can start accumulating retries, abandonment, rework or efficiency loss before any explicit incident."
+                },
+                "botHandoffGrowth": {
+                    "title": "Bot with growing handoff",
+                    "domain": "Synthetic support example",
+                    "description": "The automated support still responds, but more sessions are sent to humans.",
+                    "summary": "The bot keeps responding, but shows a persistent increase in human transfer in the WhatsApp + new customers context.",
+                    "context": "WhatsApp + new customers",
+                    "state": "Operational attention",
+                    "persistenceLabel": "5 days",
+                    "persistenceLevel": "High",
+                    "persistenceDescription": "The handoff increase appeared repeatedly for several consecutive days.",
+                    "magnitudeLabel": "+22%",
+                    "magnitudeLevel": "Moderate",
+                    "magnitudeDescription": "The transfer-to-human rate stayed above expected behavior.",
+                    "propagationLabel": "Initial",
+                    "propagationLevel": "Moderate",
+                    "propagationDescription": "The handoff increase starts affecting resolution time and the human queue.",
+                    "whyItMatters": "When handoff grows silently, the human operation can start absorbing cost before SLA or total volume make the problem obvious."
+                },
+                "deliverySlowRecovery": {
+                    "title": "Delivery with slow recovery",
+                    "domain": "Synthetic logistics example",
+                    "description": "Orders are still delivered, but the flow takes longer to return to normal.",
+                    "summary": "The operation still completes deliveries, but shows slow recovery in the mid-size sellers + Northeast context.",
+                    "context": "Mid-size sellers + Northeast",
+                    "state": "Sustained degradation",
+                    "persistenceLabel": "7 days",
+                    "persistenceLevel": "Very high",
+                    "persistenceDescription": "Behavior stayed outside the expected range longer than the natural recovery cycle.",
+                    "magnitudeLabel": "2.4x",
+                    "magnitudeLevel": "High",
+                    "magnitudeDescription": "Recovery time stayed far above the expected pattern for this delivery type.",
+                    "propagationLabel": "Spreading",
+                    "propagationLevel": "High",
+                    "propagationDescription": "The delay starts affecting at-risk orders, operational queues and delivery predictability.",
+                    "whyItMatters": "When recovery slows down, the operation can normalize delays, accumulate at-risk orders and lose the ability to return to expected behavior."
+                },
+                "billingRecurringFailures": {
+                    "title": "Billing with recurring failures",
+                    "domain": "Synthetic B2B SaaS example",
+                    "description": "Charges still run, but recovery becomes unstable.",
+                    "summary": "Charges continue to be processed, but recovery after failures shows instability in the Pro plan + mid-market accounts context.",
+                    "context": "Pro plan + mid-market accounts",
+                    "state": "Operational attention",
+                    "persistenceLabel": "3 days",
+                    "persistenceLevel": "Moderate",
+                    "persistenceDescription": "Failures repeat across some cycles, but do not yet dominate the flow behavior.",
+                    "magnitudeLabel": "+18%",
+                    "magnitudeLevel": "Moderate",
+                    "magnitudeDescription": "Retry failures increased compared to expected behavior.",
+                    "propagationLabel": "Localized",
+                    "propagationLevel": "Low",
+                    "propagationDescription": "The issue still seems concentrated in the billing retry flow.",
+                    "whyItMatters": "When billing failures become recurring, the impact may first appear as recovery effort, at-risk accounts and operational efficiency loss."
+                }
+            }
         },
-        "minimumVolume": {
-          "label": "Minimum volume",
-          "value": "30",
-          "description": "events per window for analysis"
+        "comparison": {
+            "badge": "Complementary to what you already monitor",
+            "title": "Not another infrastructure dashboard.",
+            "description": "Ohrly does not try to replace APM, BI or dashboards. It fits in the space between technical signals and operational decisions.",
+            "apm": {
+                "eyebrow": "APM",
+                "title": "Sees infrastructure",
+                "description": "Service, API, latency, error and availability."
+            },
+            "bi": {
+                "eyebrow": "BI",
+                "title": "Sees the result",
+                "description": "Conversion, revenue, volume, target and final indicators."
+            },
+            "ohrly": {
+                "eyebrow": "Ohrly",
+                "title": "Reads flow behavior",
+                "description": "Shows whether checkout, payment, support or delivery are still working well for the business.",
+                "questionLabel": "Question it answers",
+                "question": "“Is the flow still working as it should?”"
+            },
+            "closing": {
+                "part1": "The question is not only",
+                "systemOnline": "“is the system up?”",
+                "part2": "or",
+                "resultDropped": "“did the result drop?”",
+                "part3": "It is",
+                "flowHealthy": "“is the flow still working well for the business?”"
+            }
         }
-      },
-      "outputStats": {
-        "detectedEpisodes": {
-          "label": "Detected episodes",
-          "value": "44",
-          "description": "recovery pressure episodes identified"
+    },
+    "guidedDemo": {
+        "hero": {
+            "badge": "Guided demo",
+            "title": "See a ready-made reading before configuring anything.",
+            "description": "Choose a flow example, make a simple adjustment and see how Ohrly interprets noise and bottlenecks before the impact becomes obvious.",
+            "securityNote": "No integration. No real data in the first contact."
         },
-        "highPressure": {
-          "label": "High pressure",
-          "value": "32",
-          "description": "episodes reached high pressure"
+        "nav": {
+            "howItWorks": "How it works",
+            "examples": "Examples",
+            "observability": "Observability",
+            "login": "Login",
+            "enterLab": "Enter the Lab"
         },
-        "degradedEvents": {
-          "label": "Degraded events",
-          "value": "39,096",
-          "description": "events in degraded episodes"
+        "steps": {
+            "chooseExample": "Choose an example",
+            "quickAdjust": "Adjust quickly",
+            "seeReading": "See the reading"
         },
-        "highPressureEvents": {
-          "label": "Events in high pressure",
-          "value": "33,897",
-          "description": "events in high or critical pressure episodes"
+        "sections": {
+            "chooseExample": "1. Choose an example",
+            "quickAdjust": "2. Adjust quickly",
+            "seeReading": "3. See the reading"
+        },
+        "controls": {
+            "duration": "Duration",
+            "recovery": "Recovery",
+            "propagation": "Propagation",
+            "durationOptions": {
+                "twoDays": "2 days",
+                "fourDays": "4 days",
+                "sevenDays": "7 days"
+            },
+            "recoveryOptions": {
+                "normal": "Normal",
+                "slow": "Slow",
+                "fragile": "Fragile"
+            },
+            "propagationOptions": {
+                "localized": "Localized",
+                "initial": "Initial",
+                "spreading": "Spreading"
+            }
+        },
+        "reading": {
+            "selectedExample": "Selected example",
+            "summaryPrefix": "The flow still works, but shows",
+            "metrics": {
+                "state": "State",
+                "recoveryPressure": "Recovery pressure",
+                "context": "Context"
+            },
+            "rpiHelp": "Index that estimates how much pressure the flow is accumulating to return to expected behavior.",
+            "timeline": {
+                "normal": "Normal",
+                "attention": "Attention",
+                "degradation": "Degradation"
+            },
+            "whyItMatters": "Why it matters:",
+            "observableSignals": "Observable signals",
+            "adaptExample": "Adapt this example"
+        },
+        "readingStates": {
+            "normal": "Normal",
+            "attention": "Attention",
+            "degradation": "Degradation"
+        },
+        "examples": {
+            "checkout": {
+                "title": "Checkout with slow approval",
+                "shortDescription": "Payment keeps working, but confirmation time starts to increase.",
+                "selectedContext": "Pix + Mobile",
+                "scenario": "persistent operational noise in the Pix + Mobile context",
+                "stateLabel": "Operational attention",
+                "stateHelp": "When a flow still works but already shows persistent signs of worsening that deserve attention.",
+                "whyItMatters": "When this kind of signal persists, the operation can start accumulating retries, abandonment, rework or efficiency loss before any explicit incident.",
+                "signals": {
+                    "approvalTime": "Time to approval",
+                    "retries": "Retries",
+                    "abandonment": "Abandonment",
+                    "exposedValue": "Exposed value"
+                }
+            },
+            "bot": {
+                "title": "Bot with growing handoff",
+                "shortDescription": "More sessions need human support.",
+                "selectedContext": "WhatsApp + new customers",
+                "scenario": "increasing handoff pressure on WhatsApp for new customers",
+                "stateLabel": "Operational attention",
+                "stateHelp": "When the automated flow still responds, but starts requiring more human support persistently.",
+                "whyItMatters": "This signal can increase support costs, pressure human queues and hide efficiency loss in the automated flow before any formal incident.",
+                "signals": {
+                    "handoff": "Handoff",
+                    "fallback": "Fallback",
+                    "resolutionTime": "Resolution time",
+                    "unresolvedSessions": "Unresolved sessions"
+                }
+            },
+            "delivery": {
+                "title": "Delivery with slow recovery",
+                "shortDescription": "Orders are still delivered, but the flow takes longer to return to normal.",
+                "selectedContext": "Mid-size sellers + Northeast",
+                "scenario": "slower recovery among mid-size sellers in the Northeast",
+                "stateLabel": "Likely degradation",
+                "stateHelp": "When the flow keeps running, but spends too much time outside expected behavior.",
+                "whyItMatters": "Delays that look isolated can start consuming the operation's recovery window, increasing support and reducing predictability for the customer.",
+                "signals": {
+                    "shippingTime": "Time to shipment",
+                    "delay": "Delay",
+                    "atRiskOrders": "At-risk orders",
+                    "exposedValue": "Exposed value"
+                }
+            },
+            "billing": {
+                "title": "Billing with recurring failures",
+                "shortDescription": "Billing recovery starts becoming unstable.",
+                "selectedContext": "Pro plan + mid-market accounts",
+                "scenario": "recurring recovery failures in mid-market Pro plan accounts",
+                "stateLabel": "Operational attention",
+                "stateHelp": "When recovery still works, but starts depending on more attempts and loses predictability.",
+                "whyItMatters": "Recurring billing failures may look small at first, but they accumulate revenue risk, manual effort and loss of trust in the recovery process.",
+                "signals": {
+                    "billingFailures": "Billing failures",
+                    "retries": "Retries",
+                    "timeToRecover": "Time to recover",
+                    "exposedRevenue": "Exposed revenue"
+                }
+            }
+        },
+        "comparison": {
+            "title": "Ohrly does not start with infrastructure. It starts with the flow.",
+            "apm": {
+                "title": "APM sees:",
+                "description": "service and errors"
+            },
+            "bi": {
+                "title": "BI sees:",
+                "description": "results"
+            },
+            "ohrly": {
+                "title": "Ohrly sees:",
+                "description": "the flow losing efficiency"
+            },
+            "closing": "The question is not only whether the system is up. It is whether the flow is still working well for the business."
         }
-      },
-      "priorities": {
-        "high": "High",
-        "medium": "Medium"
-      },
-      "actions": {
-        "compareOperationalChanges": {
-          "title": "Compare with operational changes",
-          "description": "Cross-check the highest-pressure periods with deployments, rule changes, campaigns or support changes."
-        },
-        "investigateMetricPropagation": {
-          "title": "Investigate propagation across metrics",
-          "description": "Check whether the retention drop appeared together with handoff, complaints, boleto failures or increased human handling time."
-        },
-        "prioritizeHighConfidenceSignals": {
-          "title": "Prioritize high-confidence signals",
-          "description": "Start with episodes with higher volume and statistical confidence before investigating weaker signals."
-        },
-        "trackRecurrence": {
-          "title": "Track recurrence",
-          "description": "Compare the highlighted episodes with previous occurrences to identify recurring degradation families."
+    },
+    "reports": {
+        "badge": "Public library",
+        "title": "Explore published interpretations.",
+        "description": "See requests transformed into synthetic readings and understand how different digital flows can generate noise, bottlenecks and efficiency loss before the impact becomes explicit.",
+        "searchPlaceholder": "Search by flow, domain or signal...",
+        "publishedCount": "More than 40 synthetic readings published",
+        "rpiPrefix": "RPI",
+        "publishedAt": "Published on {date}",
+        "viewReport": "View report",
+        "items": {
+            "retencaoBoletoConversacional": {
+                "title": "Retention in conversational boleto flow",
+                "domain": "Conversational support",
+                "summary": "The retention drop did not appear in isolation. It came together with boleto failures, human handoff, longer support time and complaints.",
+                "state": "Sustained degradation",
+                "context": "Chatbot + human support"
+            },
+            "checkoutAprovacaoLenta": {
+                "title": "Checkout with slow approval",
+                "domain": "E-commerce",
+                "summary": "Payment keeps working, but the time to confirmation starts increasing in the Pix + Mobile context.",
+                "state": "Operational attention",
+                "context": "Pix + Mobile"
+            }
         }
-      }
     },
-    "sharedReading": {
-      "title": "You already have data. What is missing is a shared reading.",
-      "engineering": "Engineering sees retries.",
-      "product": "Product sees conversion drops.",
-      "operations": "Operations sees queues growing.",
-      "business": "Business sees revenue oscillating.",
-      "description": "These signals often belong to the same problem, but appear separately. Ohrly connects them into a simple answer:",
-      "question": "Is this flow still healthy or has it started losing consistency?",
-      "youReceive": "You receive",
-      "readingTitleStart": "A",
-      "readingTitleHighlight": "behavioral",
-      "readingTitleEnd": "reading of your flow"
-    },
-    "dashboardComparison": {
-      "eyebrow": "Not another dashboard",
-      "title": "Ohrly looks at the flow, not only the system",
-      "description": "The system can remain up, with no critical error and within SLA. Even so, the behavior of the flow may already have started getting worse.",
-      "traditional": "Traditional tools",
-      "traditionalQuestion": "Did the system go down?",
-      "ohrly": "Ohrly",
-      "ohrlyQuestion": "Is the flow still working well?",
-      "generatedReading": "Generated reading",
-      "noIncident": "No incident detected.",
-      "flowDegraded": "The flow is still up, but has lost consistency for 4 days.",
-      "bottomDescription": "The difference is not seeing more charts. It is understanding when a flow is still working, but has already started generating more waiting time, retries, abandonment, fallback, human support and rework.",
-      "traditionalSignals": {
-        "serviceAvailable": "Service available",
-        "errorWithinLimit": "Error within limit",
-        "latencyAcceptable": "Acceptable latency",
-        "slaNotViolated": "SLA not violated"
-      },
-      "ohrlySignals": {
-        "retriesIncreasing": "Retries increasing",
-        "approvalSlower": "Approval getting slower",
-        "fallbackGrowing": "Fallback growing",
-        "exposedValueGrowing": "Exposed value increasing"
-      },
-      "statuses": {
-        "ok": "OK",
-        "attention": "attention",
-        "degrading": "degrading"
-      },
-      "connector": "but"
-    },
-    "readingItems": {
-      "whatChanged": "What changed",
-      "howLong": "How long ago it changed",
-      "where": "Where the problem is concentrated",
-      "noiseOrDegradation": "Whether it looks like noise or degradation",
-      "exposure": "Which operation or value is exposed",
-      "waitingCost": "Waiting may be getting expensive."
-    },
-    "personas": {
-      "title": "Who it is for",
-      "ecommerceTitle": "E-commerce",
-      "ecommerceDescription": "Understand where the purchase funnel loses consistency before revenue is impacted.",
-      "productTitle": "Product",
-      "productDescription": "See the real behavior of the flows that sustain the user experience.",
-      "engineeringTitle": "Engineering",
-      "engineeringDescription": "Prioritize problems that are already relevant in behavior, not only in the system.",
-      "operationsTitle": "Operations",
-      "operationsDescription": "Anticipate queues, delays and rework before they become explicit operational cost."
-    },
-    "cta": {
-      "title": "Want to discover whether one of your flows has already started getting worse?",
-      "description": "Run a simple pilot with 1 critical flow.",
-      "button": "Simulate a flow",
-      "note": "You do not need to change your architecture to get started."
+    "reportDetail": {
+        "backToLibrary": "Back to library",
+        "sections": {
+            "oneSentence": "In one sentence",
+            "whyItMatters": "Why it matters",
+            "behaviorTimeline": "Behavior timeline",
+            "connectedSignals": "Connected signals",
+            "mainEvidence": "Main evidence",
+            "request": "What was requested",
+            "interpretation": "How Ohrly interpreted it",
+            "fieldsAndSignals": "Fields and signals considered"
+        },
+        "summaryCards": {
+            "state": "State",
+            "rpi": "RPI",
+            "context": "Context",
+            "simulatedPeriod": "Simulated period"
+        },
+        "timeline": {
+            "criticalWindow": "Critical window: late Feb – early Mar",
+            "rpi": "RPI"
+        },
+        "signals": {
+            "main": "Main signal",
+            "associated": "Associated signal"
+        },
+        "request": {
+            "flowName": "Flow name",
+            "objective": "Objective",
+            "affectedContext": "Affected context"
+        },
+        "fieldsAndSignals": {
+            "fields": "Fields considered",
+            "signals": "Signals interpreted"
+        },
+        "cta": {
+            "title": "Test Ohrly with your own flow",
+            "description": "See how synthetic or real data can become a clear, connected and actionable reading.",
+            "button": "Request an interpretation with synthetic data"
+        },
+        "reports": {
+            "retencao-boleto-conversacional": {
+                "title": "Retention in conversational boleto flow",
+                "domain": "Conversational support",
+                "badges": {
+                    "publicReport": "Public report",
+                    "syntheticData": "Synthetic data",
+                    "domain": "Conversational support"
+                },
+                "summary": "The retention drop did not appear in isolation. In the synthetic scenario, it came together with boleto failures, human handoff, longer support time and complaints.",
+                "disclaimer": "This reading uses synthetic data and is demonstrative. It shows how Ohrly would interpret a similar flow if it had access to real historical data.",
+                "state": "Sustained degradation",
+                "rpiLabel": "High pressure",
+                "context": "Chatbot + human support",
+                "period": "Jan–Mar/2025",
+                "oneSentence": "The flow kept working, but several signals were under pressure at the same time: retention, boleto failure, human handoff, support time, total resolution and complaints.",
+                "whyItMatters": "When retention drops together with boleto failures, handoff and complaints, the problem stops looking like just a conversion metric. It starts looking like an operational bottleneck spreading through the flow.",
+                "timeline": {
+                    "normal": {
+                        "label": "Normal",
+                        "date": "Jan"
+                    },
+                    "variation": {
+                        "label": "Variation",
+                        "date": "Early Feb"
+                    },
+                    "attention": {
+                        "label": "Attention",
+                        "date": "Mid Feb"
+                    },
+                    "degradation": {
+                        "label": "Sustained degradation",
+                        "date": "Mar"
+                    }
+                },
+                "signals": {
+                    "main": "Self-service retention dropped",
+                    "associated": {
+                        "boletoFailure": "Boleto failure increased",
+                        "humanHandoff": "Human handoff increased",
+                        "serviceTime": "Support time increased",
+                        "totalResolution": "Total resolution dropped",
+                        "complaints": "Complaints increased"
+                    }
+                },
+                "evidence": {
+                    "outOfExpected": "signals moved outside expected behavior",
+                    "sustainedStates": "sustained degradation states",
+                    "simultaneousSignals": "signals under pressure simultaneously in the main window"
+                },
+                "requested": {
+                    "flowName": "Retention in boleto flow",
+                    "objective": "Understand whether retention variations could be associated with boleto failures, human handoff, support time, final resolution and complaints.",
+                    "affectedContext": "Conversational channel / chatbot / human support"
+                },
+                "interpretation": "Ohrly created a synthetic base to represent the described flow, simulated behavioral signals and analyzed whether they appeared in isolation or connected over time.",
+                "interpretedSignals": {
+                    "retention": "retention",
+                    "boletoFailure": "boleto failure",
+                    "handoff": "handoff",
+                    "humanTime": "human time",
+                    "totalResolution": "total resolution",
+                    "complaints": "complaints"
+                }
+            },
+            "checkout-aprovacao-lenta": {
+                "title": "Checkout with slow approval",
+                "domain": "E-commerce",
+                "badges": {
+                    "publicReport": "Public report",
+                    "syntheticData": "Synthetic data",
+                    "domain": "E-commerce"
+                },
+                "summary": "Payment keeps working, but time to confirmation starts increasing in the Pix + Mobile context.",
+                "disclaimer": "This reading uses synthetic data and is demonstrative. It shows how Ohrly would interpret a similar flow if it had access to real historical data.",
+                "state": "Operational attention",
+                "rpiLabel": "Moderate/high pressure",
+                "context": "Pix + Mobile",
+                "period": "Last 7 simulated days",
+                "oneSentence": "The flow still completes payments, but time to approval remained under pressure long enough to stop looking like a normal fluctuation.",
+                "whyItMatters": "When approval starts taking longer in a specific context, the operation can accumulate retries, abandonment and efficiency loss before any explicit incident.",
+                "timeline": {
+                    "normal": {
+                        "label": "Normal",
+                        "date": "Day 1"
+                    },
+                    "variation": {
+                        "label": "Variation",
+                        "date": "Day 2"
+                    },
+                    "attention": {
+                        "label": "Attention",
+                        "date": "Day 4"
+                    },
+                    "observation": {
+                        "label": "Observation",
+                        "date": "Day 7"
+                    }
+                },
+                "signals": {
+                    "main": "Time to approval increased",
+                    "associated": {
+                        "retries": "Retries started increasing",
+                        "mobileCompletion": "Mobile completion fluctuated",
+                        "exposedValue": "Exposed value increased",
+                        "pixContext": "Pix context concentrated the signal"
+                    }
+                },
+                "evidence": {
+                    "persistentSignal": "of persistent signal in the synthetic scenario",
+                    "aboveExpected": "above expected behavior",
+                    "observableSignals": "associated observable signals"
+                },
+                "requested": {
+                    "flowName": "Checkout with slow approval",
+                    "objective": "Simulate whether a gradual increase in time to approval could indicate operational noise before an explicit conversion drop.",
+                    "affectedContext": "Pix + Mobile"
+                },
+                "interpretation": "Ohrly generated a synthetic scenario for the checkout flow, simulated slower approval in Pix + Mobile and analyzed persistence, recovery pressure and associated signals.",
+                "interpretedSignals": {
+                    "approvalTime": "time to approval",
+                    "retries": "retries",
+                    "abandonment": "abandonment",
+                    "exposedValue": "exposed value"
+                }
+            }
+        }
     }
-  },
-  "contact": {
-    "badge": "Contact",
-    "title": "Should we apply an Ohrly reading to one of your real flows?",
-    "description": "Tell us which flow you want to understand. From there, we can evaluate whether it makes sense to run a simple pilot with historical data to identify loss of consistency, recovery pressure and affected contexts.",
-    "bullets": {
-      "one": "Ideal for testing 1 critical flow.",
-      "two": "Can start with an export or CSV.",
-      "three": "Focused on operational reading, not a generic dashboard."
-    },
-    "emailBox": {
-      "title": "Prefer direct email?",
-      "email": "taraujo@ohrly.com.br"
-    },
-    "form": {
-      "title": "Request a conversation",
-      "description": "Tell us a little about the flow you would like to analyze. The idea is to start simple: one critical flow, historical data and a behavioral reading.",
-      "name": "Name",
-      "namePlaceholder": "Your name",
-      "email": "Email",
-      "emailPlaceholder": "you@company.com",
-      "company": "Company",
-      "companyPlaceholder": "Company name",
-      "role": "Your role",
-      "rolePlaceholder": "Select an option",
-      "flowType": "Which flow would you like to analyze?",
-      "message": "What would you like to understand about this flow?",
-      "messagePlaceholder": "E.g. I want to understand whether checkout conversion started dropping after the latest changes, or whether the payment flow is getting slower in some contexts.",
-      "submit": "Send message",
-      "privacy": "By submitting, you share this information so we can evaluate whether it makes sense to run an initial reading of your flow.",
-      "roleOptions": {
-        "product": "Product",
-        "engineering": "Engineering",
-        "operations": "Operations",
-        "data": "Data / Analytics",
-        "leadership": "Leadership",
-        "other": "Other"
-      },
-      "flowOptions": {
-        "checkout": "Checkout",
-        "payment": "Payment",
-        "delivery": "Delivery",
-        "cartRecovery": "Cart recovery",
-        "support": "Support / customer service",
-        "onboarding": "Onboarding",
-        "chatbot": "Chatbot / conversational channels",
-        "other": "Another critical flow"
-      },
-      "source": "Contact Page - Ohrly"
-    },
-    "infoPanel": {
-      "historicalData": {
-        "title": "Start with historical data",
-        "description": "A spreadsheet, export or simple dataset may already be enough for a first diagnosis."
-      },
-      "criticalFlow": {
-        "title": "Focus on one critical flow",
-        "description": "Checkout, payment, delivery, support, onboarding or another flow with real impact."
-      },
-      "noRootCausePromise": {
-        "title": "No root-cause promise",
-        "description": "The reading shows where behavior lost consistency and helps qualify the investigation."
-      },
-      "noIntegration": {
-        "title": "No integration at first",
-        "description": "The pilot can start without changing your operation architecture."
-      }
-    }
-  },
-  "demo": {
-    "hero": {
-      "badge": "Ohrly flow simulator",
-      "title": "See how Ohrly would read a flow similar to yours.",
-      "description": "Choose a template, adjust a degradation scenario, and generate a synthetic behavioral reading without sending real data.",
-      "chips": {
-        "noSensitiveData": "No sensitive data",
-        "demoReading": "Demonstrative reading"
-      }
-    },
-    "howItWorks": {
-      "eyebrow": "No real dataset on the first touch",
-      "title": "Before asking for data, show what could become visible",
-      "description": "The simulation does not replace a real analysis. It helps users understand which signals could be observed, which fields would be needed, and how Ohrly would turn that into a behavioral reading.",
-      "steps": {
-        "chooseTemplate": {
-          "title": "Choose a template",
-          "description": "Start with a common flow, such as checkout, chatbot, delivery, or billing."
-        },
-        "seeFields": {
-          "title": "See the required fields",
-          "description": "Ohrly shows which columns would help observe the real behavior of the flow."
-        },
-        "generateReading": {
-          "title": "Generate a synthetic reading",
-          "description": "Without sensitive data, the page simulates a degradation and shows what an Ohrly reading would look like."
-        }
-      }
-    },
-    "templateSection": {
-      "eyebrow": "1. Choose a starting point",
-      "title": "Critical flow templates",
-      "description": "Templates work as synthetic scenarios. They help users recognize a flow similar to theirs before any integration or historical data upload."
-    },
-    "contractSection": {
-      "eyebrow": "2. Understand the flow contract",
-      "title": "What this template makes observable",
-      "description": "The page shows stages, columns, and signals that could compose a real reading. This already helps people understand whether their operation has the minimum data needed for a pilot."
-    },
-    "scenarioSection": {
-      "eyebrow": "3. Adjust the synthetic scenario",
-      "title": "Simulate a silent degradation",
-      "description": "Adjust a few parameters to see how the reading changes. In the real product, these signals would be calculated from the flow history.",
-      "degradationType": "Degradation type",
-      "persistenceQuestion": "How long has the behavior seemed worse?",
-      "recoveryQuestion": "How does the flow usually recover?",
-      "propagationQuestion": "Does the degradation look localized or propagated?"
-    },
-    "flowMap": {
-      "title": "Synthetic flow used in the simulation"
-    },
-    "fields": {
-      "title": "Suggested columns",
-      "description": "You do not need to send this data now. The goal is to show what kind of structure would allow the flow to become a real Ohrly reading."
-    },
-    "signals": {
-      "title": "Observable signals"
-    },
-    "reading": {
-      "title": "Synthetic Ohrly reading",
-      "summary": "In the synthetic <template></template> scenario, Ohrly simulated <degradation></degradation> concentrated in <context></context>.",
-      "disclaimer": "This reading does not diagnose your real operation. It shows how Ohrly would interpret a flow similar to yours without using sensitive data.",
-      "tags": {
-        "state": "State",
-        "rpi": "Simulated RPI",
-        "persistence": "Persistence",
-        "context": "Context",
-        "days": "{count, plural, one {# day} other {# days}}"
-      }
-    },
-    "states": {
-      "lossOfRecoverability": {
-        "label": "LIKELY LOSS OF RECOVERABILITY",
-        "short": "Loss of recoverability",
-        "description": "The flow seems to have exceeded its natural recovery capacity. In a real scenario, waiting could already be accumulating relevant operational cost."
-      },
-      "sustainedDegradation": {
-        "label": "LIKELY SUSTAINED DEGRADATION",
-        "short": "Sustained degradation",
-        "description": "The described behavior no longer looks like simple fluctuation. Persistence, fragile recovery, and propagation indicate loss of operational consistency."
-      },
-      "operationalAttention": {
-        "label": "OPERATIONAL ATTENTION",
-        "short": "Attention",
-        "description": "The flow still seems to be within a reversible zone, but it already shows enough signals to justify conscious observation."
-      },
-      "controlledVariation": {
-        "label": "CONTROLLED VARIATION",
-        "short": "Variation",
-        "description": "The described scenario still looks more like normal variation than sustained degradation."
-      }
-    },
-    "timeline": {
-      "title": "Simulated timeline",
-      "states": {
-        "normal": "Normal",
-        "variation": "Variation",
-        "attention": "Attention",
-        "degradation": "Degradation"
-      },
-      "rpiLabel": "Simulated recovery pressure",
-      "description": "The synthetic RPI estimates how much pressure the scenario places on the flow's natural recovery capacity. In the real product, this index is calculated from baseline, persistence, magnitude, and propagation in historical data."
-    },
-    "nextSteps": {
-      "title": "To turn this into a real reading",
-      "items": {
-        "validateColumns": "Validate whether the suggested columns exist in the real operation.",
-        "confirmFields": "Confirm which fields represent start, end, status, and context.",
-        "runHistoricalReading": "Run a reading with exported historical data when possible.",
-        "compareSynthetic": "Compare the synthetic scenario with the real behavior of the flow."
-      },
-      "selectedTemplate": "Selected template"
-    },
-    "metrics": {
-      "stages": "simulated stages",
-      "fields": "suggested columns",
-      "signals": "observable signals",
-      "realData": "real data sent"
-    },
-    "cta": {
-      "eyebrow": "Liked the demo reading?",
-      "title": "The next step is to apply the reading to a synthetic flow.",
-      "description": "We can start with one critical flow. Before we can reach out to real, and sensitive, data, we can create a synthetic one just for you.",
-      "button": "I want to create a synthetic flow"
-    },
-    "options": {
-      "persistence": {
-        "twoDays": "2 days",
-        "fourDays": "4 days",
-        "sevenDays": "7 days",
-        "intermittentWeeks": "Comes and goes for weeks"
-      },
-      "recovery": {
-        "normalizesFast": "Normalizes quickly",
-        "sometimesNormalizes": "Sometimes normalizes",
-        "needsIntervention": "Usually needs intervention",
-        "unclearCriterion": "No clear criterion"
-      },
-      "propagation": {
-        "localized": "Still looks localized",
-        "secondarySignal": "Started affecting another signal",
-        "multipleSteps": "Already affects multiple stages"
-      }
-    },
-    "templates": {
-      "checkoutPayment": {
-        "domain": "E-commerce",
-        "title": "Checkout and payment",
-        "description": "Simulate loss of consistency between checkout start, payment selection, and order confirmation.",
-        "defaultContext": "Pix + Mobile",
-        "stages": {
-          "cartCreated": "Cart created",
-          "checkoutStarted": "Checkout started",
-          "paymentSelected": "Payment selected",
-          "paymentApproved": "Payment approved",
-          "orderConfirmed": "Order confirmed"
-        },
-        "signals": {
-          "approvalTime": "Time to approval",
-          "abandonmentRate": "Abandonment rate",
-          "paymentRetries": "Payment retries",
-          "exposedValue": "Exposed value"
-        },
-        "degradationOptions": {
-          "approvalTimeIncrease": "Gradual increase in approval time",
-          "paymentRetriesIncrease": "More retries before confirmation",
-          "mobileCompletionDrop": "Completion drop on mobile"
-        }
-      },
-      "chatbotHandoff": {
-        "domain": "CX / Support",
-        "title": "Chatbot and human handoff",
-        "description": "Simulate increased fallback, unresolved messages, and transfer to human support.",
-        "defaultContext": "WhatsApp + new customers",
-        "stages": {
-          "messageReceived": "Message received",
-          "intentDetected": "Intent detected",
-          "automatedResponse": "Automated response",
-          "resolutionOrFallback": "Resolution or fallback",
-          "humanHandoff": "Human handoff",
-          "closed": "Closed"
-        },
-        "signals": {
-          "handoffRate": "Handoff rate",
-          "resolutionTime": "Resolution time",
-          "unresolvedMessages": "Unresolved messages",
-          "fallbackRate": "Fallback rate"
-        },
-        "degradationOptions": {
-          "handoffIncrease": "Gradual handoff increase",
-          "unresolvedIncrease": "More unresolved messages",
-          "resolutionTimeIncrease": "Resolution time increasing for several days"
-        }
-      },
-      "deliveryLifecycle": {
-        "domain": "Operations / Logistics",
-        "title": "Delivery lifecycle",
-        "description": "Simulate degradation between confirmed order, shipping, estimated delivery, and actual delivery.",
-        "defaultContext": "Mid-sized sellers + Northeast",
-        "stages": {
-          "orderConfirmed": "Order confirmed",
-          "pickingStarted": "Picking started",
-          "orderShipped": "Order shipped",
-          "estimatedDelivery": "Estimated delivery",
-          "delivered": "Delivered"
-        },
-        "signals": {
-          "deliveryDelay": "Delivery delay",
-          "shippingTime": "Time to shipping",
-          "atRiskOrders": "At-risk orders",
-          "exposedValue": "Exposed value"
-        },
-        "degradationOptions": {
-          "deliveryDelayIncrease": "Gradual increase in delays",
-          "preShippingBacklog": "Backlog before shipping",
-          "slowerRecovery": "Increasingly slower recovery"
-        }
-      },
-      "billingRecovery": {
-        "domain": "B2B SaaS",
-        "title": "Billing and recovery",
-        "description": "Simulate billing failures, recovery attempts, and operational churn risk.",
-        "defaultContext": "Pro plan + mid-market accounts",
-        "stages": {
-          "invoiceCreated": "Invoice created",
-          "firstAttempt": "First attempt",
-          "failureOrSuccess": "Failure or success",
-          "retry": "Retry",
-          "recovered": "Recovered",
-          "accountAtRisk": "Account at risk"
-        },
-        "signals": {
-          "billingFailures": "Billing failures",
-          "recoveryTime": "Recovery time",
-          "retriesPerAccount": "Retries per account",
-          "exposedRevenue": "Exposed revenue"
-        },
-        "degradationOptions": {
-          "retryFailuresIncrease": "More failures in retries",
-          "slowerRecovery": "Slower recovery",
-          "accountsAtRiskIncrease": "Increase in accounts at risk"
-        }
-      }
-    }
-  }
 }
