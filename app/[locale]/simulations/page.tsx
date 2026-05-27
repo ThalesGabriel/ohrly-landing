@@ -651,7 +651,7 @@ export default function OhrlyGuidedDemoPage() {
     const t = useTranslations("guidedDemo");
 
     const [selectedExampleId, setSelectedExampleId] =
-        useState<ExampleId>("checkout");
+        useState<ExampleId>("bot");
     const [duration, setDuration] = useState<DurationOption>("4");
     const [recovery, setRecovery] = useState<RecoveryOption>("slow");
     const [propagation, setPropagation] =
