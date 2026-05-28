@@ -147,9 +147,9 @@
         "hero": {
             "badge": "Observabilidade comportamental para fluxos digitais",
             "title": {
-                "before": "Fluxos digitais podem perder consistência",
-                "highlight": "antes",
-                "after": "de parecerem quebrados."
+                "before": "O Ohrly ajuda empresas resilientes a enxergar degradações que",
+                "highlight": "ainda",
+                "after": "não viraram incidentes."
             },
             "description": "Ohrly ajuda times a entender quando fluxos críticos continuam rodando, mas começam a perder eficiência, consistência ou capacidade de recuperação antes que o impacto fique explícito.",
             "primaryCta": "Explorar E-commerce",

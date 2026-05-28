@@ -147,9 +147,9 @@
         "hero": {
             "badge": "Behavioral observability for digital flows",
             "title": {
-                "before": "Digital flows can lose consistency",
-                "highlight": "before",
-                "after": "they look broken."
+                "before": "Ohrly helps resilient companies identify degradations that",
+                "highlight": "haven't yet",
+                "after": "turned into incidents."
             },
             "description": "Ohrly helps teams understand when critical flows keep running but start losing efficiency, consistency, or recovery capacity before the impact becomes explicit.",
             "primaryCta": "Explore E-commerce",
