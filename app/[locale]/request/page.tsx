@@ -1,5 +1,6 @@
 "use client";
 
+import { trackMetaEvent } from "@/lib/meta-pixel";
 import Link from "next/link";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
@@ -278,10 +279,14 @@ function ImportantFieldsEditor({
     fields,
     onChange,
     t,
+    onFieldAdded,
+    onFieldRemoved,
 }: {
     fields: ImportantField[];
     onChange: (fields: ImportantField[]) => void;
     t: ReturnType<typeof useTranslations>;
+    onFieldAdded?: () => void;
+    onFieldRemoved?: (field: ImportantField) => void;
 }) {
     function updateField(id: string, key: keyof ImportantField, value: string) {
         onChange(
@@ -292,7 +297,13 @@ function ImportantFieldsEditor({
     }
 
     function removeField(id: string) {
+        const removedField = fields.find((field) => field.id === id);
+
         onChange(fields.filter((field) => field.id !== id));
+
+        if (removedField) {
+            onFieldRemoved?.(removedField);
+        }
     }
 
     function addField() {
@@ -304,6 +315,8 @@ function ImportantFieldsEditor({
                 role: "",
             },
         ]);
+
+        onFieldAdded?.();
     }
 
     return (
@@ -368,21 +381,54 @@ function RequestFormCard() {
         "retry_growth",
         "slow_recovery",
     ]);
+
+    const [formStarted, setFormStarted] = useState(false);
     const [fields, setFields] = useState<ImportantField[]>(() => getDefaultFields(t));
     const [submitted, setSubmitted] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     function toggleSignal(signalId: SyntheticSignalId) {
-        setSelectedSignals((current) =>
-            current.includes(signalId)
+        setSelectedSignals((current) => {
+            const isSelected = current.includes(signalId);
+
+            const nextSignals = isSelected
                 ? current.filter((id) => id !== signalId)
-                : [...current, signalId],
-        );
+                : [...current, signalId];
+
+            trackMetaEvent("SyntheticRequestSignalToggled", {
+                source: "synthetic_request",
+                signal: signalId,
+                action: isSelected ? "removed" : "added",
+                selectedSignalsCount: nextSignals.length,
+            });
+
+            return nextSignals;
+        });
+    }
+
+    function trackFormStarted() {
+        if (formStarted) return;
+
+        setFormStarted(true);
+
+        trackMetaEvent("SyntheticRequestFormStarted", {
+            source: "synthetic_request",
+            section: "request_form",
+            selectedSignalsCount: selectedSignals.length,
+            fieldsCount: fields.length,
+        });
     }
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
+
+        trackMetaEvent("SyntheticRequestSubmitAttempt", {
+            source: "synthetic_request",
+            selectedSignalsCount: selectedSignals.length,
+            fieldsCount: fields.length,
+            hasAnyCustomField: fields.some((field) => field.name.trim() || field.role.trim()),
+        });
 
         setSubmitted(false);
         setSubmitError(null);
@@ -431,8 +477,21 @@ function RequestFormCard() {
 
             setSubmitted(true);
             form.reset();
+
+            trackMetaEvent("SyntheticRequestSubmitted", {
+                source: "synthetic_request",
+                selectedSignalsCount: selectedSignals.length,
+                selectedSignals: selectedSignals.join(","),
+                fieldsCount: fields.length,
+            });
         } catch {
             setSubmitError(t("form.errorMessage"));
+
+            trackMetaEvent("SyntheticRequestSubmitError", {
+                source: "synthetic_request",
+                selectedSignalsCount: selectedSignals.length,
+                fieldsCount: fields.length,
+            });
         } finally {
             setIsSubmitting(false);
         }
@@ -444,6 +503,7 @@ function RequestFormCard() {
             method="POST"
             onSubmit={handleSubmit}
             className="rounded-3xl border border-slate-200 bg-white/80 shadow-xl shadow-slate-200/60 backdrop-blur dark:border-slate-800 dark:bg-slate-950/70 dark:shadow-cyan-950/20"
+            onFocusCapture={trackFormStarted}
         >
             <div className="border-b border-slate-200 p-6 dark:border-slate-800 lg:p-8">
                 <h2 className="text-xl font-semibold tracking-tight text-slate-950 dark:text-white">
@@ -530,7 +590,25 @@ function RequestFormCard() {
                         </p>
                     </div>
 
-                    <ImportantFieldsEditor fields={fields} onChange={setFields} t={t} />
+                    <ImportantFieldsEditor
+                        fields={fields}
+                        onChange={setFields}
+                        t={t}
+                        onFieldAdded={() =>
+                            trackMetaEvent("SyntheticRequestFieldAdded", {
+                                source: "synthetic_request",
+                                fieldsCount: fields.length + 1,
+                            })
+                        }
+                        onFieldRemoved={(field) =>
+                            trackMetaEvent("SyntheticRequestFieldRemoved", {
+                                source: "synthetic_request",
+                                fieldHadName: Boolean(field.name),
+                                fieldHadRole: Boolean(field.role),
+                                fieldsCount: Math.max(fields.length - 1, 0),
+                            })
+                        }
+                    />
                 </section>
 
                 <section className="border-t border-slate-200 pt-8 dark:border-slate-800">
@@ -597,6 +675,15 @@ function RequestFormCard() {
 
                 <Link
                     href="/reports"
+                    onClick={() =>
+                        trackMetaEvent("SyntheticRequestViewExampleClick", {
+                            source: "synthetic_request",
+                            section: "form_footer",
+                            destination: "/reports",
+                            selectedSignalsCount: selectedSignals.length,
+                            fieldsCount: fields.length,
+                        })
+                    }
                     className="inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white/70 px-5 text-sm font-semibold text-cyan-700 transition hover:border-cyan-300 hover:bg-cyan-50 dark:border-slate-800 dark:bg-slate-950/70 dark:text-cyan-300 dark:hover:border-cyan-300/40 dark:hover:bg-cyan-300/5"
                 >
                     {t("form.viewExample")}

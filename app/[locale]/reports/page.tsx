@@ -1,8 +1,11 @@
+"use client";
+
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ArrowRight, Search, Sparkles } from "lucide-react";
 import { PageShell } from "@/components/layout/PageShell";
 import { publicReports } from "@/data/reports";
+import { trackMetaEvent } from "@/lib/meta-pixel";
 
 export default function ReportsPage() {
   const t = useTranslations("reports");
@@ -40,7 +43,7 @@ export default function ReportsPage() {
         </p> */}
 
         <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {publicReports.map((report) => {
+          {publicReports.map((report, index) => {
             const base = `items.${report.id}`;
 
             return (
@@ -76,6 +79,15 @@ export default function ReportsPage() {
 
                 <Link
                   href={`/reports/${report.slug}`}
+                  onClick={() =>
+                    trackMetaEvent("ReportsCardClick", {
+                      source: "reports_page",
+                      reportId: report.id,
+                      slug: report.slug,
+                      rpi: report.rpi,
+                      position: index + 1,
+                    })
+                  }
                   className="mt-5 inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-cyan-400 px-4 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
                 >
                   {t("viewReport")}

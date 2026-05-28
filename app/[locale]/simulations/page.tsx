@@ -1,5 +1,6 @@
 "use client";
 
+import { trackMetaEvent } from "@/lib/meta-pixel";
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -207,9 +208,9 @@ function getRpi(
     return Math.min(
         92,
         baseByExample[selectedExample.id] +
-            durationScores[duration] +
-            recoveryScores[recovery] +
-            propagationScores[propagation],
+        durationScores[duration] +
+        recoveryScores[recovery] +
+        propagationScores[propagation],
     );
 }
 
@@ -532,6 +533,18 @@ function ReadingPanel({
                 <div className="mt-7 text-center">
                     <Link
                         href="/request"
+                        onClick={() =>
+                            trackMetaEvent("GuidedDemoRequestClick", {
+                                source: "guided_demo",
+                                section: "reading_panel",
+                                destination: "/request",
+                                example: selectedExample.id,
+                                duration,
+                                recovery,
+                                propagation,
+                                rpi,
+                            })
+                        }
                         className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-cyan-600 px-5 text-sm font-semibold text-white shadow-lg shadow-cyan-600/20 transition hover:-translate-y-0.5 hover:bg-cyan-500 dark:bg-cyan-500 dark:hover:bg-cyan-400"
                     >
                         <Settings2 className="h-4 w-4" />
@@ -656,11 +669,125 @@ export default function OhrlyGuidedDemoPage() {
     const [recovery, setRecovery] = useState<RecoveryOption>("slow");
     const [propagation, setPropagation] =
         useState<PropagationOption>("initial");
+    const [demoTouched, setDemoTouched] = useState({
+        example: false,
+        control: false,
+        completed: false,
+    });
 
     const selectedExample = useMemo(
         () => examples.find((example) => example.id === selectedExampleId) ?? examples[0],
         [selectedExampleId],
     );
+
+    const rpi = useMemo(
+        () => getRpi(selectedExample, duration, recovery, propagation),
+        [selectedExample, duration, recovery, propagation],
+    );
+
+    function handleExampleSelect(exampleId: ExampleId) {
+        setSelectedExampleId(exampleId);
+
+        trackMetaEvent("GuidedDemoExampleSelected", {
+            source: "guided_demo",
+            example: exampleId,
+            duration,
+            recovery,
+            propagation,
+            rpi,
+        });
+
+        setDemoTouched((current) =>
+            trackDemoCompletedIfNeeded({
+                ...current,
+                example: true,
+            }),
+        );
+    }
+
+    function handleDurationChange(value: DurationOption) {
+        setDuration(value);
+
+        trackMetaEvent("GuidedDemoDurationChanged", {
+            source: "guided_demo",
+            example: selectedExampleId,
+            duration: value,
+            recovery,
+            propagation,
+            rpi,
+        });
+
+        setDemoTouched((current) =>
+            trackDemoCompletedIfNeeded({
+                ...current,
+                control: true,
+            }),
+        );
+    }
+
+    function handlePropagationChange(value: PropagationOption) {
+        setPropagation(value);
+
+        trackMetaEvent("GuidedDemoPropagationChanged", {
+            source: "guided_demo",
+            example: selectedExampleId,
+            duration,
+            recovery,
+            propagation: value,
+            rpi,
+        });
+
+        setDemoTouched((current) =>
+            trackDemoCompletedIfNeeded({
+                ...current,
+                control: true,
+            }),
+        );
+    }
+
+    function handleRecoveryChange(value: RecoveryOption) {
+        setRecovery(value);
+
+        trackMetaEvent("GuidedDemoRecoveryChanged", {
+            source: "guided_demo",
+            example: selectedExampleId,
+            duration,
+            recovery: value,
+            propagation,
+            rpi,
+        });
+
+        setDemoTouched((current) =>
+            trackDemoCompletedIfNeeded({
+                ...current,
+                control: true,
+            }),
+        );
+    }
+
+    function trackDemoCompletedIfNeeded(nextState: {
+        example: boolean;
+        control: boolean;
+        completed: boolean;
+    }) {
+        if (nextState.example && nextState.control && !nextState.completed) {
+            trackMetaEvent("GuidedDemoCompleted", {
+                source: "guided_demo",
+                example: selectedExampleId,
+                duration,
+                recovery,
+                propagation,
+                rpi,
+            });
+
+            return {
+                ...nextState,
+                completed: true,
+            };
+        }
+
+        return nextState;
+    }
 
     return (
         <div className="min-h-screen bg-slate-50 text-slate-950 dark:bg-[#020b12] dark:text-white">
@@ -747,7 +874,7 @@ export default function OhrlyGuidedDemoPage() {
                                         key={example.id}
                                         example={example}
                                         selected={example.id === selectedExampleId}
-                                        onSelect={() => setSelectedExampleId(example.id)}
+                                        onSelect={() => handleExampleSelect(example.id)}
                                     />
                                 ))}
                             </div>
@@ -762,7 +889,7 @@ export default function OhrlyGuidedDemoPage() {
                                         label={t("controls.duration")}
                                         icon={Clock3}
                                         value={duration}
-                                        onChange={setDuration}
+                                        onChange={handleDurationChange}
                                         options={[
                                             {
                                                 label: t("controls.durationOptions.twoDays"),
@@ -782,7 +909,7 @@ export default function OhrlyGuidedDemoPage() {
                                         label={t("controls.recovery")}
                                         icon={LineChart}
                                         value={recovery}
-                                        onChange={setRecovery}
+                                        onChange={handleRecoveryChange}
                                         options={[
                                             {
                                                 label: t("controls.recoveryOptions.normal"),
@@ -802,7 +929,7 @@ export default function OhrlyGuidedDemoPage() {
                                         label={t("controls.propagation")}
                                         icon={Sparkles}
                                         value={propagation}
-                                        onChange={setPropagation}
+                                        onChange={handlePropagationChange}
                                         options={[
                                             {
                                                 label: t("controls.propagationOptions.localized"),

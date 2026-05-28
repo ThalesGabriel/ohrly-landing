@@ -1,4 +1,4 @@
-// src/app/[locale]/reports/[slug]/page.tsx
+"use client";
 
 import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
@@ -25,6 +25,72 @@ import {
 } from "lucide-react";
 import { PageShell } from "@/components/layout/PageShell";
 import { publicReports } from "@/data/reports";
+import { trackMetaEvent } from "@/lib/meta-pixel";
+import { useEffect, useRef } from "react";
+
+type TrackedLinkProps = {
+  href: string;
+  eventName: string;
+  eventParams: Record<string, string | number | boolean | undefined>;
+  className?: string;
+  children: React.ReactNode;
+};
+
+export function TrackedLink({
+  href,
+  eventName,
+  eventParams,
+  className,
+  children,
+}: TrackedLinkProps) {
+  return (
+    <Link
+      href={href}
+      onClick={() => trackMetaEvent(eventName, eventParams)}
+      className={className}
+    >
+      {children}
+    </Link>
+  );
+}
+
+type TrackSectionViewProps = {
+  eventName: string;
+  eventParams: Record<string, string | number | boolean | undefined>;
+  threshold?: number;
+  children: React.ReactNode;
+};
+
+export function TrackSectionView({
+  eventName,
+  eventParams,
+  threshold = 0.45,
+  children,
+}: TrackSectionViewProps) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const tracked = useRef(false);
+
+  useEffect(() => {
+    if (!ref.current || tracked.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !tracked.current) {
+          tracked.current = true;
+          trackMetaEvent(eventName, eventParams);
+          observer.disconnect();
+        }
+      },
+      { threshold },
+    );
+
+    observer.observe(ref.current);
+
+    return () => observer.disconnect();
+  }, [eventName, eventParams, threshold]);
+
+  return <div ref={ref}>{children}</div>;
+}
 
 function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -169,13 +235,22 @@ export default async function ReportDetailPage({
   return (
     <PageShell>
       <article className="mx-auto max-w-7xl px-5 py-8 sm:px-8 lg:px-10 lg:py-12">
-        <Link
+        <TrackedLink
           href="/reports"
+          eventName="ReportDetailBackClick"
+          eventParams={{
+            source: "report_detail",
+            slug: report.slug,
+            reportId: report.id,
+            rpi: detail.rpi,
+            stateTone: detail.stateTone,
+            destination: "/reports",
+          }}
           className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-cyan-700 dark:text-slate-400 dark:hover:text-cyan-300"
         >
           <ArrowLeft className="h-4 w-4" />
           {t("backToLibrary")}
-        </Link>
+        </TrackedLink>
 
         <ReportHero t={t} detail={detail} base={base} />
         <SummaryCards t={t} detail={detail} base={base} />
@@ -194,11 +269,46 @@ export default async function ReportDetailPage({
           />
         </div>
 
-        <BehaviorTimeline t={t} detail={detail} base={base} />
-        <ConnectedSignals t={t} detail={detail} base={base} />
+        <TrackSectionView
+          eventName="ReportTimelineViewed"
+          eventParams={{
+            source: "report_detail",
+            slug: report.slug,
+            reportId: report.id,
+            rpi: detail.rpi,
+            stateTone: detail.stateTone,
+          }}
+        >
+          <BehaviorTimeline t={t} detail={detail} base={base} />
+        </TrackSectionView>
+        <TrackSectionView
+          eventName="ReportConnectedSignalsViewed"
+          eventParams={{
+            source: "report_detail",
+            slug: report.slug,
+            reportId: report.id,
+            rpi: detail.rpi,
+            stateTone: detail.stateTone,
+            signalsCount: detail.associatedSignalKeys.length,
+          }}
+        >
+          <ConnectedSignals t={t} detail={detail} base={base} />
+        </TrackSectionView>
 
         <section className="mt-8 grid gap-6 lg:grid-cols-[2fr_1fr]">
-          <EvidenceSection t={t} detail={detail} base={base} />
+          <TrackSectionView
+            eventName="ReportEvidenceViewed"
+            eventParams={{
+              source: "report_detail",
+              slug: report.slug,
+              reportId: report.id,
+              rpi: detail.rpi,
+              stateTone: detail.stateTone,
+              evidenceCount: detail.evidence.length,
+            }}
+          >
+            <EvidenceSection t={t} detail={detail} base={base} />
+          </TrackSectionView>
           <InterpretationCard
             t={t}
             text={t(`${base}.interpretation`)}
@@ -210,7 +320,23 @@ export default async function ReportDetailPage({
           <FieldsAndSignals t={t} detail={detail} base={base} />
         </section>
 
-        <ReportCta t={t} />
+        <TrackedLink
+          href="/request"
+          eventName="ReportRequestClick"
+          eventParams={{
+            source: "report_detail",
+            section: "final_cta",
+            slug,
+            reportId: report.id,
+            rpi: detail.rpi,
+            stateTone: detail.stateTone,
+            destination: "/request",
+          }}
+          className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-cyan-400 px-5 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-400/20 transition hover:-translate-y-0.5 hover:bg-cyan-300"
+        >
+          {t("cta.button")}
+          <ArrowRight className="h-4 w-4" />
+        </TrackedLink>
       </article>
     </PageShell>
   );
@@ -351,17 +477,17 @@ function MetricCard({
           className={cn(
             "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl",
             tone === "healthy" &&
-              "bg-emerald-400/10 text-emerald-600 dark:text-emerald-300",
+            "bg-emerald-400/10 text-emerald-600 dark:text-emerald-300",
             tone === "variation" &&
-              "bg-blue-400/10 text-blue-600 dark:text-blue-300",
+            "bg-blue-400/10 text-blue-600 dark:text-blue-300",
             tone === "attention" &&
-              "bg-amber-400/10 text-amber-600 dark:text-amber-300",
+            "bg-amber-400/10 text-amber-600 dark:text-amber-300",
             tone === "danger" &&
-              "bg-red-400/10 text-red-600 dark:text-red-300",
+            "bg-red-400/10 text-red-600 dark:text-red-300",
             tone === "cyan" &&
-              "bg-cyan-400/10 text-cyan-600 dark:text-cyan-300",
+            "bg-cyan-400/10 text-cyan-600 dark:text-cyan-300",
             tone === "blue" &&
-              "bg-sky-400/10 text-sky-600 dark:text-sky-300",
+            "bg-sky-400/10 text-sky-600 dark:text-sky-300",
           )}
         >
           <Icon className="h-5 w-5" />
@@ -465,13 +591,13 @@ function BehaviorTimeline({
                   className={cn(
                     "mt-4 text-sm font-semibold",
                     item.tone === "healthy" &&
-                      "text-emerald-600 dark:text-emerald-300",
+                    "text-emerald-600 dark:text-emerald-300",
                     item.tone === "variation" &&
-                      "text-blue-600 dark:text-blue-300",
+                    "text-blue-600 dark:text-blue-300",
                     item.tone === "attention" &&
-                      "text-amber-600 dark:text-amber-300",
+                    "text-amber-600 dark:text-amber-300",
                     item.tone === "danger" &&
-                      "text-red-600 dark:text-red-300",
+                    "text-red-600 dark:text-red-300",
                   )}
                 >
                   {t(`${base}.timeline.${item.key}.label`)}
@@ -600,13 +726,13 @@ function EvidenceSection({
               className={cn(
                 "flex h-11 w-11 items-center justify-center rounded-xl",
                 item.tone === "cyan" &&
-                  "bg-cyan-400/10 text-cyan-600 dark:text-cyan-300",
+                "bg-cyan-400/10 text-cyan-600 dark:text-cyan-300",
                 item.tone === "danger" &&
-                  "bg-red-400/10 text-red-600 dark:text-red-300",
+                "bg-red-400/10 text-red-600 dark:text-red-300",
                 item.tone === "purple" &&
-                  "bg-violet-400/10 text-violet-600 dark:text-violet-300",
+                "bg-violet-400/10 text-violet-600 dark:text-violet-300",
                 item.tone === "attention" &&
-                  "bg-amber-400/10 text-amber-600 dark:text-amber-300",
+                "bg-amber-400/10 text-amber-600 dark:text-amber-300",
               )}
             >
               <item.icon className="h-5 w-5" />
@@ -782,7 +908,19 @@ function PillList({
   );
 }
 
-function ReportCta({ t }: { t: TranslationFn }) {
+function ReportCta({
+  t,
+  slug,
+  reportId,
+  rpi,
+  stateTone,
+}: {
+  t: TranslationFn;
+  slug: string;
+  reportId: string;
+  rpi: number;
+  stateTone: string;
+}) {
   return (
     <section className="mt-8 rounded-3xl border border-cyan-300/25 bg-cyan-300/10 p-6 shadow-xl shadow-cyan-500/10 backdrop-blur lg:flex lg:items-center lg:justify-between lg:gap-8">
       <div className="flex gap-4">
