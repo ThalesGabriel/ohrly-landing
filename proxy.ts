@@ -53,7 +53,7 @@ export default function proxy(request: NextRequest) {
   if (shouldRedirectFromMeta) {
     const url = request.nextUrl.clone();
 
-    url.pathname = locale ? `/${locale}/for-ecommerce` : "/pt/for-ecommerce";
+    url.pathname = locale ? `/${locale}/solutions/for-ecommerce` : "/pt/solutions/for-ecommerce";
 
     return NextResponse.redirect(url);
   }
