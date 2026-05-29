@@ -20,8 +20,6 @@ function cn(...classes: Array<string | false | null | undefined>) {
 
 const productLinks = [
   { key: "home", href: "/" },
-  { key: "ecommerce", href: "/solutions/for-ecommerce" },
-  { key: "bots", href: "/solutions/for-bots" },
   { key: "simulations", href: "/simulations" },
   { key: "reports", href: "/reports" },
 ] as const;

@@ -145,101 +145,241 @@
     },
     "home": {
         "hero": {
-            "badge": "Observabilidade comportamental para fluxos digitais",
-            "title": {
-                "before": "O Ohrly ajuda empresas resilientes a enxergar degradações que",
-                "highlight": "ainda",
-                "after": "não viraram incidentes."
-            },
-            "description": "Ohrly ajuda times a entender quando fluxos críticos continuam rodando, mas começam a perder eficiência, consistência ou capacidade de recuperação antes que o impacto fique explícito.",
-            "primaryCta": "Explorar E-commerce",
-            "secondaryCta": "Explorar Bots & Agentes"
-        },
-        "heroReadingCard": {
-            "title": "Leitura comportamental",
-            "period": "Últimos 7 dias",
-            "rpiLabel": "RPI",
-            "state": "Atenção moderada",
-            "chartTitle": "Atenção operacional",
-            "flowsInFocus": "Fluxos em foco",
-            "focusFlows": {
-                "checkout": "Checkout + Pix + Mobile",
-                "bot": "Bot + Handoff"
-            },
-            "dates": {
-                "may14": "14 de mai.",
-                "may21": "21 de mai.",
-                "may28": "28 de mai.",
-                "jun4": "4 de jun."
+            "eyebrow": "Pre-Impact Intelligence for Critical Digital Flows",
+            "title": "Decida antes que pequenos sinais virem impacto operacional.",
+            "description": "O Ohrly interpreta sinais persistentes em fluxos digitais críticos para mostrar quando esperar deixou de ser uma decisão neutra; antes que isso vire incidente, retrabalho, queda de conversão ou sobrecarga operacional.",
+            "primaryCta": "Ver uma janela de decisão",
+            "secondaryCta": "Aplicar em um fluxo real",
+            "proof": {
+                "notAlert": {
+                    "label": "Não é alerta",
+                    "value": "É leitura"
+                },
+                "notDashboard": {
+                    "label": "Não é dashboard",
+                    "value": "É contexto"
+                },
+                "notAutomation": {
+                    "label": "Não é automação",
+                    "value": "É decisão"
+                }
             }
         },
-        "solutions": {
-            "title": "Escolha o caminho mais próximo da sua operação.",
-            "cards": {
+        "decisionChart": {
+            "flowBehavior": "Comportamento do fluxo",
+            "title": "A janela aparece antes da anomalia evidente",
+            "badge": "Janela de decisão detectada",
+            "decisionWindowOpens": "Janela de decisão abre",
+            "obviousAnomaly": "Anomalia evidente",
+            "ariaLabel": "Gráfico mostrando a janela de decisão abrindo antes da anomalia",
+            "insights": {
+                "persistentSignal": {
+                    "label": "Sinal persistente",
+                    "value": "2,8x acima do esperado"
+                },
+                "decisionWindow": {
+                    "label": "Janela decisória",
+                    "value": "aberta há 4 dias"
+                },
+                "nextStage": {
+                    "label": "Próximo estágio",
+                    "value": "impacto operacional"
+                }
+            },
+            "note": "O comportamento ainda não virou uma anomalia evidente, mas já saiu do padrão esperado por tempo suficiente para tornar a espera uma decisão consciente.",
+            "ticks": {
+                "d1": "D1",
+                "d8": "D8",
+                "d12": "D12",
+                "d16": "D16",
+                "d20": "D20",
+                "d24": "D24"
+            }
+        },
+        "decisionWindowExplanation": {
+            "title": "Entre “está funcionando” e “temos um problema”, existe uma janela.",
+            "description": "É o intervalo em que o fluxo ainda conclui, aprova, responde ou entrega; mas sinais persistentes já indicam que o comportamento saiu do esperado.",
+            "steps": {
+                "normal": {
+                    "title": "Normal",
+                    "description": "O fluxo opera dentro do comportamento esperado."
+                },
+                "variation": {
+                    "title": "Variação",
+                    "description": "Existe oscilação, mas ainda compatível com ruído."
+                },
+                "attention": {
+                    "title": "Atenção",
+                    "description": "O sinal persiste e começa a exigir contexto."
+                },
+                "decisionWindow": {
+                    "title": "Janela de decisão",
+                    "description": "Esperar ainda é possível, mas já não é neutro."
+                },
+                "operationalImpact": {
+                    "title": "Impacto operacional",
+                    "description": "O problema já aparece como perda, retrabalho ou sobrecarga."
+                }
+            }
+        },
+        "observes": {
+            "title": "Alguns sinais que o Ohrly interpreta",
+            "description": "O Ohrly não trata todo desvio como problema. Ele procura sinais que persistem, ganham contexto e começam a reduzir a capacidade natural de recuperação do fluxo.",
+            "items": {
+                "persistence": {
+                    "title": "Persistência",
+                    "description": "O sinal durou tempo suficiente para deixar de parecer ruído."
+                },
+                "magnitude": {
+                    "title": "Magnitude",
+                    "description": "O comportamento se afastou do esperado para aquele contexto."
+                },
+                "propagation": {
+                    "title": "Propagação",
+                    "description": "O problema começou a aparecer em sinais secundários."
+                },
+                "recoverability": {
+                    "title": "Recuperabilidade",
+                    "description": "O fluxo já deveria ter voltado ao normal, mas não voltou."
+                },
+                "exposedValue": {
+                    "title": "Valor exposto",
+                    "description": "Pedidos, sessões ou transações passaram por estado degradado."
+                }
+            }
+        },
+        "whereItAppears": {
+            "title": "Para quem isso serve",
+            "description": "A tese é horizontal, mas a leitura precisa ser concreta. O Ohrly começa por fluxos onde pequenos sinais costumam virar custo operacional antes de virarem incidentes.",
+            "items": {
                 "ecommerce": {
-                    "title": "Ohrly para E-commerce",
-                    "description": "Detecte quando checkout, pagamento, entrega ou recuperação de carrinho começam a perder eficiência antes que a queda de conversão fique óbvia.",
-                    "cta": "Ver solução",
-                    "tags": {
-                        "checkout": "Checkout",
-                        "payments": "Pagamentos",
-                        "delivery": "Entrega"
-                    }
+                    "title": "E-commerce",
+                    "description": "Checkout, pagamento, entrega e recuperação de carrinho."
                 },
                 "bots": {
-                    "title": "Ohrly para Bots & Agentes",
-                    "description": "Detecte quando bots e agentes continuam respondendo, mas começam a transferir mais para humanos, resolver menos ou acumular sessões sem resolução.",
-                    "cta": "Ver solução",
-                    "tags": {
-                        "handoff": "Handoff",
-                        "fallback": "Fallback",
-                        "resolution": "Resolução"
-                    }
+                    "title": "Atendimento e bots",
+                    "description": "Handoff, fallback, mensagens não resolvidas e tempo de resolução."
+                },
+                "billing": {
+                    "title": "Billing e cobrança",
+                    "description": "Falhas recorrentes, retentativas e recuperação lenta."
+                },
+                "journeys": {
+                    "title": "Jornadas digitais",
+                    "description": "Onboarding, abandono, fricção e perda de progressão."
+                }
+            }
+        },
+        "comparison": {
+            "eyebrow": "Camada complementar",
+            "title": "Como o Ohrly complementa suas ferramentas atuais",
+            "description": "O Ohrly não substitui APM, BI ou detecção de anomalias. Ele ocupa o intervalo em que sinais já persistem, mas o impacto ainda não ficou óbvio o suficiente para legitimar uma decisão.",
+            "items": {
+                "technicalObservability": {
+                    "title": "Observabilidade técnica",
+                    "question": "O sistema falhou?",
+                    "description": "Foco em infraestrutura, erros, disponibilidade, latência e logs."
+                },
+                "biAnalytics": {
+                    "title": "BI / Analytics",
+                    "question": "O resultado caiu?",
+                    "description": "Foco em histórico, conversão, receita, volume e análises agregadas."
+                },
+                "anomalyDetection": {
+                    "title": "Anomaly detection",
+                    "question": "Algum indicador virou anomalia?",
+                    "description": "Foco em thresholds, desvios estatísticos e confirmação do ponto anômalo."
+                },
+                "ohrly": {
+                    "title": "Ohrly",
+                    "question": "Esperar deixou de ser neutro?",
+                    "description": "Foco em persistência, contexto, recuperabilidade e janela de decisão."
+                }
+            }
+        },
+        "exampleReading": {
+            "eyebrow": "Exemplo de leitura Ohrly",
+            "title": "Não é incidente ainda. Mas já é uma decisão.",
+            "description": "O fluxo de pagamento Pix + Mobile ainda aprova pedidos, mas opera há 4 dias fora do comportamento esperado. A degradação ultrapassou o ciclo natural de recuperação e começa a se propagar para retries.",
+            "metrics": {
+                "currentState": {
+                    "label": "Estado atual",
+                    "value": "Atenção avançada"
+                },
+                "rpi": {
+                    "label": "RPI",
+                    "value": "72/100"
+                },
+                "exposedValue": {
+                    "label": "Valor exposto",
+                    "value": "R$ 184 mil"
+                }
+            },
+            "contrast": {
+                "dashboard": {
+                    "label": "O que um painel poderia mostrar",
+                    "text": "Tempo de confirmação acima da média em alguns períodos."
+                },
+                "ohrly": {
+                    "label": "O que o Ohrly interpreta",
+                    "text": "O comportamento deixou de parecer ruído, ultrapassou sua recuperação esperada e abriu uma janela de decisão antes do impacto explícito."
                 }
             }
         },
         "howItWorks": {
-            "title": "Como o Ohrly funciona",
+            "eyebrow": "Como funciona",
+            "title": "Do sinal persistente à janela de decisão",
             "steps": {
-                "flow": {
-                    "title": "Fluxo",
-                    "description": "Fluxos digitais rodam através de múltiplos sistemas."
+                "observeFlow": {
+                    "title": "Observa o fluxo",
+                    "description": "O Ohrly parte de eventos, timestamps, status, contexto e sinais intermediários."
                 },
-                "signals": {
-                    "title": "Sinais",
-                    "description": "Sinais comportamentais são capturados."
+                "reconstructBehavior": {
+                    "title": "Reconstrói comportamento",
+                    "description": "O fluxo é comparado com seu próprio histórico e contexto operacional."
                 },
-                "context": {
-                    "title": "Contexto",
-                    "description": "Os sinais são enriquecidos com contexto operacional."
+                "recognizePersistence": {
+                    "title": "Reconhece persistência",
+                    "description": "Um pico isolado não vira leitura. O que importa é duração, recorrência e trajetória."
                 },
-                "persistence": {
-                    "title": "Persistência",
-                    "description": "Dados contextuais são armazenados para análise longitudinal."
+                "measureRecoveryPressure": {
+                    "title": "Mede pressão de recuperação",
+                    "description": "O RPI mostra o quanto a operação está acumulando pressão para voltar ao normal."
                 },
-                "reading": {
-                    "title": "Leitura",
-                    "description": "Ohrly calcula a leitura comportamental de RPI."
+                "translateDecision": {
+                    "title": "Traduz em decisão",
+                    "description": "A saída não é um alerta. É uma leitura para o time discutir o que fazer agora."
                 }
-            },
-            "description": "Do comportamento bruto a uma leitura única que mostra quando a performance começa a se afastar dos padrões esperados."
+            }
         },
-        "secondaryCards": {
-            "simulations": {
-                "title": "Simulações",
-                "description": "Explore simulações de fluxos digitais.",
-                "cta": "Ver Laboratório"
-            },
-            "reports": {
-                "title": "Relatórios públicos",
-                "description": "Navegue por interpretações sintéticas publicadas e exemplos.",
-                "cta": "Ver Relatórios"
+        "lab": {
+            "eyebrow": "Laboratório Ohrly",
+            "title": "Veja como o Ohrly leria um fluxo parecido com o seu, sem enviar dados reais.",
+            "description": "Escolha um template e explore uma leitura sintética. A simulação não diagnostica sua operação real; ela mostra que tipo de comportamento o Ohrly conseguiria tornar visível com dados históricos.",
+            "cta": "Explorar templates de fluxo",
+            "templates": {
+                "checkout": {
+                    "title": "Checkout e pagamento",
+                    "description": "Simule atraso de aprovação, retries e valor exposto."
+                },
+                "chatbot": {
+                    "title": "Chatbot e handoff",
+                    "description": "Simule fallback, handoff humano e mensagens não resolvidas."
+                },
+                "delivery": {
+                    "title": "Ciclo de entrega",
+                    "description": "Simule atraso, recuperação lenta e concentração por região."
+                },
+                "billing": {
+                    "title": "Billing e cobrança",
+                    "description": "Simule falhas recorrentes, retentativas e receita exposta."
+                }
             }
         },
         "finalCta": {
-            "title": "Comece pela rota que mais combina com a sua operação.",
-            "description": "Explore primeiro uma solução focada e depois use o Laboratório para ver como o Ohrly leria um fluxo semelhante com dados sintéticos.",
-            "cta": "Explorar simulações"
+            "title": "Pronto para enxergar a próxima janela de decisão da sua operação?",
+            "description": "Comece com um fluxo crítico e veja como o Ohrly transforma sinais persistentes em clareza para decidir.",
+            "cta": "Aplicar em um fluxo real"
         }
     },
     "guidedDemo": {
@@ -580,417 +720,6 @@
                     "exposedValue": "valor exposto"
                 }
             }
-        }
-    },
-    "ecommerce": {
-        "flowTemplates": {
-            "checkout": {
-                "name": "Checkout e pagamento",
-                "description": "Do início do checkout até a confirmação do pedido."
-            },
-            "delivery": {
-                "name": "Entrega",
-                "description": "Do pedido aprovado até a entrega concluída."
-            },
-            "cart": {
-                "name": "Carrinho",
-                "description": "Da criação do carrinho até a tentativa de compra."
-            },
-            "billing": {
-                "name": "Billing",
-                "description": "Da cobrança gerada até recuperação ou conta em risco."
-            }
-        },
-        "scenarios": {
-            "slow_approval": {
-                "name": "Aprovação mais lenta",
-                "description": "O tempo até confirmação começa a subir."
-            },
-            "more_retries": {
-                "name": "Mais retries",
-                "description": "Pagamentos precisam de mais tentativas."
-            },
-            "mobile_drop": {
-                "name": "Queda no mobile",
-                "description": "A conclusão cai em dispositivos móveis."
-            }
-        },
-        "states": {
-            "degradation": {
-                "label": "Degradação provável",
-                "shortLabel": "Degradação"
-            },
-            "attention": {
-                "label": "Atenção operacional",
-                "shortLabel": "Atenção"
-            },
-            "variation": {
-                "label": "Variação observada",
-                "shortLabel": "Variação"
-            }
-        },
-        "contexts": {
-            "checkout": "Pix + Mobile",
-            "delivery": "Sellers médios + Nordeste",
-            "cart": "Mobile + visitantes recorrentes",
-            "billing": "Plano Pro + contas médias"
-        },
-        "readings": {
-            "delivery": {
-                "title": "Entrega com recuperação lenta",
-                "summary": "Os pedidos ainda são entregues, mas o fluxo demora mais para voltar ao comportamento esperado.",
-                "apmSignal": "Jobs ativos, APIs respondendo e erros dentro do tolerável.",
-                "ohrlyReading": "A jornada de entrega está exigindo mais tempo de recuperação e criando fila operacional antes de virar reclamação massiva.",
-                "exposed": "R$ 96 mil",
-                "metric": "+31%",
-                "metricLabel": "tempo até envio",
-                "signals": {
-                    "one": "atraso",
-                    "two": "pedidos em risco",
-                    "three": "fila operacional"
-                }
-            },
-            "cart": {
-                "title": "Carrinho com abandono crescente",
-                "summary": "O carrinho continua sendo criado, mas mais clientes desistem antes de iniciar o pagamento.",
-                "apmSignal": "Frontend carregando, API sem queda e eventos sendo registrados.",
-                "ohrlyReading": "O comportamento do usuário mudou: mais sessões param antes do pagamento, principalmente em um contexto específico.",
-                "exposed": "R$ 72 mil",
-                "metric": "+24%",
-                "metricLabel": "abandono",
-                "signals": {
-                    "one": "abandono",
-                    "two": "mobile",
-                    "three": "retorno sem compra"
-                }
-            },
-            "billing": {
-                "title": "Billing com recuperação instável",
-                "summary": "As cobranças continuam rodando, mas a recuperação começa a depender de mais tentativas.",
-                "apmSignal": "Gateway disponível, filas consumidas e falhas sem pico crítico.",
-                "ohrlyReading": "A recuperação de receita está ficando mais frágil: o mesmo resultado exige mais tentativas e mais tempo.",
-                "exposed": "R$ 121 mil",
-                "metric": "+29%",
-                "metricLabel": "falhas de cobrança",
-                "signals": {
-                    "one": "falhas",
-                    "two": "retries",
-                    "three": "receita exposta"
-                }
-            },
-            "checkout_more_retries": {
-                "title": "Checkout com retries crescentes",
-                "summary": "O pagamento continua funcionando, mas mais pedidos precisam de novas tentativas antes da confirmação.",
-                "apmSignal": "Gateway no ar, taxa de erro aceitável e latência sem alerta crítico.",
-                "ohrlyReading": "O fluxo está ficando mais custoso para concluir a mesma venda: há mais esforço antes da confirmação.",
-                "exposed": "R$ 184 mil",
-                "metric": "+37%",
-                "metricLabel": "retries",
-                "signals": {
-                    "one": "retries",
-                    "two": "aprovação lenta",
-                    "three": "valor exposto"
-                }
-            },
-            "checkout_mobile_drop": {
-                "title": "Checkout com queda no mobile",
-                "summary": "O fluxo segue ativo, mas a conclusão em mobile começa a se afastar do comportamento esperado.",
-                "apmSignal": "Aplicação disponível, rotas respondendo e checkout ainda processando pedidos.",
-                "ohrlyReading": "O problema não é indisponibilidade: é perda de eficiência concentrada em mobile antes de aparecer como queda geral.",
-                "exposed": "R$ 184 mil",
-                "metric": "-18%",
-                "metricLabel": "conclusão mobile",
-                "signals": {
-                    "one": "mobile",
-                    "two": "abandono",
-                    "three": "valor exposto"
-                }
-            },
-            "checkout_slow_approval": {
-                "title": "Checkout com aprovação lenta",
-                "summary": "O pagamento continua funcionando, mas o tempo até aprovação aumentou por alguns dias e os retries começaram a aparecer.",
-                "apmSignal": "Checkout no ar, poucos erros e latência ainda abaixo do limite crítico.",
-                "ohrlyReading": "O fluxo está perdendo eficiência: a aprovação demora mais, exige mais tentativas e expõe receita antes do incidente ficar óbvio.",
-                "exposed": "R$ 184 mil",
-                "metric": "+42%",
-                "metricLabel": "tempo até aprovação",
-                "signals": {
-                    "one": "aprovação lenta",
-                    "two": "retries",
-                    "three": "abandono"
-                }
-            }
-        },
-        "hero": {
-            "title": "Seu e-commerce não precisa sair do ar para começar a perder dinheiro.",
-            "description": "Checkout, pagamento, entrega e recuperação de carrinho podem continuar funcionando enquanto já acumulam atraso, retries, abandono e perda de eficiência.",
-            "differenceCards": {
-                "apm": {
-                    "label": "APM mostra a saúde",
-                    "text": "Seu sistema pode estar saudável e ainda assim gerar prejuízo na operação."
-                },
-                "ohrly": {
-                    "label": "Ohrly interpreta",
-                    "text": "Mesmo um sistema saudável pode estar operando abaixo do potencial."
-                }
-            },
-            "cta": "Simular meu fluxo"
-        },
-        "heroVisual": {
-            "eyebrow": "Leitura de fluxo",
-            "title": "Comportamento do checkout",
-            "rpiLabel": "RPI",
-            "effortTitle": "Esforço até aprovação",
-            "exposedValueTitle": "Valor exposto",
-            "exposedValueDescription": "antes do incidente claro",
-            "relevantSignals": "Sinais relevantes",
-            "dates": {
-                "apr30": "30 Abr",
-                "may02": "02 Mai",
-                "may04": "04 Mai",
-                "may06": "06 Mai"
-            }
-        },
-        "comparison": {
-            "eyebrow": "Onde o Ohrly entra",
-            "title": "Identifica sinais relevantes que indicam que algo pode estar quebrado.",
-            "description": "O Ohrly não substitui APM nem BI. Ele conecta os dois: mostra quando o comportamento técnico começa a pressionar o resultado operacional.",
-            "items": {
-                "apm": {
-                    "title": "APM responde",
-                    "description": "O serviço está disponível? Há erro? A latência passou do limite?"
-                },
-                "bi": {
-                    "title": "BI responde",
-                    "description": "A conversão caiu? A receita mudou? O resultado final piorou?"
-                },
-                "ohrly": {
-                    "title": "Ohrly responde",
-                    "description": "O fluxo começou a perder eficiência antes do impacto ficar óbvio?"
-                }
-            }
-        },
-        "symptoms": {
-            "title": "A loja continua vendendo. Mas o fluxo já pode estar piorando.",
-            "description": "O ponto não é detectar apenas falhas explícitas. É perceber quando sinais pequenos, persistentes e conectados indicam perda de eficiência operacional.",
-            "apmLabel": "APM pode mostrar",
-            "ohrlyLabel": "Ohrly interpreta",
-            "items": {
-                "slowCheckout": {
-                    "title": "Checkout mais lento",
-                    "apm": "Latência ainda dentro do limite técnico.",
-                    "ohrly": "O tempo até aprovação subiu e começou a criar fricção na jornada de compra."
-                },
-                "moreRetries": {
-                    "title": "Mais retries",
-                    "apm": "Gateway disponível e transações ainda sendo processadas.",
-                    "ohrly": "A mesma venda passou a exigir mais tentativas, aumentando custo e risco de abandono."
-                },
-                "moreAbandonment": {
-                    "title": "Mais abandono",
-                    "apm": "Eventos continuam chegando e a aplicação não está fora do ar.",
-                    "ohrly": "Clientes estão parando antes da conclusão em um contexto específico, como mobile ou Pix."
-                },
-                "fragileDelivery": {
-                    "title": "Entrega mais frágil",
-                    "apm": "Jobs, filas e integrações podem parecer saudáveis isoladamente.",
-                    "ohrly": "O fluxo demora mais para se recuperar e começa a acumular pressão operacional."
-                }
-            }
-        },
-        "example": {
-            "eyebrow": "Exemplo de leitura comportamental",
-            "apmCouldSay": "APM poderia dizer",
-            "ohrlyInterprets": "Ohrly interpreta"
-        },
-        "simulator": {
-            "eyebrow": "Simulador guiado",
-            "title": "Simule um fluxo parecido com o seu",
-            "description": "Em vez de escolher métricas soltas, você simula uma jornada, um cenário de degradação e a pressão operacional acumulada.",
-            "steps": {
-                "one": "Escolha um fluxo de negócio",
-                "two": "Escolha uma perda de eficiência",
-                "three": "Ajuste a pressão operacional",
-                "four": "Receba uma leitura, não só um gráfico"
-            },
-            "controls": {
-                "persistence": "Persistência",
-                "recovery": "Recuperação",
-                "propagation": "Propagação",
-                "fast": "Rápida",
-                "normal": "Normal",
-                "slow": "Lenta",
-                "low": "Baixa",
-                "medium": "Média",
-                "high": "Alta"
-            },
-            "liveReading": {
-                "state": "Estado",
-                "context": "Contexto afetado",
-                "reading": "Leitura",
-                "timeline": "Linha do tempo",
-                "today": "Hoje"
-            }
-        },
-        "method": {
-            "eyebrow": "Além do APM",
-            "title": "O Ohrly interpreta a trajetória do fluxo, não apenas a saúde dos componentes.",
-            "steps": {
-                "businessFlow": {
-                    "title": "Parte do fluxo de negócio",
-                    "description": "Não começa no serviço ou endpoint. Começa na jornada que precisa gerar resultado."
-                },
-                "intermediateSignals": {
-                    "title": "Lê sinais intermediários",
-                    "description": "Retries, atrasos, abandono, recuperação e conclusão parcial antes do incidente claro."
-                },
-                "contextComparison": {
-                    "title": "Compara por contexto",
-                    "description": "Mobile, Pix, região, plano, seller ou canal podem ter comportamentos esperados diferentes."
-                },
-                "persistencePropagation": {
-                    "title": "Mede persistência e propagação",
-                    "description": "Diferencia pico isolado de degradação sustentada que começa a espalhar impacto."
-                },
-                "decisionTranslation": {
-                    "title": "Traduz para decisão",
-                    "description": "Mostra estado do fluxo, pressão de recuperação, valor exposto e prioridade operacional."
-                }
-            }
-        },
-        "finalCta": {
-            "title": "Teste com um fluxo parecido com o seu",
-            "description": "Ideal para times que já monitoram sistemas, mas ainda precisam entender quando uma jornada crítica começou a perder eficiência operacional.",
-            "cta": "Solicitar simulação personalizada"
-        }
-    },
-    "bots": {
-        "symptoms": {
-            "moreHandoff": {
-                "title": "Mais handoff humano",
-                "description": "Transferências aumentam antes do volume explodir."
-            },
-            "moreFallback": {
-                "title": "Mais fallback",
-                "description": "O bot recorre mais a respostas genéricas ou não resolutivas."
-            },
-            "longerResolution": {
-                "title": "Mais tempo de resolução",
-                "description": "Cada atendimento leva mais tempo para concluir."
-            },
-            "unresolvedSessions": {
-                "title": "Mais sessões sem desfecho",
-                "description": "Mais conversas encerradas sem resolução efetiva."
-            }
-        },
-        "methodSteps": {
-            "expectedFlow": {
-                "number": "1",
-                "title": "Definimos o fluxo esperado",
-                "description": "Mapeamos o que o bot ou agente deveria entregar em condições normais."
-            },
-            "behaviorSignals": {
-                "number": "2",
-                "title": "Observamos sinais comportamentais",
-                "description": "Capturamos sinais reais do comportamento das conversas ao longo do tempo."
-            },
-            "contextComparison": {
-                "number": "3",
-                "title": "Comparamos por contexto",
-                "description": "Comparamos com o histórico recente e com contextos semelhantes."
-            },
-            "persistenceMagnitudePropagation": {
-                "number": "4",
-                "title": "Medimos persistência, magnitude e propagação",
-                "description": "Avaliamos se a mudança é recorrente, relevante e se espalha para outros segmentos."
-            },
-            "actionableReading": {
-                "number": "5",
-                "title": "Geramos uma leitura acionável",
-                "description": "Entregamos RPI, principais sinais e o que vale investigar ou agir."
-            }
-        },
-        "comparison": {
-            "apm": {
-                "title": "APM vê:",
-                "subtitle": "serviço e erro",
-                "description": "Foca na saúde técnica e na disponibilidade."
-            },
-            "bi": {
-                "title": "BI vê:",
-                "subtitle": "resultado",
-                "description": "Foca no que foi entregue ao final da jornada."
-            },
-            "ohrly": {
-                "title": "Ohrly vê:",
-                "subtitle": "o fluxo perdendo eficiência",
-                "description": "Foca no que muda antes do resultado piorar."
-            }
-        },
-        "header": {
-            "howItWorks": "Como funciona",
-            "example": "Exemplo",
-            "method": "Método",
-            "login": "Login",
-            "labCta": "Entrar no Lab"
-        },
-        "hero": {
-            "badge": "Análise de drift em bots e agentes",
-            "title": "Seu bot pode estar degradando antes do handoff explodir.",
-            "description": "Bots e agentes podem continuar respondendo enquanto já resolvem menos, transferem mais para humanos e acumulam sessões sem desfecho.",
-            "primaryCta": "Ver exemplo pronto",
-            "secondaryCta": "Solicitar análise sintética",
-            "privacyNote": "Sem integração. Sem dados reais no primeiro contato."
-        },
-        "dashboard": {
-            "rpiTitle": "Índice de Drift (RPI)",
-            "state": "Atenção operacional",
-            "contextLabel": "Contexto",
-            "contextValue": "WhatsApp + novos clientes",
-            "recoveryPressure": "Pressão de recuperação",
-            "recoveryLevel": "Alta",
-            "recoveryDescription": "O bot está resistindo, mas com mais esforço.",
-            "mainInsights": "Insights principais",
-            "insights": {
-                "handoff": "Handoff em alta nas últimas 2 semanas",
-                "fallback": "Mais fallback em intents similares",
-                "resolution": "Tempo de resolução piorou 18%"
-            },
-            "viewSignals": "Ver todos os sinais",
-            "handoffChartTitle": "Handoff para humano",
-            "today": "Hoje"
-        },
-        "symptomsSection": {
-            "title": "O bot não caiu. Mas algo já mudou."
-        },
-        "exampleReading": {
-            "title": "Veja uma leitura pronta de Bot Drift",
-            "cardTitle": "Bot com handoff crescente",
-            "state": "Atenção operacional",
-            "contextLabel": "Contexto",
-            "contextValue": "WhatsApp + novos clientes",
-            "connectedSignals": "Sinais conectados",
-            "signals": {
-                "handoff": "↗ handoff",
-                "fallback": "↗ fallback",
-                "resolutionTime": "↘ tempo de resolução",
-                "unresolvedSessions": "✱ sessões sem resolução"
-            },
-            "adaptCta": "Adaptar este exemplo"
-        },
-        "methodSection": {
-            "title": "Como a análise funciona"
-        },
-        "startWithoutIntegration": {
-            "title": "Comece sem integração",
-            "description": "Basta um conjunto simples de dados exportado do seu sistema.",
-            "privacyNote": "CSV ou Parquet. Sem PII sensível no primeiro contato."
-        },
-        "finalCta": {
-            "title": "Antecipe problemas. Atue antes do handoff explodir.",
-            "description": "Solicite uma análise sintética do seu fluxo e receba uma leitura pronta com os principais sinais.",
-            "cta": "Solicitar análise sintética",
-            "privacyNote": "Sem integração. Sem dados reais."
         }
     },
     "footer": {

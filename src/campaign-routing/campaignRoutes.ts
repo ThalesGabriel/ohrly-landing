@@ -43,7 +43,7 @@ export type CampaignRoute = {
 export const campaignRoutes: CampaignRoute[] = [
   {
     id: "meta-ecommerce-default",
-    enabled: true,
+    enabled: false,
     priority: 10,
     source: "meta",
     matchPaths: ["/", "/pt", "/en"],
@@ -55,7 +55,7 @@ export const campaignRoutes: CampaignRoute[] = [
   },
   {
     id: "meta-checkout-lab-test",
-    enabled: true,
+    enabled: false,
     priority: 20,
     source: "meta",
     matchPaths: ["/", "/pt", "/en"],
