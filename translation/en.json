@@ -22,7 +22,7 @@
         },
         "hero": {
             "badge": "Guided request",
-            "title": "Request an interpretation with synthetic data.",
+            "title": "Request a free interpretation with synthetic data.",
             "description": "Describe your real flow in a simple way and receive a synthetic interpretation and a full report later, directly in your email.",
             "securityNote": "No sensitive data in the first contact."
         },
