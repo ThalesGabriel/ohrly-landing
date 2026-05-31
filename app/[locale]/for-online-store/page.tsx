@@ -1,53 +1,55 @@
+"use client";
+
 import Link from "next/link";
 import {
   ArrowRight,
   Box,
-  CheckCircle2,
   Clock3,
   CreditCard,
   FileSearch,
   Lock,
   Mail,
-  MapPinned,
   MessageCircle,
   MousePointer2,
   Route,
   Search,
   ShieldCheck,
-  ShoppingCart,
   Sparkles,
   Target,
   Workflow,
 } from "lucide-react";
 
+import { useRef } from "react";
+import { trackMetaEvent } from "@/lib/meta-pixel";
+
 const organizedItems = [
   {
-    title: "Jornada",
-    description: "Qual caminho o usuário percorre?",
+    title: "Caminho da venda",
+    description: "Por onde o cliente passa antes de comprar?",
     icon: Route,
     className: "bg-sky-50 text-sky-700",
   },
   {
-    title: "Sinais",
-    description: "Que comportamentos mostram atrito?",
+    title: "Sinais de atrito",
+    description: "O que pode estar fazendo a pessoa desistir?",
     icon: Workflow,
     className: "bg-teal-50 text-teal-700",
   },
   {
-    title: "Contexto",
-    description: "Onde o problema parece se concentrar?",
+    title: "Ponto de travamento",
+    description: "Onde a venda parece perder força?",
     icon: Target,
     className: "bg-violet-50 text-violet-700",
   },
   {
-    title: "Persistência",
-    description: "Isso é pontual ou vem se repetindo?",
+    title: "Repetição",
+    description: "Isso acontece uma vez ou vem se repetindo?",
     icon: Clock3,
     className: "bg-orange-50 text-orange-700",
   },
   {
     title: "Próximo dado",
-    description: "O que seria necessário para confirmar?",
+    description: "O que olhar para confirmar o problema?",
     icon: FileSearch,
     className: "bg-emerald-50 text-emerald-700",
   },
@@ -66,7 +68,9 @@ export default function DigitalJourneysLandingPage() {
       <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/85 backdrop-blur-xl">
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-center px-6 lg:px-8">
           <Link href="/" className="flex items-center gap-3" aria-label="Ohrly home">
-            <span className="text-2xl font-semibold tracking-tight text-slate-950">Ohrly</span>
+            <span className="text-2xl font-semibold tracking-tight text-slate-950">
+              Ohrly
+            </span>
           </Link>
         </div>
       </header>
@@ -76,17 +80,17 @@ export default function DigitalJourneysLandingPage() {
           <div className="flex flex-col justify-center">
             <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-blue-100 bg-white px-4 py-2 text-sm font-medium text-blue-700 shadow-sm">
               <Sparkles className="h-4 w-4" />
-              Análise inicial de jornada digital
+              Análise inicial da sua venda online
             </div>
 
             <h1 className="max-w-3xl text-5xl font-semibold tracking-[-0.055em] text-slate-950 sm:text-6xl lg:text-7xl">
-              Sua loja online recebe visitas, <span className="text-blue-700"> mas não vende </span> como deveria?
+              Sua loja online recebe visitas,{" "}
+              <span className="text-blue-700">mas não vende</span> como deveria?
             </h1>
 
             <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-600 sm:text-xl">
-              Descreva uma jornada importante: Venda, checkout, pagamento, entrega,
-              atendimento ou onboarding. A Ohrly te ajuda a entender quais sinais poderiam
-              mostrar perda de consistência.
+              Antes de gastar mais com anúncio, entenda onde a venda pode estar travando:
+              produto, carrinho, pagamento, frete, atendimento ou entrega.
             </p>
 
             <div className="mt-10 hidden max-w-xl items-center gap-4 lg:flex">
@@ -99,8 +103,11 @@ export default function DigitalJourneysLandingPage() {
                       <div className="flex h-14 w-14 items-center justify-center rounded-full border border-slate-200 bg-white text-blue-700 shadow-sm transition group-hover:-translate-y-0.5 group-hover:shadow-md">
                         <Icon className="h-5 w-5" />
                       </div>
-                      <span className="text-xs font-medium text-slate-500">{step.label}</span>
+                      <span className="text-xs font-medium text-slate-500">
+                        {step.label}
+                      </span>
                     </div>
+
                     {index < journeySteps.length - 1 && (
                       <div className="h-px w-8 bg-gradient-to-r from-slate-200 to-sky-200" />
                     )}
@@ -119,12 +126,14 @@ export default function DigitalJourneysLandingPage() {
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-50 text-blue-700">
             <Search className="h-5 w-5" />
           </div>
+
           <h2 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
             O que a Ohrly organiza
           </h2>
+
           <p className="mt-4 text-base leading-7 text-slate-600">
-            A primeira leitura não tenta adivinhar causa. Ela organiza a jornada para mostrar
-            onde faz sentido observar melhor.
+            A primeira análise não tenta adivinhar a causa. Ela organiza o que você percebe
+            para mostrar onde faz sentido olhar primeiro.
           </p>
         </div>
 
@@ -137,11 +146,19 @@ export default function DigitalJourneysLandingPage() {
                 key={item.title}
                 className="rounded-[2rem] border border-slate-200 bg-white p-6 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-md"
               >
-                <div className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full ${item.className}`}>
+                <div
+                  className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full ${item.className}`}
+                >
                   <Icon className="h-7 w-7" />
                 </div>
-                <h3 className="mt-5 text-lg font-semibold text-slate-950">{item.title}</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>
+
+                <h3 className="mt-5 text-lg font-semibold text-slate-950">
+                  {item.title}
+                </h3>
+
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  {item.description}
+                </p>
               </article>
             );
           })}
@@ -157,16 +174,21 @@ export default function DigitalJourneysLandingPage() {
 
             <div>
               <h2 className="text-2xl font-semibold tracking-tight text-slate-950">
-                Exemplo de leitura inicial
+                Exemplo de análise inicial
               </h2>
 
               <div className="mt-5 rounded-[1.5rem] border border-slate-200 bg-slate-50/70 p-6 text-lg leading-8 text-slate-700">
-                <span className="mr-2 text-4xl font-semibold leading-none text-blue-600">“</span>
-                A jornada parece perder clareza entre interesse e conclusão. Antes de afirmar
-                causa, faz sentido observar abandono de carrinho, tentativas de pagamento,
-                dúvidas no atendimento e variação por canal. A Ohrly não substitui sua decisão.
-                Ela mostra onde olhar primeiro.
-                <span className="ml-2 text-4xl font-semibold leading-none text-blue-600">”</span>
+                <span className="mr-2 text-4xl font-semibold leading-none text-blue-600">
+                  “
+                </span>
+                Pelo que você descreveu, a venda parece perder força entre o interesse e a
+                conclusão da compra. Antes de mexer no anúncio, faria sentido observar:
+                abandono de carrinho, dúvidas no atendimento, frete, tentativas de pagamento
+                e clareza da oferta. A Ohrly não substitui sua decisão. Ela mostra onde olhar
+                primeiro.
+                <span className="ml-2 text-4xl font-semibold leading-none text-blue-600">
+                  ”
+                </span>
               </div>
             </div>
           </div>
@@ -178,12 +200,14 @@ export default function DigitalJourneysLandingPage() {
           <div className="mb-4 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-700 sm:mb-0">
             <ShieldCheck className="h-6 w-6" />
           </div>
+
           <div>
             <h2 className="text-xl font-semibold tracking-tight text-slate-950">
-              A Ohrly não diz como vender mais.
+              A Ohrly não promete vender mais.
             </h2>
+
             <p className="mt-1 text-base leading-7 text-slate-600">
-              Ela ajuda a entender onde uma jornada digital pode estar perdendo consistência.
+              Ela ajuda você a entender onde a venda online pode estar travando.
             </p>
           </div>
         </div>
@@ -192,20 +216,60 @@ export default function DigitalJourneysLandingPage() {
   );
 }
 
-function RequestCard() {
+export function RequestCard() {
+  const hasStartedRef = useRef(false);
+
+  function handleFormStart() {
+    if (hasStartedRef.current) return;
+
+    hasStartedRef.current = true;
+
+    trackMetaEvent("form_started", {
+      form_name: "analise_inicial_jornada_digital",
+      page: "digital_journeys_landing_page",
+      source: "landing_jornada_digital",
+    });
+  }
+
   return (
     <div className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-xl shadow-slate-200/70 sm:p-7 lg:p-8">
-      <form className="space-y-6">
+      <form
+        action="https://formspree.io/f/mkoygpnk"
+        method="POST"
+        className="space-y-6"
+        onFocus={handleFormStart}
+      >
+        <input
+          type="hidden"
+          name="_redirect"
+          value="https://www.ohrly.com.br/pt/obrigado"
+        />
+
+        <input
+          type="hidden"
+          name="_subject"
+          value="Novo pedido de análise inicial - Ohrly"
+        />
+
+        <input
+          type="hidden"
+          name="source"
+          value="landing_jornada_digital"
+        />
+
         <div>
           <label htmlFor="email" className="text-sm font-semibold text-slate-900">
             Email
           </label>
-          <div className="mt-2 flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3.5 shadow-sm transition-within:border-blue-500 focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-100">
+
+          <div className="mt-2 flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3.5 shadow-sm transition focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-100">
             <Mail className="h-5 w-5 text-slate-400" />
+
             <input
               id="email"
               name="email"
               type="email"
+              required
               placeholder="seu@email.com"
               className="w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
             />
@@ -214,35 +278,39 @@ function RequestCard() {
 
         <div>
           <label htmlFor="journey" className="text-sm font-semibold text-slate-900">
-            Qual jornada você quer entender?
+            Qual parte da venda você quer entender?
           </label>
+
           <input
             id="journey"
-            name="journey"
+            name="parte_da_venda"
             type="text"
-            placeholder="Ex: checkout, pagamento Pix, entrega, atendimento no WhatsApp..."
+            required
+            placeholder="Ex: carrinho, pagamento Pix, frete, atendimento no WhatsApp..."
             className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3.5 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
           />
         </div>
 
         <div>
           <label htmlFor="context" className="text-sm font-semibold text-slate-900">
-            O que você percebe hoje?
+            O que está acontecendo hoje?
           </label>
+
           <textarea
             id="context"
-            name="context"
+            name="contexto"
             rows={6}
-            placeholder="Ex: As pessoas chegam, mas poucas concluem. Não sei se o atrito está no carrinho, pagamento, frete ou atendimento."
+            required
+            placeholder="Ex: As pessoas entram na loja, perguntam no WhatsApp, mas não compram. Acho que pode ser frete, preço, pagamento ou falta de confiança."
             className="mt-2 w-full resize-none rounded-2xl border border-slate-200 bg-white px-4 py-3.5 text-sm leading-6 text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
           />
         </div>
 
         <button
           type="submit"
-          className="cursor-pointer group flex w-full items-center justify-center gap-2 rounded-2xl bg-blue-700 px-5 py-4 text-base font-semibold text-white shadow-lg shadow-blue-700/20 transition hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl hover:shadow-blue-700/25"
+          className="group flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl bg-blue-700 px-5 py-4 text-base font-semibold text-white shadow-lg shadow-blue-700/20 transition hover:-translate-y-0.5 hover:bg-blue-800 hover:shadow-xl hover:shadow-blue-700/25"
         >
-          Receber análise inicial
+          Entender onde minha venda trava
           <ArrowRight className="h-5 w-5 transition group-hover:translate-x-0.5" />
         </button>
 
@@ -251,20 +319,6 @@ function RequestCard() {
           Não é necessário enviar dados sensíveis agora.
         </p>
       </form>
-    </div>
-  );
-}
-
-function FloatingIcon({
-  icon: Icon,
-  className,
-}: {
-  icon: typeof ShoppingCart;
-  className: string;
-}) {
-  return (
-    <div className={`flex h-14 w-14 items-center justify-center rounded-full border border-slate-200 shadow-sm ${className}`}>
-      <Icon className="h-6 w-6" />
     </div>
   );
 }
