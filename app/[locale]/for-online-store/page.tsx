@@ -30,7 +30,7 @@ import {
   File,
   FileText,
 } from "lucide-react";
-import { trackMetaEvent } from "@/lib/meta-pixel";
+import { MetaPixelEventParams, trackMetaEvent } from "@/lib/meta-pixel";
 
 const CONTACT_EMAIL = "taraujo@ohrly.com.br";
 
@@ -82,6 +82,46 @@ const platforms = [
   "WhatsApp",
   "Outros sistemas",
 ];
+
+function trackLandingEvent(
+  eventName: string,
+  params?: MetaPixelEventParams
+) {
+  trackMetaEvent(eventName, params);
+
+  const payload = {
+    eventName,
+    page: "digital_journeys_landing_page",
+    source: params?.source,
+    offer: params?.offer,
+    contact_method: params?.contact_method,
+    metadata: params ?? {},
+  };
+
+  try {
+    const body = JSON.stringify(payload);
+
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(
+        "/api/track-event",
+        new Blob([body], { type: "application/json" })
+      );
+
+      return;
+    }
+
+    fetch("/api/track-event", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body,
+      keepalive: true,
+    });
+  } catch (error) {
+    console.error("Failed to track landing event", error);
+  }
+}
 
 function ExampleInputAndReportSection() {
   const exampleRows = [
@@ -329,7 +369,7 @@ export default function DigitalJourneysLandingPage() {
       block: "start",
     });
 
-    trackMetaEvent("cta_scroll_to_offer", {
+    trackLandingEvent("cta_scroll_to_offer", {
       page: "digital_journeys_landing_page",
       source: "hero_card",
     });
@@ -602,7 +642,7 @@ function FreeAnalysisOfferSection({
   onOpenNextStep: () => void;
 }) {
   function handleFreeAnalysisClick() {
-    trackMetaEvent("free_analysis_interest", {
+    trackLandingEvent("free_analysis_interest", {
       offer: "free_initial_analysis",
       page: "digital_journeys_landing_page",
       source: "free_analysis_offer_section",
@@ -612,7 +652,7 @@ function FreeAnalysisOfferSection({
   }
 
   function handleActionPlanClick() {
-    trackMetaEvent("action_plan_offer_interest", {
+    trackLandingEvent("action_plan_offer_interest", {
       offer: "action_plan",
       original_price: 97,
       validation_price: 49,
@@ -958,7 +998,7 @@ Ex: Tenho visitas, mas poucas compras. Quero saber se o problema parece estar no
   )}&body=${encodeURIComponent(body)}`;
 
   function handleEmailClick() {
-    trackMetaEvent("free_analysis_email_click", {
+    trackLandingEvent("free_analysis_email_click", {
       offer: "free_initial_analysis",
       page: "digital_journeys_landing_page",
       contact_method: "email",

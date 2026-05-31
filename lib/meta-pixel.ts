@@ -1,4 +1,4 @@
-type MetaPixelEventParams = Record<string, string | number | boolean | undefined>;
+export type MetaPixelEventParams = Record<string, string | number | boolean | undefined>;
 
 declare global {
   interface Window {
