@@ -215,7 +215,7 @@ const platforms = [
   "Outros sistemas",
 ];
 
-export default function NuvemshopLandingPage() {
+export default function ForEcommerceLandingPage() {
   const [isFreeAnalysisModalOpen, setIsFreeAnalysisModalOpen] = useState(false);
   const [isNextStepModalOpen, setIsNextStepModalOpen] = useState(false);
   const [isFreeAnalysisSubmitted, setIsFreeAnalysisSubmitted] = useState(false);
@@ -300,11 +300,11 @@ export default function NuvemshopLandingPage() {
           <div>
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm">
               <Cloud className="h-4 w-4" />
-              Leitura gratuita para lojistas que usam Nuvemshop
+              Leitura gratuita para lojistas em plataformas de ecommerce
             </div>
 
             <h1 className="max-w-3xl text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
-              Sua loja Nuvemshop vende menos do que poderia?
+              Sua loja virtual vende menos do que poderia?
             </h1>
 
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
@@ -363,7 +363,7 @@ export default function NuvemshopLandingPage() {
               </h2>
 
               <p className="mt-4 leading-7 text-slate-600">
-                Envie relatórios que sua loja Nuvemshop já exporta. O Ohrly devolve
+                Envie relatórios que sua loja virtual já exporta. O Ohrly devolve
                 uma primeira leitura mostrando onde a jornada pode estar perdendo
                 continuidade.
               </p>
@@ -478,7 +478,7 @@ export default function NuvemshopLandingPage() {
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto max-w-3xl text-center">
             <span className="inline-flex rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
-              Dados que a Nuvemshop já pode te dar
+              Dados que a plataforma já pode te dar
             </span>
 
             <h2 className="mt-5 text-3xl font-bold tracking-tight text-slate-950">
@@ -571,7 +571,7 @@ export default function NuvemshopLandingPage() {
                       Exemplo de dados enviados
                     </h3>
                     <p className="text-sm text-slate-500">
-                      Relatórios exportados da Nuvemshop
+                      Relatórios exportados da plataforma de ecommerce
                     </p>
                   </div>
                 </div>
@@ -902,7 +902,7 @@ export default function NuvemshopLandingPage() {
 
             <div>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                Envie seus relatórios da Nuvemshop e receba uma primeira leitura gratuita.
+                Envie relatórios do seu ecommerce e receba uma primeira leitura gratuita.
               </h2>
 
               <p className="mt-5 max-w-3xl leading-7 text-blue-50">
@@ -946,7 +946,7 @@ export default function NuvemshopLandingPage() {
 
                 <p className="mt-2 text-sm leading-6 text-slate-600">
                   Conte rapidamente o segmento da sua loja e o que você gostaria de entender.
-                  Depois entramos em contato para orientar quais relatórios exportar da Nuvemshop.
+                  Depois entramos em contato para orientar quais relatórios exportar da plataforma.
                 </p>
               </div>
 
@@ -972,7 +972,7 @@ export default function NuvemshopLandingPage() {
                     <p className="mt-2 text-sm leading-6 text-emerald-900">
                       Recebemos sua solicitação. Vamos entrar em contato pelo e-mail informado
                       com mais detalhes sobre a leitura gratuita e orientar quais relatórios
-                      exportar da Nuvemshop. Se preferir adiantar, entre em contato pelo e-mail{" "}
+                      exportar da plataforma. Se preferir adiantar, entre em contato pelo e-mail{" "}
                       <a
                         href="mailto:taraujo@ohrly.com.br"
                         className="font-semibold underline decoration-emerald-700/40 underline-offset-4 hover:text-emerald-800"
@@ -1035,7 +1035,7 @@ export default function NuvemshopLandingPage() {
                 <input
                   type="hidden"
                   name="origem"
-                  value="Landing Page Ohrly para Nuvemshop"
+                  value="Landing Page Ohrly para Lojas Virtuais"
                 />
 
                 <input
