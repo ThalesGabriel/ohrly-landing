@@ -7,6 +7,9 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { MetaPixel } from "@/components/analytics/MetaPixel";
+import Script from "next/script";
+
+const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -141,6 +144,24 @@ export default async function RootLayout({
           <ThemeProvider>
             <MetaPixel />
             {children}
+
+            {googleAdsId && (
+              <>
+                <Script
+                  src={`https://www.googletagmanager.com/gtag/js?id=${googleAdsId}`}
+                  strategy="afterInteractive"
+                />
+
+                <Script id="google-ads-tag" strategy="afterInteractive">
+                  {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${googleAdsId}');
+              `}
+                </Script>
+              </>
+            )}
             <Analytics />
           </ThemeProvider>
         </NextIntlClientProvider>
