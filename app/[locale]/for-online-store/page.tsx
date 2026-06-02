@@ -26,6 +26,7 @@ import {
   WalletCards,
   Zap,
 } from "lucide-react";
+import { trackMetaEvent } from "@/lib/meta-pixel";
 
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/mkoygpnk";
 
@@ -244,6 +245,15 @@ export default function ForEcommerceLandingPage() {
       }
 
       setIsFreeAnalysisSubmitted(true);
+
+      trackMetaEvent("track", {
+        event_name: "Lead",
+        content_name: "Leitura gratuita Ohrly",
+        content_category: "Landing Page",
+        lead_source: "Formspree",
+        page: "for-ecommerce",
+      });
+
     } catch {
       setFreeAnalysisError(
         "Não conseguimos enviar agora. Tente novamente ou entre em contato pelo nosso e-mail."
@@ -257,6 +267,13 @@ export default function ForEcommerceLandingPage() {
     setIsFreeAnalysisSubmitted(false);
     setFreeAnalysisError(null);
     setIsFreeAnalysisModalOpen(true);
+
+    trackMetaEvent("trackCustom", {
+      event_name: "LeadFormOpen",
+      content_name: "Leitura gratuita Ohrly",
+      content_category: "Landing Page",
+      page: "for-ecommerce",
+    });
   }
 
   return (
@@ -819,7 +836,16 @@ export default function ForEcommerceLandingPage() {
 
               <button
                 type="button"
-                onClick={() => setIsNextStepModalOpen(true)}
+                onClick={() => {
+                  setIsNextStepModalOpen(true);
+
+                  trackMetaEvent("trackCustom", {
+                    eventName: "NextStepModalOpen",
+                    content_name: "Leitura Ohrly consolidada",
+                    content_category: "Landing Page",
+                    page: "for-ecommerce",
+                  });
+                }}
                 className="cursor-pointer mt-8 inline-flex w-full items-center justify-center rounded-xl border border-blue-200 bg-white px-5 py-3 text-sm font-semibold text-blue-700 transition hover:bg-blue-50"
               >
                 Entender próximo passo
@@ -1121,6 +1147,13 @@ export default function ForEcommerceLandingPage() {
               <button
                 type="button"
                 onClick={() => {
+                  trackMetaEvent("trackCustom", {
+                    event_name: "NextStepToFreeAnalysis",
+                    content_name: "Leitura Ohrly consolidada",
+                    content_category: "Landing Page",
+                    page: "for-ecommerce",
+                  });
+
                   setIsNextStepModalOpen(false);
                   openFreeAnalysisModal();
                 }}
