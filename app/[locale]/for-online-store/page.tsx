@@ -246,8 +246,7 @@ export default function ForEcommerceLandingPage() {
 
       setIsFreeAnalysisSubmitted(true);
 
-      trackMetaEvent("track", {
-        event_name: "Lead",
+      trackMetaEvent("Lead", {
         content_name: "Leitura gratuita Ohrly",
         content_category: "Landing Page",
         lead_source: "Formspree",
@@ -268,8 +267,7 @@ export default function ForEcommerceLandingPage() {
     setFreeAnalysisError(null);
     setIsFreeAnalysisModalOpen(true);
 
-    trackMetaEvent("trackCustom", {
-      event_name: "LeadFormOpen",
+    trackMetaEvent("LeadFormOpen", {
       content_name: "Leitura gratuita Ohrly",
       content_category: "Landing Page",
       page: "for-ecommerce",
@@ -1147,8 +1145,7 @@ export default function ForEcommerceLandingPage() {
               <button
                 type="button"
                 onClick={() => {
-                  trackMetaEvent("trackCustom", {
-                    event_name: "NextStepToFreeAnalysis",
+                  trackMetaEvent("NextStepToFreeAnalysis", {
                     content_name: "Leitura Ohrly consolidada",
                     content_category: "Landing Page",
                     page: "for-ecommerce",
