@@ -3,15 +3,18 @@
 import { useState, type FormEvent } from "react";
 
 import {
+  Activity,
   ArrowRight,
   BarChart3,
   Bell,
   CheckCircle2,
   ChevronRight,
+  CircleDollarSign,
   Cloud,
   Download,
   Eye,
   FileText,
+  GitBranch,
   Heart,
   HelpCircle,
   Lock,
@@ -100,28 +103,28 @@ const journeySteps = [
 
 const explanationCards = [
   {
-    title: "Você não precisa entender de dados",
+    title: "Encontra gaps de crescimento",
     description:
-      "Eliminamos a complexidade técnica. Você envia os relatórios e recebe uma leitura clara, em linguagem simples.",
-    icon: UserRound,
-  },
-  {
-    title: "A análise mostra onde olhar primeiro",
-    description:
-      "Priorizamos os pontos com maior impacto potencial na sua jornada, com base no que os dados permitem observar.",
-    icon: Search,
-  },
-  {
-    title: "Não é promessa de vender mais",
-    description:
-      "Não garantimos resultados. Entregamos uma leitura honesta sobre onde a jornada pode estar perdendo continuidade.",
-    icon: ShieldCheck,
-  },
-  {
-    title: "O acompanhamento vem depois",
-    description:
-      "Após a leitura inicial, você pode acompanhar a evolução com nosso plugin e validar hipóteses continuamente.",
+      "O Ohrly organiza os dados para entender se o crescimento está limitado por conversão, ticket médio, volume, continuidade ou mensurabilidade.",
     icon: BarChart3,
+  },
+  {
+    title: "Transforma dados em janelas de decisão",
+    description:
+      "Em vez de entregar métricas soltas, o diagnóstico mostra qual decisão ficou aberta: recuperar pedido, qualificar intenção, medir cliente ou criar continuidade pós-compra.",
+    icon: GitBranch,
+  },
+  {
+    title: "Dimensiona valor exposto",
+    description:
+      "Cada janela vem acompanhada de uma estimativa do que está em jogo: valor não confirmado, receita pouco mensurável ou potencial de continuidade a testar.",
+    icon: CircleDollarSign,
+  },
+  {
+    title: "Mostra o que acompanhar depois",
+    description:
+      "O diagnóstico indica quais comportamentos monitorar para saber se uma janela voltou, reduziu ou desapareceu.",
+    icon: Activity,
   },
 ];
 
@@ -318,14 +321,13 @@ export default function ForEcommerceLandingPage() {
               Leitura gratuita para lojistas em plataformas de ecommerce
             </div>
 
-            <h1 className="max-w-3xl text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
-              Sua loja virtual vende menos do que poderia?
+            <h1 className="max-w-3xl text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl lg:text-4xl">
+              Você já parou para pensar se sua loja poderia estar crescendo mais com a operação que já tem?
             </h1>
 
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
-              Antes de gastar mais com anúncio, entenda onde a jornada do cliente
-              pode estar perdendo continuidade: produto, carrinho, pagamento,
-              recompra ou atendimento.
+              O Ohrly analisa pedidos, clientes e produtos para mostrar onde o crescimento pode estar ficando preso:
+              vendas que não confirmam, clientes que ficam invisíveis, compras que não viram continuidade e janelas que merecem decisão.
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -407,45 +409,93 @@ export default function ForEcommerceLandingPage() {
             </p>
 
             <h2 className="text-3xl font-bold tracking-tight">
-              Uma leitura simples para entender onde a jornada do cliente pode
-              estar perdendo continuidade.
+              Um diagnóstico para descobrir onde o crescimento da sua loja está ficando preso.
             </h2>
 
             <p className="mt-5 leading-7 text-blue-50">
-              O Ohrly olha para relatórios que sua loja já gera — pedidos, produtos,
-              clientes, carrinhos, pagamentos e atendimento — e organiza esses
-              sinais em uma leitura clara sobre onde clientes demonstram intenção,
-              mas deixam de continuar a jornada.
+              O Ohrly analisa relatórios que sua loja já gera — pedidos, produtos,
+              clientes, carrinhos, pagamentos e atendimento — e transforma esses dados
+              em janelas de decisão: onde você pode estar deixando venda escapar, onde
+              a recompra fica invisível e quais comportamentos merecem acompanhamento.
             </p>
 
             <div className="mt-8 rounded-2xl bg-white/10 p-5 ring-1 ring-white/15">
               <div className="flex items-start gap-4">
                 <Target className="mt-1 h-6 w-6 text-blue-100" />
                 <p className="font-semibold leading-7 text-white">
-                  Mais clareza para priorizar o que realmente pode destravar suas
-                  vendas.
+                  Não é mais um dashboard. É uma leitura para decidir o que testar,
+                  medir e monitorar primeiro.
                 </p>
               </div>
             </div>
           </div>
 
           <div className="grid gap-5 p-8 lg:p-10">
-            {explanationCards.map((card) => {
-              const Icon = card.icon;
+            <div className="flex gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+                <BarChart3 className="h-6 w-6" />
+              </div>
 
-              return (
-                <div key={card.title} className="flex gap-4">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
-                    <Icon className="h-6 w-6" />
-                  </div>
+              <div>
+                <h3 className="font-bold text-slate-950">
+                  Encontra gaps de crescimento
+                </h3>
+                <p className="mt-1 leading-6 text-slate-600">
+                  O Ohrly organiza os dados para entender se o crescimento está limitado
+                  por conversão, ticket médio, volume, continuidade ou mensurabilidade.
+                </p>
+              </div>
+            </div>
 
-                  <div>
-                    <h3 className="font-bold text-slate-950">{card.title}</h3>
-                    <p className="mt-1 leading-6 text-slate-600">{card.description}</p>
-                  </div>
-                </div>
-              );
-            })}
+            <div className="flex gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+                <GitBranch className="h-6 w-6" />
+              </div>
+
+              <div>
+                <h3 className="font-bold text-slate-950">
+                  Transforma dados em janelas de decisão
+                </h3>
+                <p className="mt-1 leading-6 text-slate-600">
+                  Em vez de entregar métricas soltas, o diagnóstico mostra qual decisão
+                  ficou aberta: recuperar pedido, qualificar intenção, medir cliente ou
+                  criar continuidade pós-compra.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+                <CircleDollarSign className="h-6 w-6" />
+              </div>
+
+              <div>
+                <h3 className="font-bold text-slate-950">
+                  Dimensiona valor exposto
+                </h3>
+                <p className="mt-1 leading-6 text-slate-600">
+                  Cada janela vem acompanhada de uma estimativa do que está em jogo:
+                  valor não confirmado, receita pouco mensurável ou potencial de
+                  continuidade a testar.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+                <Activity className="h-6 w-6" />
+              </div>
+
+              <div>
+                <h3 className="font-bold text-slate-950">
+                  Mostra o que acompanhar depois
+                </h3>
+                <p className="mt-1 leading-6 text-slate-600">
+                  O diagnóstico não termina no relatório. Ele indica quais comportamentos
+                  monitorar para saber se uma janela voltou, reduziu ou desapareceu.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -555,214 +605,291 @@ export default function ForEcommerceLandingPage() {
         </div>
       </section>
 
-      <section id="exemplo" className="px-5 py-10 lg:px-8">
+      <section id="exemplo" className="px-5 py-16 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto max-w-3xl text-center">
             <span className="inline-flex rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
-              Exemplo inspirado em uma leitura real
+              Exemplo de diagnóstico Ohrly
             </span>
 
-            <h2 className="mt-5 text-3xl font-bold tracking-tight text-slate-950">
-              O que você envia e o que recebe de volta
+            <h2 className="mt-5 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+              Da diferença de crescimento às janelas de decisão
             </h2>
 
             <p className="mt-4 leading-7 text-slate-600">
-              A análise inicial não tenta adivinhar uma causa. Ela mostra onde a
-              jornada parece perder continuidade e quais perguntas merecem ser
-              investigadas antes de decidir por desconto, campanha ou tráfego.
+              O Ohrly não entrega apenas uma lista de métricas. Ele compara sua loja com
+              referências do segmento, identifica onde o crescimento pode ter ficado preso
+              e transforma esses espaços em janelas de decisão com valor exposto, experimento
+              recomendado e comportamento para monitorar.
             </p>
           </div>
 
-          <div className="mt-10 grid gap-6 lg:grid-cols-2">
-            <div>
-              <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
-                    <ShoppingCart className="h-5 w-5" />
-                  </div>
-
-                  <div>
-                    <h3 className="text-lg font-bold text-slate-950">
-                      Exemplo de dados enviados
-                    </h3>
-                    <p className="text-sm text-slate-500">
-                      Relatórios exportados da plataforma de ecommerce
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-5 overflow-hidden rounded-2xl border border-slate-200">
-                  <table className="w-full text-left text-sm">
-                    <thead className="bg-slate-50 text-slate-600">
-                      <tr>
-                        <th className="px-4 py-3 font-semibold">Origem</th>
-                        <th className="px-4 py-3 font-semibold">Produto</th>
-                        <th className="px-4 py-3 font-semibold">Status</th>
-                        <th className="px-4 py-3 font-semibold">Valor</th>
-                        <th className="px-4 py-3 font-semibold">Canal</th>
-                      </tr>
-                    </thead>
-
-                    <tbody className="divide-y divide-slate-100 text-slate-700">
-                      <tr>
-                        <td className="px-4 py-3">Carrinho</td>
-                        <td className="px-4 py-3">Capacete Norisk</td>
-                        <td className="px-4 py-3">Abandonado</td>
-                        <td className="px-4 py-3">R$ 799,90</td>
-                        <td className="px-4 py-3">Mobile</td>
-                      </tr>
-
-                      <tr>
-                        <td className="px-4 py-3">Pedido</td>
-                        <td className="px-4 py-3">Capacete ASX</td>
-                        <td className="px-4 py-3">Pagamento recusado</td>
-                        <td className="px-4 py-3">R$ 599,90</td>
-                        <td className="px-4 py-3">Site</td>
-                      </tr>
-
-                      <tr>
-                        <td className="px-4 py-3">Venda</td>
-                        <td className="px-4 py-3">Balaclava + limpeza</td>
-                        <td className="px-4 py-3">Pago</td>
-                        <td className="px-4 py-3">R$ 58,90</td>
-                        <td className="px-4 py-3">Online</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-2xl bg-slate-50 p-4">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                      Enviado
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-slate-800">
-                      Pedidos, clientes, produtos e carrinhos
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl bg-slate-50 p-4">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                      Ainda faltaria
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-slate-800">
-                      Visitas, produtos acessados e WhatsApp
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
-                  Análise gratuita
-                </span>
-
-                <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
-                  Leitura inicial
-                </span>
-              </div>
-
-              <h3 className="mt-5 text-2xl font-bold tracking-tight text-slate-950">
-                A jornada parece perder continuidade antes da conclusão da compra
-              </h3>
-
-              <p className="mt-4 leading-7 text-slate-600">
-                Os carrinhos abandonados aparecem concentrados em produtos de maior
-                decisão, como capacetes. Isso pode indicar intenção real, mas também
-                dúvida sobre tamanho, prova, encaixe, confiança ou risco operacional.
-              </p>
-
-              <div className="mt-6 space-y-3">
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                  <p className="text-sm font-bold text-slate-950">
-                    Janela 1 — Carrinho de capacete
-                  </p>
-                  <p className="mt-1 text-sm leading-6 text-slate-600">
-                    A decisão pode não ser dar desconto, mas testar um caminho
-                    intermediário: reservar online e provar na loja.
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                  <p className="text-sm font-bold text-slate-950">
-                    Janela 2 — Pagamento não concluído
-                  </p>
-                  <p className="mt-1 text-sm leading-6 text-slate-600">
-                    Pedido recusado pode misturar cliente real, tentativa suspeita,
-                    cartão clonado ou ruído.
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                  <p className="text-sm font-bold text-slate-950">
-                    Janela 3 — Produtos de continuidade
-                  </p>
-                  <p className="mt-1 text-sm leading-6 text-slate-600">
-                    Produtos simples, de menor risco e possível recompra podem sustentar
-                    continuidade depois da primeira intenção.
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-6 rounded-2xl bg-emerald-50 p-5 ring-1 ring-emerald-100">
-                <div className="flex gap-3">
-                  <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-emerald-700" />
-                  <div>
-                    <h4 className="font-bold text-emerald-950">
-                      Próximo dado que mais ajudaria
-                    </h4>
-                    <p className="mt-1 text-sm leading-6 text-emerald-900">
-                      Relatório de visitas e produtos acessados para entender se produtos
-                      recorrentes não vendem porque ninguém vê, porque não entram no
-                      carrinho ou porque entram e depois abandonam.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div className="mt-10 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
+            <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
               <div>
-                <h3 className="text-lg font-bold text-slate-950">
-                  Como a Ohrly organiza essa interpretação
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+                    Método Ohrly
+                  </span>
+
+                  <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                    Comparativo → Diferença → Janela → Experimento
+                  </span>
+                </div>
+
+                <h3 className="mt-5 text-2xl font-bold tracking-tight text-slate-950">
+                  Se o segmento cresceu mais que sua loja, onde esse crescimento ficou preso?
                 </h3>
 
-                <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
-                  A leitura separa o que foi observado, o que é hipótese, o que ainda não
-                  dá para afirmar e qual decisão ficou aberta para o lojista.
+                <p className="mt-4 leading-7 text-slate-600">
+                  Em vez de sugerir campanha, desconto ou tráfego de forma genérica, o Ohrly
+                  organiza a análise em algumas alavancas como: conversão, ticket médio, volume e
+                  continuidade. Depois, conecta cada uma a uma decisão prática.
                 </p>
-              </div>
 
-              <span className="rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
-                Observado → Hipótese → Decisão
-              </span>
-            </div>
-
-            <div className="mt-6 grid gap-4 md:grid-cols-4">
-              {interpretationCards.map((card) => {
-                const Icon = card.icon;
-
-                return (
-                  <div
-                    key={card.title}
-                    className="rounded-2xl border border-slate-200 bg-slate-50/60 p-5"
-                  >
-                    <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-blue-700 shadow-sm">
-                      <Icon className="h-5 w-5" />
-                    </div>
-
-                    <h4 className="font-bold leading-6 text-slate-950">{card.title}</h4>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">
-                      {card.description}
+                <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                  <div className="rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      Segmento
+                    </p>
+                    <p className="mt-2 text-2xl font-bold text-slate-950">+70%</p>
+                    <p className="mt-1 text-sm text-slate-600">
+                      crescimento de referência
                     </p>
                   </div>
-                );
-              })}
+
+                  <div className="rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      Sua loja
+                    </p>
+                    <p className="mt-2 text-2xl font-bold text-slate-950">+40%</p>
+                    <p className="mt-1 text-sm text-slate-600">
+                      crescimento observado
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl bg-blue-50 p-4 ring-1 ring-blue-100">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">
+                      Gap investigado
+                    </p>
+                    <p className="mt-2 text-2xl font-bold text-blue-950">30%</p>
+                    <p className="mt-1 text-sm text-blue-800">
+                      onde procurar potencial
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-6 rounded-2xl bg-emerald-50 p-5 ring-1 ring-emerald-100">
+                  <div className="flex gap-3">
+                    <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-emerald-700" />
+                    <div>
+                      <h4 className="font-bold text-emerald-950">
+                        Potencial comparativo estimado
+                      </h4>
+                      <p className="mt-1 text-sm leading-6 text-emerald-900">
+                        Em uma primeira leitura, o Ohrly pode estimar uma faixa conservadora
+                        de potencial capturável. Exemplo: R$ 17 mil a R$ 72 mil em gaps
+                        comparativos, antes de aprofundar nas janelas específicas da operação.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-5">
+                  <p className="text-sm leading-6 text-slate-600">
+                    Este é um exemplo simplificado de como o Ohrly organiza uma leitura. As janelas,
+                    valores e experimentos variam conforme o segmento, a maturidade da operação e
+                    os dados disponíveis. Em algumas lojas, o diagnóstico pode revelar oportunidades
+                    claras de crescimento; em outras, o primeiro valor pode ser mostrar que a operação
+                    precisa medir melhor clientes, canais ou continuidade antes de projetar ganhos.
+                  </p>
+                </div>
+              </div>
+
+              <div className="rounded-3xl border border-slate-200 bg-slate-950 p-6 text-white shadow-sm">
+                <p className="text-sm font-semibold text-blue-300">
+                  Leitura gerada pelo Ohrly
+                </p>
+
+                <h3 className="mt-4 text-2xl font-bold tracking-tight">
+                  O crescimento não ficou preso em um único ponto.
+                </h3>
+
+                <p className="mt-4 leading-7 text-slate-300">
+                  A loja vende, mas há sinais de que parte do potencial pode estar distribuída
+                  entre baixa mensurabilidade, pouca continuidade pós-compra e intenção digital
+                  que não confirma.
+                </p>
+
+                <div className="mt-6 space-y-3">
+                  <div className="rounded-2xl bg-white/10 p-4 ring-1 ring-white/10">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-sm font-bold text-white">
+                        Cliente invisível por agregação
+                      </p>
+                      <span className="rounded-full bg-red-400/15 px-3 py-1 text-xs font-semibold text-red-200">
+                        Crítica
+                      </span>
+                    </div>
+
+                    <p className="mt-2 text-sm leading-6 text-slate-300">
+                      A loja vende, mas parte da operação dificulta medir recompra real,
+                      LTV e continuidade.
+                    </p>
+
+                    <p className="mt-3 text-sm font-semibold text-white">
+                      Valor associado: R$ 338.909,10
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl bg-white/10 p-4 ring-1 ring-white/10">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-sm font-bold text-white">
+                        Continuidade pós-compra
+                      </p>
+                      <span className="rounded-full bg-amber-400/15 px-3 py-1 text-xs font-semibold text-amber-200">
+                        Alta
+                      </span>
+                    </div>
+
+                    <p className="mt-2 text-sm leading-6 text-slate-300">
+                      Clientes compram capacete, mas poucos retornam para viseira, luva,
+                      limpeza ou acessórios.
+                    </p>
+
+                    <p className="mt-3 text-sm font-semibold text-white">
+                      Janela observada: R$ 131.939,59
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl bg-white/10 p-4 ring-1 ring-white/10">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-sm font-bold text-white">
+                        Intenção digital não confirmada
+                      </p>
+                      <span className="rounded-full bg-amber-400/15 px-3 py-1 text-xs font-semibold text-amber-200">
+                        Alta
+                      </span>
+                    </div>
+
+                    <p className="mt-2 text-sm leading-6 text-slate-300">
+                      Produtos de alto atrito geram pedidos digitais, mas parte da intenção
+                      não vira pagamento confirmado.
+                    </p>
+
+                    <p className="mt-3 text-sm font-semibold text-white">
+                      Valor não confirmado: R$ 4.320,00
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+
+          <div className="mt-6 grid gap-5 lg:grid-cols-3">
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+                <BarChart3 className="h-5 w-5" />
+              </div>
+
+              <h3 className="mt-5 text-lg font-bold text-slate-950">
+                1. O comparativo mostra o quanto você pode otimizar seu faturamento
+              </h3>
+
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Primeiro entendemos se a loja está abaixo do esperado para seu segmento:
+                conversão, ticket, volume, participação do digital ou continuidade.
+              </p>
+            </div>
+
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+                <GitBranch className="h-5 w-5" />
+              </div>
+
+              <h3 className="mt-5 text-lg font-bold text-slate-950">
+                2. As janelas decisórias mostram onde agir e porque você deveria se preocupar
+              </h3>
+
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Depois o Ohrly transforma o gap em decisões: recuperar pedido, qualificar
+                intenção, criar régua pós-compra ou melhorar identificação do cliente.
+              </p>
+            </div>
+
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+                <Activity className="h-5 w-5" />
+              </div>
+
+              <h3 className="mt-5 text-lg font-bold text-slate-950">
+                3. O monitoramento te acompanha no dia a dia e te ajuda a corrigir a rota
+              </h3>
+
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                O diagnóstico mostra o que apareceu no passado. O acompanhamento mostra se
+                a janela voltou, reduziu, desapareceu ou continuou abrindo.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-6 rounded-3xl border border-blue-100 bg-blue-50 p-6 lg:p-8">
+            <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+              <div>
+                <p className="text-sm font-semibold text-blue-700">
+                  O que isso ajuda a decidir?
+                </p>
+
+                <h3 className="mt-3 text-2xl font-bold tracking-tight text-blue-950">
+                  Não é “faça mais marketing”. É saber qual janela merece o próximo teste.
+                </h3>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="rounded-2xl bg-white p-4 ring-1 ring-blue-100">
+                  <p className="text-sm font-bold text-slate-950">
+                    Capturar telefone no balcão
+                  </p>
+                  <p className="mt-1 text-sm leading-6 text-slate-600">
+                    Para reduzir cliente genérico e medir recompra real.
+                  </p>
+                </div>
+
+                <div className="rounded-2xl bg-white p-4 ring-1 ring-blue-100">
+                  <p className="text-sm font-bold text-slate-950">
+                    Criar régua pós-capacete
+                  </p>
+                  <p className="mt-1 text-sm leading-6 text-slate-600">
+                    Para testar venda complementar entre 7 e 15 dias.
+                  </p>
+                </div>
+
+                <div className="rounded-2xl bg-white p-4 ring-1 ring-blue-100">
+                  <p className="text-sm font-bold text-slate-950">
+                    Separar venda boa de tentativa ruim
+                  </p>
+                  <p className="mt-1 text-sm leading-6 text-slate-600">
+                    Para não tratar todo pagamento recusado como venda perdida.
+                  </p>
+                </div>
+
+                <div className="rounded-2xl bg-white p-4 ring-1 ring-blue-100">
+                  <p className="text-sm font-bold text-slate-950">
+                    Testar reserva e prova
+                  </p>
+                  <p className="mt-1 text-sm leading-6 text-slate-600">
+                    Para produtos de alto atrito, como capacetes e acessórios.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p className="mx-auto mt-6 max-w-3xl text-center text-sm leading-6 text-slate-500">
+            Os valores apresentados são exemplos de valor operacional exposto e potencial
+            investigativo. Eles não representam promessa de recuperação integral de faturamento.
+            O objetivo é mostrar onde testar, medir e acompanhar.
+          </p>
         </div>
       </section>
 
@@ -814,8 +941,8 @@ export default function ForEcommerceLandingPage() {
               <h3 className="text-xl font-bold text-slate-950">Leitura Ohrly consolidada</h3>
 
               <div className="mt-5 flex items-end gap-3">
-                <span className="text-5xl font-bold tracking-tight text-slate-950">R$ 49</span>
-                <span className="pb-2 text-sm text-slate-500 line-through">de R$ 97</span>
+                <span className="text-5xl font-bold tracking-tight text-slate-950">R$ 99</span>
+                <span className="pb-2 text-sm text-slate-500 line-through">de R$ 197</span>
               </div>
 
               <p className="mt-5 leading-7 text-slate-600">
