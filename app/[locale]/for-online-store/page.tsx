@@ -15,16 +15,13 @@ import {
   Eye,
   FileText,
   GitBranch,
-  Heart,
   HelpCircle,
   Lock,
   PackageCheck,
   Plug,
   Search,
   ShieldCheck,
-  ShoppingCart,
   Target,
-  Truck,
   UserRound,
   WalletCards,
   Zap,
@@ -33,19 +30,102 @@ import { trackMetaEvent } from "@/lib/meta-pixel";
 
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/mkoygpnk";
 
+const policyFamilies = [
+  {
+    title: "Cliente invisível",
+    description:
+      "Quando a venda acontece, mas não vira comprador confiável para recompra, LTV ou campanha.",
+    icon: UserRound,
+  },
+  {
+    title: "Canal dominante",
+    description:
+      "Quando quase toda a receita depende de um canal e os demais ainda têm papel pequeno.",
+    icon: GitBranch,
+  },
+  {
+    title: "Mensurabilidade por canal",
+    description:
+      "Quando o canal que mais vende também é o que menos identifica compradores.",
+    icon: Eye,
+  },
+  {
+    title: "Pressão de desconto",
+    description:
+      "Quando o crescimento começa a depender demais de incentivo, cupom ou desconto.",
+    icon: CircleDollarSign,
+  },
+  {
+    title: "Conclusão de pedido",
+    description:
+      "Quando pedidos, pagamentos ou status distorcem a leitura de venda real.",
+    icon: WalletCards,
+  },
+  {
+    title: "Continuidade pós-compra",
+    description:
+      "Quando a primeira compra não vira recompra, complemento ou relacionamento.",
+    icon: Activity,
+  },
+];
+
+const realDiagnosticFindings = [
+  {
+    label: "Crítico",
+    title: "61,55% da receita sem comprador confiável",
+    description:
+      "A operação vende, mas parte relevante da receita não permite medir recompra, LTV ou continuidade.",
+    metric: "unidentified_revenue_share",
+    value: "61,55%",
+    tone: "critical",
+  },
+  {
+    label: "Crítico",
+    title: "94,26% da receita no Ponto de venda",
+    description:
+      "O canal físico é o motor da operação. O digital existe, mas ainda tem papel pequeno.",
+    metric: "top_channel_revenue_share",
+    value: "94,26%",
+    tone: "critical",
+  },
+  {
+    label: "Crítico",
+    title: "65,24% da receita do Ponto de venda sem comprador confiável",
+    description:
+      "A principal janela não é só vender mais online; é transformar a venda física em relacionamento mensurável.",
+    metric: "top_channel_unidentified_revenue_share",
+    value: "65,24%",
+    tone: "critical",
+  },
+  {
+    label: "Dentro da referência",
+    title: "8,02% de desconto agregado",
+    description:
+      "Desconto não apareceu como principal pressão no agregado inicial.",
+    metric: "discount_share",
+    value: "8,02%",
+    tone: "healthy",
+  },
+  {
+    label: "Dentro da referência",
+    title: "0% de receita não confirmada",
+    description:
+      "Pelos dados analisados, a qualidade de conclusão não foi o gargalo principal.",
+    metric: "unconfirmed_revenue_share",
+    value: "0%",
+    tone: "healthy",
+  },
+];
+
 const requiredDataGroups = [
   {
     title: "Comece por aqui",
-    description: "Já permite uma primeira leitura da jornada.",
-    items: [
-      "Pedidos e vendas",
-      "Clientes",
-      "Produtos",
-    ],
+    description: "Já permite uma primeira leitura diagnóstica.",
+    items: ["Pedidos e vendas", "Clientes", "Produtos"],
   },
   {
     title: "Deixa a leitura mais forte",
-    description: "Ajuda a entender onde a intenção se perde.",
+    description: "Ajuda a separar venda boa, ruído e intenção perdida.",
     items: [
       "Carrinhos abandonados",
       "Pagamentos recusados ou pendentes",
@@ -54,7 +134,7 @@ const requiredDataGroups = [
   },
   {
     title: "Fecha melhor as hipóteses",
-    description: "Ajuda a enxergar o começo da jornada.",
+    description: "Ajuda a entender o começo e a continuidade da jornada.",
     items: [
       "Visitas e produtos acessados",
       "Origem do tráfego",
@@ -63,150 +143,76 @@ const requiredDataGroups = [
   },
 ];
 
-const observableWindows = [
-  {
-    title: "Carrinho abandonado",
-    description: "Cliente escolheu produto, mas não concluiu a compra.",
-  },
-  {
-    title: "Pagamento não concluído",
-    description: "Pode ser cliente recuperável, tentativa suspeita ou ruído.",
-  },
-  {
-    title: "Compra sem continuidade",
-    description: "Cliente comprou uma vez, mas não voltou para recompra.",
-  },
-  {
-    title: "Produto recorrente escondido",
-    description: "Itens simples podem sustentar continuidade, mas talvez nem apareçam no online.",
-  },
-];
-
-const journeySteps = [
-  {
-    label: "interesse",
-    icon: Heart,
-  },
-  {
-    label: "pagamento",
-    icon: WalletCards,
-  },
-  {
-    label: "atendimento",
-    icon: HelpCircle,
-  },
-  {
-    label: "entrega",
-    icon: Truck,
-  },
-];
-
-const explanationCards = [
-  {
-    title: "Encontra gaps de crescimento",
-    description:
-      "O Ohrly organiza os dados para entender se o crescimento está limitado por conversão, ticket médio, volume, continuidade ou mensurabilidade.",
-    icon: BarChart3,
-  },
-  {
-    title: "Transforma dados em janelas de decisão",
-    description:
-      "Em vez de entregar métricas soltas, o diagnóstico mostra qual decisão ficou aberta: recuperar pedido, qualificar intenção, medir cliente ou criar continuidade pós-compra.",
-    icon: GitBranch,
-  },
-  {
-    title: "Dimensiona valor exposto",
-    description:
-      "Cada janela vem acompanhada de uma estimativa do que está em jogo: valor não confirmado, receita pouco mensurável ou potencial de continuidade a testar.",
-    icon: CircleDollarSign,
-  },
-  {
-    title: "Mostra o que acompanhar depois",
-    description:
-      "O diagnóstico indica quais comportamentos monitorar para saber se uma janela voltou, reduziu ou desapareceu.",
-    icon: Activity,
-  },
-];
-
 const analysisSteps = [
   {
     number: "1",
-    title: "Contexto",
-    description: "Fale sobre seu negócio, canais, produtos e objetivos.",
-    icon: FileText,
-  },
-  {
-    number: "2",
-    title: "Dados disponíveis",
-    description: "Descubra quais relatórios sua plataforma já permite exportar.",
+    title: "Você envia relatórios",
+    description:
+      "Comece com CSVs que sua plataforma já exporta: vendas, clientes, produtos e canais.",
     icon: Download,
   },
   {
+    number: "2",
+    title: "O Ohrly normaliza",
+    description:
+      "Os dados viram um modelo semântico: venda, canal, comprador, status, desconto e continuidade.",
+    icon: GitBranch,
+  },
+  {
     number: "3",
-    title: "Análise inicial",
-    description: "Você recebe uma leitura objetiva com sinais e próximos passos.",
-    icon: BarChart3,
+    title: "Policies rodam",
+    description:
+      "O motor calcula métricas diagnósticas e compara com referências iniciais.",
+    icon: Search,
+  },
+  {
+    number: "4",
+    title: "Janelas aparecem",
+    description:
+      "Você recebe uma leitura com problemas críticos, sinais saudáveis e próximos testes.",
+    icon: Bell,
   },
 ];
 
-const interpretationCards = [
+const learningSteps = [
   {
-    title: "O que os dados permitem observar",
-    description: "Transformamos relatórios brutos em sinais claros.",
-    icon: Eye,
+    title: "Degradação detectada",
+    description:
+      "O Ohrly encontra um comportamento relevante nos dados, como receita sem comprador confiável.",
+    icon: Search,
   },
   {
-    title: "Onde a venda pode estar travando",
-    description: "Identificamos os pontos com maior potencial de impacto.",
-    icon: Zap,
+    title: "Cliente valida",
+    description:
+      "O lojista confirma se aquilo é um problema real para a operação.",
+    icon: CheckCircle2,
   },
   {
-    title: "Quais sinais merecem atenção",
-    description: "Priorizamos o que realmente pode explicar a queda.",
-    icon: Bell,
+    title: "Janela acompanhada",
+    description:
+      "A leitura deixa de ser pontual e passa a acompanhar se a janela voltou, reduziu ou piorou.",
+    icon: Activity,
   },
   {
-    title: "Qual próximo dado ajudaria mais",
-    description: "Indicamos o próximo passo para ampliar a clareza.",
-    icon: ArrowRight,
+    title: "Policy evolui",
+    description:
+      "Quando o padrão se repete em lojas parecidas, ele pode virar candidata a policy curada.",
+    icon: ShieldCheck,
   },
 ];
 
 const freePlanItems = [
   "Primeiro contato para entender sua loja",
-  "Principais sinais e possíveis gargalos",
-  "Sugestão de próximo passo",
-  "Entrega em até 3 dias úteis",
+  "Leitura inicial com janelas possíveis",
+  "Sinais críticos, saudáveis e inconclusivos",
+  "Sugestão de próximo dado ou próximo teste",
 ];
 
 const consolidatedPlanItems = [
-  "Leitura aprofundada e consolidada",
+  "Leitura aprofundada dos achados",
   "Janelas de decisão priorizadas",
-  "Insights acionáveis para sua operação",
-  "Entrega em até 3 dias úteis",
-];
-
-const followUpSteps = [
-  {
-    title: "Leitura gratuita",
-    description: "Identificamos sinais e possíveis gargalos.",
-    icon: FileText,
-  },
-  {
-    title: "Hipóteses",
-    description: "Levantamos hipóteses sobre os pontos críticos.",
-    icon: Bell,
-  },
-  {
-    title: "Plugin / Acompanhamento",
-    description: "Observamos a jornada real ao longo do tempo.",
-    icon: Plug,
-  },
-  {
-    title: "Refino contínuo",
-    description: "Validamos, ajustamos e priorizamos decisões.",
-    icon: Target,
-  },
+  "Separação entre fato, hipótese e ruído",
+  "Comportamentos para acompanhar depois",
 ];
 
 const platforms = [
@@ -218,6 +224,22 @@ const platforms = [
   "WhatsApp",
   "Outros sistemas",
 ];
+
+function findingToneClasses(tone: string) {
+  if (tone === "critical") {
+    return {
+      badge: "bg-red-50 text-red-700 ring-red-100",
+      card: "border-red-100 bg-red-50/40",
+      value: "text-red-700",
+    };
+  }
+
+  return {
+    badge: "bg-emerald-50 text-emerald-700 ring-emerald-100",
+    card: "border-emerald-100 bg-emerald-50/40",
+    value: "text-emerald-700",
+  };
+}
 
 export default function ForEcommerceLandingPage() {
   const [isFreeAnalysisModalOpen, setIsFreeAnalysisModalOpen] = useState(false);
@@ -250,12 +272,11 @@ export default function ForEcommerceLandingPage() {
       setIsFreeAnalysisSubmitted(true);
 
       trackMetaEvent("Lead", {
-        content_name: "Leitura gratuita Ohrly",
+        content_name: "Diagnóstico gratuito Ohrly",
         content_category: "Landing Page",
         lead_source: "Formspree",
         page: "for-ecommerce",
       });
-
     } catch {
       setFreeAnalysisError(
         "Não conseguimos enviar agora. Tente novamente ou entre em contato pelo nosso e-mail."
@@ -271,7 +292,7 @@ export default function ForEcommerceLandingPage() {
     setIsFreeAnalysisModalOpen(true);
 
     trackMetaEvent("LeadFormOpen", {
-      content_name: "Leitura gratuita Ohrly",
+      content_name: "Diagnóstico gratuito Ohrly",
       content_category: "Landing Page",
       page: "for-ecommerce",
     });
@@ -287,25 +308,25 @@ export default function ForEcommerceLandingPage() {
 
           <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
             <a href="#o-que" className="transition hover:text-blue-700">
-              O que é
+              O que encontra
+            </a>
+            <a href="#exemplo" className="transition hover:text-blue-700">
+              Exemplo real
             </a>
             <a href="#como-funciona" className="transition hover:text-blue-700">
               Como funciona
             </a>
-            <a href="#exemplo" className="transition hover:text-blue-700">
-              Exemplo
-            </a>
             <a href="#oferta" className="transition hover:text-blue-700">
-              Análise gratuita
+              Diagnóstico gratuito
             </a>
           </nav>
 
           <button
             type="button"
             onClick={openFreeAnalysisModal}
-            className="cursor-pointer hidden rounded-full bg-blue-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-blue-700/20 transition hover:bg-blue-800 md:inline-flex"
+            className="hidden cursor-pointer rounded-full bg-blue-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-blue-700/20 transition hover:bg-blue-800 md:inline-flex"
           >
-            Receber leitura gratuita
+            Receber diagnóstico gratuito
           </button>
         </div>
       </header>
@@ -314,29 +335,31 @@ export default function ForEcommerceLandingPage() {
         <div className="absolute right-0 top-0 h-96 w-96 rounded-full bg-blue-200/40 blur-3xl" />
         <div className="absolute left-10 top-40 h-72 w-72 rounded-full bg-sky-100 blur-3xl" />
 
-        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 py-16 lg:grid-cols-[1.1fr_0.9fr] lg:px-8 lg:py-24">
+        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-24">
           <div>
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm">
               <Cloud className="h-4 w-4" />
-              Leitura gratuita para lojistas em plataformas de ecommerce
+              Diagnóstico gratuito para lojistas digitais e físico-digitais
             </div>
 
-            <h1 className="max-w-3xl text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl lg:text-4xl">
-              Você já parou para pensar se sua loja poderia estar crescendo mais com a operação que já tem?
+            <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
+              Sua loja vende. Mas ela consegue enxergar onde o crescimento está vazando?
             </h1>
 
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
-              O Ohrly analisa pedidos, clientes e produtos para mostrar onde o crescimento pode estar ficando preso:
-              vendas que não confirmam, clientes que ficam invisíveis, compras que não viram continuidade e janelas que merecem decisão.
+              O Ohrly analisa relatórios da sua loja como: Pedidos, clientes,
+              produtos e canais para identificar situações de cliente invisível,
+              concentração de receita, pressão de desconto, venda não confirmada e
+              continuidade perdida.
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <button
                 type="button"
                 onClick={openFreeAnalysisModal}
-                className="cursor-pointer inline-flex items-center justify-center rounded-xl bg-blue-700 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-700/20 transition hover:bg-blue-800"
+                className="inline-flex cursor-pointer items-center justify-center rounded-xl bg-blue-700 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-700/20 transition hover:bg-blue-800"
               >
-                Quero minha leitura gratuita
+                Quero meu diagnóstico gratuito
                 <ArrowRight className="ml-2 h-4 w-4" />
               </button>
 
@@ -344,194 +367,288 @@ export default function ForEcommerceLandingPage() {
                 href="#exemplo"
                 className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-blue-200 hover:text-blue-700"
               >
-                Ver exemplo de leitura
+                Ver exemplo real
               </a>
             </div>
 
-            <div className="mt-10 grid max-w-2xl grid-cols-2 gap-4 sm:grid-cols-4">
-              {journeySteps.map((step, index) => {
-                const Icon = step.icon;
-
-                return (
-                  <div key={step.label} className="relative flex flex-col items-center gap-3">
-                    {index < journeySteps.length - 1 && (
-                      <div className="absolute left-[62%] top-7 hidden h-px w-[76%] border-t border-dashed border-blue-200 sm:block" />
-                    )}
-
-                    <div className="relative z-10 flex h-14 w-14 items-center justify-center rounded-2xl border border-blue-100 bg-white text-blue-700 shadow-sm">
-                      <Icon className="h-6 w-6" />
-                    </div>
-
-                    <span className="text-sm font-medium text-slate-600">{step.label}</span>
-                  </div>
-                );
-              })}
+            <div className="mt-8 grid max-w-2xl gap-3 sm:grid-cols-3">
+              {[
+                "Sem instalação inicial",
+                "Comece com CSVs exportados",
+                "Receba janelas priorizadas",
+              ].map((item) => (
+                <div
+                  key={item}
+                  className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm"
+                >
+                  <CheckCircle2 className="h-4 w-4 text-blue-700" />
+                  {item}
+                </div>
+              ))}
             </div>
           </div>
 
           <div className="relative">
-            <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-2xl shadow-blue-950/10">
-              <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
-                <FileText className="h-6 w-6" />
+            <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-2xl shadow-blue-950/10">
+              <div className="mb-6 flex items-center justify-between gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+                  <BarChart3 className="h-6 w-6" />
+                </div>
+
+                <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                  Exemplo de saída
+                </span>
               </div>
 
               <h2 className="text-2xl font-bold tracking-tight text-slate-950">
-                Comece com uma leitura gratuita
+                De relatórios brutos para janelas de decisão.
               </h2>
 
-              <p className="mt-4 leading-7 text-slate-600">
-                Envie relatórios que sua loja virtual já exporta. O Ohrly devolve
-                uma primeira leitura mostrando onde a jornada pode estar perdendo
-                continuidade.
-              </p>
+              <div className="mt-6 space-y-3">
+                {realDiagnosticFindings.slice(0, 3).map((finding) => {
+                  const classes = findingToneClasses(finding.tone);
 
-              <a
-                href="#como-funciona"
-                className="mt-8 inline-flex w-full items-center justify-center rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-700/20 transition hover:bg-blue-800"
-              >
-                Ver como funciona
-              </a>
+                  return (
+                    <div
+                      key={finding.metric}
+                      className={`rounded-2xl border p-4 ${classes.card}`}
+                    >
+                      <div className="flex items-center justify-between gap-4">
+                        <p className="text-sm font-bold text-slate-950">
+                          {finding.title}
+                        </p>
+                        <span
+                          className={`rounded-full px-3 py-1 text-xs font-semibold ring-1 ${classes.badge}`}
+                        >
+                          {finding.label}
+                        </span>
+                      </div>
 
-              <div className="mt-6 flex items-center gap-3 rounded-2xl bg-slate-50 p-4 text-sm text-slate-600 justify-center">
-                <Lock className="h-4 w-4 shrink-0 text-slate-500" />
-                Não é necessário enviar dados sensíveis agora.
+                      <p className="mt-2 text-sm leading-6 text-slate-600">
+                        {finding.description}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="mt-6 rounded-2xl bg-slate-50 p-4 text-sm leading-6 text-slate-600">
+                O diagnóstico não promete recuperar faturamento. Ele mostra o que
+                está exposto, onde olhar e qual comportamento acompanhar.
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="o-que" className="px-5 pb-10 lg:px-8">
-        <div className="mx-auto grid max-w-7xl overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm lg:grid-cols-[0.95fr_1.05fr]">
-          <div className="bg-gradient-to-br from-blue-700 to-blue-950 p-8 text-white lg:p-10">
-            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-blue-100">
-              O que é o Ohrly?
-            </p>
-
-            <h2 className="text-3xl font-bold tracking-tight">
-              Um diagnóstico para descobrir onde o crescimento da sua loja está ficando preso.
-            </h2>
-
-            <p className="mt-5 leading-7 text-blue-50">
-              O Ohrly analisa relatórios que sua loja já gera — pedidos, produtos,
-              clientes, carrinhos, pagamentos e atendimento — e transforma esses dados
-              em janelas de decisão: onde você pode estar deixando venda escapar, onde
-              a recompra fica invisível e quais comportamentos merecem acompanhamento.
-            </p>
-
-            <div className="mt-8 rounded-2xl bg-white/10 p-5 ring-1 ring-white/15">
-              <div className="flex items-start gap-4">
-                <Target className="mt-1 h-6 w-6 text-blue-100" />
-                <p className="font-semibold leading-7 text-white">
-                  Não é mais um dashboard. É uma leitura para decidir o que testar,
-                  medir e monitorar primeiro.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid gap-5 p-8 lg:p-10">
-            <div className="flex gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
-                <BarChart3 className="h-6 w-6" />
-              </div>
-
-              <div>
-                <h3 className="font-bold text-slate-950">
-                  Encontra gaps de crescimento
-                </h3>
-                <p className="mt-1 leading-6 text-slate-600">
-                  O Ohrly organiza os dados para entender se o crescimento está limitado
-                  por conversão, ticket médio, volume, continuidade ou mensurabilidade.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
-                <GitBranch className="h-6 w-6" />
-              </div>
-
-              <div>
-                <h3 className="font-bold text-slate-950">
-                  Transforma dados em janelas de decisão
-                </h3>
-                <p className="mt-1 leading-6 text-slate-600">
-                  Em vez de entregar métricas soltas, o diagnóstico mostra qual decisão
-                  ficou aberta: recuperar pedido, qualificar intenção, medir cliente ou
-                  criar continuidade pós-compra.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
-                <CircleDollarSign className="h-6 w-6" />
-              </div>
-
-              <div>
-                <h3 className="font-bold text-slate-950">
-                  Dimensiona valor exposto
-                </h3>
-                <p className="mt-1 leading-6 text-slate-600">
-                  Cada janela vem acompanhada de uma estimativa do que está em jogo:
-                  valor não confirmado, receita pouco mensurável ou potencial de
-                  continuidade a testar.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
-                <Activity className="h-6 w-6" />
-              </div>
-
-              <div>
-                <h3 className="font-bold text-slate-950">
-                  Mostra o que acompanhar depois
-                </h3>
-                <p className="mt-1 leading-6 text-slate-600">
-                  O diagnóstico não termina no relatório. Ele indica quais comportamentos
-                  monitorar para saber se uma janela voltou, reduziu ou desapareceu.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="como-funciona" className="px-5 py-14 lg:px-8">
+      <section id="o-que" className="px-5 py-14 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-slate-950">
-              Como funciona a análise
+          <div className="mx-auto max-w-3xl text-center">
+            <span className="inline-flex rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
+              O que o Ohrly procura
+            </span>
+
+            <h2 className="mt-5 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+              Temos uma base de políticas capazes de diagnosticar o seu negócio
             </h2>
+
+            <p className="mt-4 leading-7 text-slate-600">
+              Em vez de entregar um dashboard com métricas soltas, o Ohrly interpreta os
+              seus dados e mostra onde existe perda de mensurabilidade, concentração,
+              continuidade ou qualidade.
+            </p>
           </div>
 
-          <div className="mt-10 grid gap-5 md:grid-cols-3">
+          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {policyFamilies.map((item) => {
+              const Icon = item.icon;
+
+              return (
+                <div
+                  key={item.title}
+                  className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+                    <Icon className="h-6 w-6" />
+                  </div>
+
+                  <h3 className="mt-5 text-lg font-bold text-slate-950">
+                    {item.title}
+                  </h3>
+
+                  <p className="mt-2 text-sm leading-6 text-slate-600">
+                    {item.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section id="exemplo" className="px-5 py-16 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="mx-auto max-w-3xl text-center">
+            <span className="inline-flex rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
+              Exemplo de relatório Ohrly
+            </span>
+
+            <h2 className="mt-5 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+              O diagnóstico vira um artefato claro para decidir o próximo passo.
+            </h2>
+
+            <p className="mt-4 leading-7 text-slate-600">
+              O Ohrly organiza os achados em janelas decisórias, valor exposto,
+              experimentos recomendados e comportamentos para acompanhar. A ideia não é
+              entregar uma lista de métricas soltas, mas mostrar onde agir, por que isso
+              importa e como validar se melhorou.
+            </p>
+          </div>
+
+          <div className="mt-10 grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+            <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-3 shadow-2xl shadow-blue-950/10">
+              <img
+                src="/images/ohrly-report-example.png"
+                alt="Exemplo de relatório de resultados do Ohrly com resumo executivo, janelas decisórias, experimentos recomendados e comportamentos monitoráveis"
+                className="w-full rounded-2xl"
+              />
+            </div>
+
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
+              <h3 className="text-2xl font-bold tracking-tight text-slate-950">
+                O que aparece no relatório
+              </h3>
+
+              <div className="mt-6 space-y-4">
+                {[
+                  "Resumo executivo com as principais janelas encontradas",
+                  "Janelas decisórias priorizadas por impacto e confiança",
+                  "Valor operacional exposto sem prometer recuperação automática",
+                  "Experimentos recomendados para validar a hipótese",
+                  "Comportamentos que devem ser monitorados depois",
+                  "Próximos passos para reduzir a janela ou melhorar a mensurabilidade",
+                ].map((item) => (
+                  <div key={item} className="flex gap-3 text-sm leading-6 text-slate-700">
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-blue-700" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-6 rounded-2xl bg-blue-50 p-5 ring-1 ring-blue-100">
+                <p className="text-sm font-semibold text-blue-950">
+                  Exemplo de leitura:
+                </p>
+                <p className="mt-2 text-sm leading-6 text-blue-900">
+                  Em uma base Nuvemshop analisada, o Ohrly identificou receita sem
+                  comprador confiável, concentração no Ponto de venda e perda de
+                  mensurabilidade no canal dominante.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <p className="mx-auto mt-6 max-w-3xl text-center text-sm leading-6 text-slate-500">
+            Os valores apresentados são exemplos de valor operacional exposto e leitura
+            investigativa. Eles não representam promessa de recuperação integral de faturamento.
+          </p>
+        </div>
+      </section>
+
+      <section id="como-funciona" className="px-5 py-16 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="mx-auto max-w-3xl text-center">
+            <span className="inline-flex rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
+              Como funciona
+            </span>
+
+            <h2 className="mt-5 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+              Do CSV ao diagnóstico acompanhável.
+            </h2>
+
+            <p className="mt-4 leading-7 text-slate-600">
+              A análise começa com dados exportados. Depois, o Ohrly normaliza os
+              campos, roda policies e transforma achados em janelas de decisão.
+            </p>
+          </div>
+
+          <div className="mt-10 grid gap-5 lg:grid-cols-4">
             {analysisSteps.map((step, index) => {
               const Icon = step.icon;
 
               return (
-                <div key={step.title} className="relative rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div
+                  key={step.title}
+                  className="relative rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
+                >
                   {index < analysisSteps.length - 1 && (
-                    <div className="absolute -right-4 top-1/2 z-10 hidden h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-blue-700 shadow-sm md:flex">
+                    <div className="absolute -right-4 top-1/2 z-10 hidden h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-blue-700 shadow-sm lg:flex">
                       <ChevronRight className="h-4 w-4" />
                     </div>
                   )}
 
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
-                      <Icon className="h-6 w-6" />
-                    </div>
-
-                    <div>
-                      <span className="text-sm font-semibold text-blue-700">{step.number}</span>
-                      <h3 className="text-lg font-bold text-slate-950">{step.title}</h3>
-                    </div>
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+                    <Icon className="h-6 w-6" />
                   </div>
 
-                  <p className="mt-4 leading-7 text-slate-600">{step.description}</p>
+                  <span className="mt-5 inline-flex text-sm font-semibold text-blue-700">
+                    {step.number}
+                  </span>
+
+                  <h3 className="mt-1 text-lg font-bold text-slate-950">
+                    {step.title}
+                  </h3>
+
+                  <p className="mt-2 text-sm leading-6 text-slate-600">
+                    {step.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-5 py-14 lg:px-8">
+        <div className="mx-auto max-w-7xl overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm lg:grid lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="bg-gradient-to-br from-blue-700 to-blue-950 p-8 text-white lg:p-10">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-blue-100">
+              Diferencial do Ohrly
+            </p>
+
+            <h2 className="text-3xl font-bold tracking-tight">
+              O diagnóstico melhora quando o cliente confirma o que é relevante.
+            </h2>
+
+            <p className="mt-5 leading-7 text-blue-50">
+              O Ohrly não precisa depender de humanos criando tudo do zero para
+              sempre. Degradações validadas viram janelas acompanhadas. Quando se
+              repetem em lojas parecidas, podem virar candidatas a policy curada.
+            </p>
+
+            <div className="mt-8 rounded-2xl bg-white/10 p-5 ring-1 ring-white/15">
+              <p className="font-semibold leading-7 text-white">
+                Não é só uma análise pontual. É um ciclo de aprendizado operacional.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid gap-5 p-8 lg:p-10">
+            {learningSteps.map((step) => {
+              const Icon = step.icon;
+
+              return (
+                <div key={step.title} className="flex gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+                    <Icon className="h-6 w-6" />
+                  </div>
+
+                  <div>
+                    <h3 className="font-bold text-slate-950">{step.title}</h3>
+                    <p className="mt-1 text-sm leading-6 text-slate-600">
+                      {step.description}
+                    </p>
+                  </div>
                 </div>
               );
             })}
@@ -543,18 +660,17 @@ export default function ForEcommerceLandingPage() {
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto max-w-3xl text-center">
             <span className="inline-flex rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
-              Dados que a plataforma já pode te dar
+              Dados que ajudam a leitura
             </span>
 
             <h2 className="mt-5 text-3xl font-bold tracking-tight text-slate-950">
-              Quais dados ajudam a leitura?
+              Você não precisa enviar tudo de uma vez.
             </h2>
 
             <p className="mt-4 leading-7 text-slate-600">
-              Você não precisa enviar tudo de uma vez. A primeira leitura pode começar
-              com pedidos, clientes e produtos. Quanto mais etapas da jornada você
-              envia, mais o Ohrly consegue separar intenção real, ruído, abandono e
-              oportunidades de continuidade.
+              A primeira leitura pode começar com pedidos, clientes e produtos.
+              Quanto mais etapas da jornada você envia, mais o Ohrly consegue
+              separar fato, hipótese, ruído e próximo dado necessário.
             </p>
           </div>
 
@@ -564,7 +680,9 @@ export default function ForEcommerceLandingPage() {
                 key={group.title}
                 className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
               >
-                <h3 className="text-lg font-bold text-slate-950">{group.title}</h3>
+                <h3 className="text-lg font-bold text-slate-950">
+                  {group.title}
+                </h3>
 
                 <p className="mt-2 text-sm leading-6 text-slate-600">
                   {group.description}
@@ -572,7 +690,10 @@ export default function ForEcommerceLandingPage() {
 
                 <ul className="mt-6 space-y-3">
                   {group.items.map((item) => (
-                    <li key={item} className="flex items-start gap-3 text-sm text-slate-700">
+                    <li
+                      key={item}
+                      className="flex items-start gap-3 text-sm text-slate-700"
+                    >
                       <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-blue-700" />
                       <span>{item}</span>
                     </li>
@@ -592,304 +713,14 @@ export default function ForEcommerceLandingPage() {
                 <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
                   Primeiro entendemos o que os dados permitem observar. Depois
                   separamos o que é fato, hipótese, ruído e próximo dado necessário.
-                  Isso evita tratar todo carrinho abandonado como venda perdida ou todo
-                  pagamento recusado como cliente real.
                 </p>
               </div>
 
               <div className="rounded-2xl bg-white px-5 py-4 text-sm font-semibold text-blue-700 shadow-sm">
-                Pedidos → Carrinhos → Pagamentos → Recompra
+                Pedidos → Clientes → Canais → Continuidade
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section id="exemplo" className="px-5 py-16 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="mx-auto max-w-3xl text-center">
-            <span className="inline-flex rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
-              Exemplo de diagnóstico Ohrly
-            </span>
-
-            <h2 className="mt-5 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
-              Da diferença de crescimento às janelas de decisão
-            </h2>
-
-            <p className="mt-4 leading-7 text-slate-600">
-              O Ohrly não entrega apenas uma lista de métricas. Ele compara sua loja com
-              referências do segmento, identifica onde o crescimento pode ter ficado preso
-              e transforma esses espaços em janelas de decisão com valor exposto, experimento
-              recomendado e comportamento para monitorar.
-            </p>
-          </div>
-
-          <div className="mt-10 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
-            <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-              <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-                    Método Ohrly
-                  </span>
-
-                  <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
-                    Comparativo → Diferença → Janela → Experimento
-                  </span>
-                </div>
-
-                <h3 className="mt-5 text-2xl font-bold tracking-tight text-slate-950">
-                  Se o segmento cresceu mais que sua loja, onde esse crescimento ficou preso?
-                </h3>
-
-                <p className="mt-4 leading-7 text-slate-600">
-                  Em vez de sugerir campanha, desconto ou tráfego de forma genérica, o Ohrly
-                  organiza a análise em algumas alavancas como: conversão, ticket médio, volume e
-                  continuidade. Depois, conecta cada uma a uma decisão prática.
-                </p>
-
-                <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                      Segmento
-                    </p>
-                    <p className="mt-2 text-2xl font-bold text-slate-950">+70%</p>
-                    <p className="mt-1 text-sm text-slate-600">
-                      crescimento de referência
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                      Sua loja
-                    </p>
-                    <p className="mt-2 text-2xl font-bold text-slate-950">+40%</p>
-                    <p className="mt-1 text-sm text-slate-600">
-                      crescimento observado
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl bg-blue-50 p-4 ring-1 ring-blue-100">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">
-                      Gap investigado
-                    </p>
-                    <p className="mt-2 text-2xl font-bold text-blue-950">30%</p>
-                    <p className="mt-1 text-sm text-blue-800">
-                      onde procurar potencial
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-6 rounded-2xl bg-emerald-50 p-5 ring-1 ring-emerald-100">
-                  <div className="flex gap-3">
-                    <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-emerald-700" />
-                    <div>
-                      <h4 className="font-bold text-emerald-950">
-                        Potencial comparativo estimado
-                      </h4>
-                      <p className="mt-1 text-sm leading-6 text-emerald-900">
-                        Em uma primeira leitura, o Ohrly pode estimar uma faixa conservadora
-                        de potencial capturável. Exemplo: R$ 17 mil a R$ 72 mil em gaps
-                        comparativos, antes de aprofundar nas janelas específicas da operação.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-5">
-                  <p className="text-sm leading-6 text-slate-600">
-                    Este é um exemplo simplificado de como o Ohrly organiza uma leitura. As janelas,
-                    valores e experimentos variam conforme o segmento, a maturidade da operação e
-                    os dados disponíveis. Em algumas lojas, o diagnóstico pode revelar oportunidades
-                    claras de crescimento; em outras, o primeiro valor pode ser mostrar que a operação
-                    precisa medir melhor clientes, canais ou continuidade antes de projetar ganhos.
-                  </p>
-                </div>
-              </div>
-
-              <div className="rounded-3xl border border-slate-200 bg-slate-950 p-6 text-white shadow-sm">
-                <p className="text-sm font-semibold text-blue-300">
-                  Leitura gerada pelo Ohrly
-                </p>
-
-                <h3 className="mt-4 text-2xl font-bold tracking-tight">
-                  O crescimento não ficou preso em um único ponto.
-                </h3>
-
-                <p className="mt-4 leading-7 text-slate-300">
-                  A loja vende, mas há sinais de que parte do potencial pode estar distribuída
-                  entre baixa mensurabilidade, pouca continuidade pós-compra e intenção digital
-                  que não confirma.
-                </p>
-
-                <div className="mt-6 space-y-3">
-                  <div className="rounded-2xl bg-white/10 p-4 ring-1 ring-white/10">
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="text-sm font-bold text-white">
-                        Cliente invisível por agregação
-                      </p>
-                      <span className="rounded-full bg-red-400/15 px-3 py-1 text-xs font-semibold text-red-200">
-                        Crítica
-                      </span>
-                    </div>
-
-                    <p className="mt-2 text-sm leading-6 text-slate-300">
-                      A loja vende, mas parte da operação dificulta medir recompra real,
-                      LTV e continuidade.
-                    </p>
-
-                    <p className="mt-3 text-sm font-semibold text-white">
-                      Valor associado: R$ 338.909,10
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl bg-white/10 p-4 ring-1 ring-white/10">
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="text-sm font-bold text-white">
-                        Continuidade pós-compra
-                      </p>
-                      <span className="rounded-full bg-amber-400/15 px-3 py-1 text-xs font-semibold text-amber-200">
-                        Alta
-                      </span>
-                    </div>
-
-                    <p className="mt-2 text-sm leading-6 text-slate-300">
-                      Clientes compram capacete, mas poucos retornam para viseira, luva,
-                      limpeza ou acessórios.
-                    </p>
-
-                    <p className="mt-3 text-sm font-semibold text-white">
-                      Janela observada: R$ 131.939,59
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl bg-white/10 p-4 ring-1 ring-white/10">
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="text-sm font-bold text-white">
-                        Intenção digital não confirmada
-                      </p>
-                      <span className="rounded-full bg-amber-400/15 px-3 py-1 text-xs font-semibold text-amber-200">
-                        Alta
-                      </span>
-                    </div>
-
-                    <p className="mt-2 text-sm leading-6 text-slate-300">
-                      Produtos de alto atrito geram pedidos digitais, mas parte da intenção
-                      não vira pagamento confirmado.
-                    </p>
-
-                    <p className="mt-3 text-sm font-semibold text-white">
-                      Valor não confirmado: R$ 4.320,00
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6 grid gap-5 lg:grid-cols-3">
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
-                <BarChart3 className="h-5 w-5" />
-              </div>
-
-              <h3 className="mt-5 text-lg font-bold text-slate-950">
-                1. O comparativo mostra o quanto você pode otimizar seu faturamento
-              </h3>
-
-              <p className="mt-2 text-sm leading-6 text-slate-600">
-                Primeiro entendemos se a loja está abaixo do esperado para seu segmento:
-                conversão, ticket, volume, participação do digital ou continuidade.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
-                <GitBranch className="h-5 w-5" />
-              </div>
-
-              <h3 className="mt-5 text-lg font-bold text-slate-950">
-                2. As janelas decisórias mostram onde agir e porque você deveria se preocupar
-              </h3>
-
-              <p className="mt-2 text-sm leading-6 text-slate-600">
-                Depois o Ohrly transforma o gap em decisões: recuperar pedido, qualificar
-                intenção, criar régua pós-compra ou melhorar identificação do cliente.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
-                <Activity className="h-5 w-5" />
-              </div>
-
-              <h3 className="mt-5 text-lg font-bold text-slate-950">
-                3. O monitoramento te acompanha no dia a dia e te ajuda a corrigir a rota
-              </h3>
-
-              <p className="mt-2 text-sm leading-6 text-slate-600">
-                O diagnóstico mostra o que apareceu no passado. O acompanhamento mostra se
-                a janela voltou, reduziu, desapareceu ou continuou abrindo.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-6 rounded-3xl border border-blue-100 bg-blue-50 p-6 lg:p-8">
-            <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
-              <div>
-                <p className="text-sm font-semibold text-blue-700">
-                  O que isso ajuda a decidir?
-                </p>
-
-                <h3 className="mt-3 text-2xl font-bold tracking-tight text-blue-950">
-                  Não é “faça mais marketing”. É saber qual janela merece o próximo teste.
-                </h3>
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl bg-white p-4 ring-1 ring-blue-100">
-                  <p className="text-sm font-bold text-slate-950">
-                    Capturar telefone no balcão
-                  </p>
-                  <p className="mt-1 text-sm leading-6 text-slate-600">
-                    Para reduzir cliente genérico e medir recompra real.
-                  </p>
-                </div>
-
-                <div className="rounded-2xl bg-white p-4 ring-1 ring-blue-100">
-                  <p className="text-sm font-bold text-slate-950">
-                    Criar régua pós-capacete
-                  </p>
-                  <p className="mt-1 text-sm leading-6 text-slate-600">
-                    Para testar venda complementar entre 7 e 15 dias.
-                  </p>
-                </div>
-
-                <div className="rounded-2xl bg-white p-4 ring-1 ring-blue-100">
-                  <p className="text-sm font-bold text-slate-950">
-                    Separar venda boa de tentativa ruim
-                  </p>
-                  <p className="mt-1 text-sm leading-6 text-slate-600">
-                    Para não tratar todo pagamento recusado como venda perdida.
-                  </p>
-                </div>
-
-                <div className="rounded-2xl bg-white p-4 ring-1 ring-blue-100">
-                  <p className="text-sm font-bold text-slate-950">
-                    Testar reserva e prova
-                  </p>
-                  <p className="mt-1 text-sm leading-6 text-slate-600">
-                    Para produtos de alto atrito, como capacetes e acessórios.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <p className="mx-auto mt-6 max-w-3xl text-center text-sm leading-6 text-slate-500">
-            Os valores apresentados são exemplos de valor operacional exposto e potencial
-            investigativo. Eles não representam promessa de recuperação integral de faturamento.
-            O objetivo é mostrar onde testar, medir e acompanhar.
-          </p>
         </div>
       </section>
 
@@ -897,27 +728,37 @@ export default function ForEcommerceLandingPage() {
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-slate-950">
-              Comece com uma análise gratuita
+              Comece com um diagnóstico gratuito.
             </h2>
 
             <p className="mt-4 leading-7 text-slate-600">
-              Envie os relatórios que sua loja já consegue exportar. O Ohrly analisa
-              o que é possível observar e mostra onde a jornada do cliente pode estar perdendo continuidade.
+              Envie os relatórios que sua loja já consegue exportar. O Ohrly
+              analisa o que é possível observar e mostra quais janelas merecem
+              decisão.
             </p>
           </div>
 
           <div className="mx-auto mt-10 grid max-w-5xl gap-6 lg:grid-cols-2">
             <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-              <h3 className="text-xl font-bold text-slate-950">Análise inicial gratuita</h3>
+              <h3 className="text-xl font-bold text-slate-950">
+                Diagnóstico inicial gratuito
+              </h3>
 
               <div className="mt-5 flex items-end gap-3">
-                <span className="text-5xl font-bold tracking-tight text-slate-950">R$ 0</span>
-                <span className="pb-2 text-sm text-slate-500">preço de validação</span>
+                <span className="text-5xl font-bold tracking-tight text-slate-950">
+                  R$ 0
+                </span>
+                <span className="pb-2 text-sm text-slate-500">
+                  preço de validação
+                </span>
               </div>
 
               <ul className="mt-6 space-y-3">
                 {freePlanItems.map((item) => (
-                  <li key={item} className="flex gap-3 text-sm leading-6 text-slate-700">
+                  <li
+                    key={item}
+                    className="flex gap-3 text-sm leading-6 text-slate-700"
+                  >
                     <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-blue-700" />
                     {item}
                   </li>
@@ -927,9 +768,9 @@ export default function ForEcommerceLandingPage() {
               <button
                 type="button"
                 onClick={openFreeAnalysisModal}
-                className="cursor-pointer mt-8 inline-flex w-full items-center justify-center rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-700/20 transition hover:bg-blue-800"
+                className="mt-8 inline-flex w-full cursor-pointer items-center justify-center rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-700/20 transition hover:bg-blue-800"
               >
-                Quero uma análise gratuita
+                Quero meu diagnóstico gratuito
               </button>
             </div>
 
@@ -938,21 +779,30 @@ export default function ForEcommerceLandingPage() {
                 Oferta de validação
               </div>
 
-              <h3 className="text-xl font-bold text-slate-950">Leitura Ohrly consolidada</h3>
+              <h3 className="text-xl font-bold text-slate-950">
+                Leitura Ohrly consolidada
+              </h3>
 
               <div className="mt-5 flex items-end gap-3">
-                <span className="text-5xl font-bold tracking-tight text-slate-950">R$ 99</span>
-                <span className="pb-2 text-sm text-slate-500 line-through">de R$ 197</span>
+                <span className="text-5xl font-bold tracking-tight text-slate-950">
+                  R$ 99
+                </span>
+                <span className="pb-2 text-sm text-slate-500 line-through">
+                  de R$ 197
+                </span>
               </div>
 
               <p className="mt-5 leading-7 text-slate-600">
-                Após a análise gratuita, aprofunde a leitura com contexto e janelas
-                de decisão priorizadas.
+                Após o diagnóstico gratuito, aprofunde a leitura com contexto,
+                priorização e próximos comportamentos para acompanhar.
               </p>
 
               <ul className="mt-6 space-y-3">
                 {consolidatedPlanItems.map((item) => (
-                  <li key={item} className="flex gap-3 text-sm leading-6 text-slate-700">
+                  <li
+                    key={item}
+                    className="flex gap-3 text-sm leading-6 text-slate-700"
+                  >
                     <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-blue-700" />
                     {item}
                   </li>
@@ -971,7 +821,7 @@ export default function ForEcommerceLandingPage() {
                     page: "for-ecommerce",
                   });
                 }}
-                className="cursor-pointer mt-8 inline-flex w-full items-center justify-center rounded-xl border border-blue-200 bg-white px-5 py-3 text-sm font-semibold text-blue-700 transition hover:bg-blue-50"
+                className="mt-8 inline-flex w-full cursor-pointer items-center justify-center rounded-xl border border-blue-200 bg-white px-5 py-3 text-sm font-semibold text-blue-700 transition hover:bg-blue-50"
               >
                 Entender próximo passo
               </button>
@@ -982,45 +832,6 @@ export default function ForEcommerceLandingPage() {
 
       <section className="px-5 py-16 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="mx-auto max-w-3xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-slate-950">
-              A leitura mostra onde olhar. O acompanhamento valida isso continuamente.
-            </h2>
-
-            <p className="mt-4 leading-7 text-slate-600">
-              A leitura gratuita identifica hipóteses e pontos críticos. O plugin e o
-              acompanhamento observam a jornada real todos os dias, refinando as
-              análises e confirmando o que realmente impacta suas vendas.
-            </p>
-          </div>
-
-          <div className="mt-10 grid gap-5 lg:grid-cols-4">
-            {followUpSteps.map((step, index) => {
-              const Icon = step.icon;
-
-              return (
-                <div key={step.title} className="relative rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-                  {index < followUpSteps.length - 1 && (
-                    <div className="absolute -right-4 top-1/2 z-10 hidden h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-blue-700 shadow-sm lg:flex">
-                      <ArrowRight className="h-4 w-4" />
-                    </div>
-                  )}
-
-                  <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
-                    <Icon className="h-6 w-6" />
-                  </div>
-
-                  <h3 className="font-bold text-slate-950">{step.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">{step.description}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section className="px-5 pb-14 lg:px-8">
-        <div className="mx-auto max-w-7xl">
           <h2 className="text-center text-2xl font-bold tracking-tight text-slate-950">
             Funciona com plataformas e canais comuns do comércio digital
           </h2>
@@ -1030,11 +841,15 @@ export default function ForEcommerceLandingPage() {
               <div
                 key={platform}
                 className={`inline-flex items-center gap-2 rounded-2xl border px-5 py-3 text-sm font-semibold shadow-sm ${index === 0
-                  ? "border-blue-200 bg-blue-50 text-blue-800"
-                  : "border-slate-200 bg-white text-slate-700"
+                    ? "border-blue-200 bg-blue-50 text-blue-800"
+                    : "border-slate-200 bg-white text-slate-700"
                   }`}
               >
-                {index === 0 ? <Cloud className="h-4 w-4" /> : <PackageCheck className="h-4 w-4" />}
+                {index === 0 ? (
+                  <Cloud className="h-4 w-4" />
+                ) : (
+                  <PackageCheck className="h-4 w-4" />
+                )}
                 {platform}
               </div>
             ))}
@@ -1053,22 +868,21 @@ export default function ForEcommerceLandingPage() {
 
             <div>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                Envie relatórios do seu ecommerce e receba uma primeira leitura gratuita.
+                Envie relatórios da sua loja e receba uma primeira leitura gratuita.
               </h2>
 
               <p className="mt-5 max-w-3xl leading-7 text-blue-50">
-                Descubra se seus dados já mostram clientes escapando da jornada,
-                sinais online que precisam ser filtrados e decisões que não deveriam
-                esperar mais.
+                Descubra se seus dados já mostram clientes invisíveis, concentração
+                de canal, pressão de desconto ou decisões que não deveriam esperar.
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <button
                   type="button"
                   onClick={openFreeAnalysisModal}
-                  className="cursor-pointer inline-flex items-center justify-center rounded-xl bg-white px-6 py-3 text-sm font-semibold text-blue-800 shadow-lg transition hover:bg-blue-50"
+                  className="inline-flex cursor-pointer items-center justify-center rounded-xl bg-white px-6 py-3 text-sm font-semibold text-blue-800 shadow-lg transition hover:bg-blue-50"
                 >
-                  Quero minha leitura gratuita
+                  Quero meu diagnóstico gratuito
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </button>
 
@@ -1088,16 +902,17 @@ export default function ForEcommerceLandingPage() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <span className="inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
-                  Leitura gratuita
+                  Diagnóstico gratuito
                 </span>
 
                 <h2 className="mt-4 text-2xl font-bold tracking-tight text-slate-950">
-                  Solicitar leitura gratuita da sua loja
+                  Solicitar diagnóstico gratuito da sua loja
                 </h2>
 
                 <p className="mt-2 text-sm leading-6 text-slate-600">
-                  Conte rapidamente o segmento da sua loja e o que você gostaria de entender.
-                  Depois entramos em contato para orientar quais relatórios exportar da plataforma.
+                  Conte rapidamente o segmento da sua loja e o que você gostaria
+                  de entender. Depois entramos em contato para orientar quais
+                  relatórios exportar.
                 </p>
               </div>
 
@@ -1121,9 +936,9 @@ export default function ForEcommerceLandingPage() {
                     </h3>
 
                     <p className="mt-2 text-sm leading-6 text-emerald-900">
-                      Recebemos sua solicitação. Vamos entrar em contato pelo e-mail informado
-                      com mais detalhes sobre a leitura gratuita e orientar quais relatórios
-                      exportar da plataforma. Se preferir adiantar, entre em contato pelo e-mail{" "}
+                      Recebemos sua solicitação. Vamos entrar em contato pelo e-mail
+                      informado para orientar os próximos passos. Se preferir adiantar,
+                      fale pelo e-mail{" "}
                       <a
                         href="mailto:taraujo@ohrly.com.br"
                         className="font-semibold underline decoration-emerald-700/40 underline-offset-4 hover:text-emerald-800"
@@ -1134,15 +949,16 @@ export default function ForEcommerceLandingPage() {
                     </p>
 
                     <div className="mt-5 rounded-2xl bg-white p-4 text-sm leading-6 text-emerald-950 ring-1 ring-emerald-100">
-                      Se quiser adiantar, envie para o nosso contato os relatórios de:
-                      <strong> pedidos e vendas, clientes, produtos, carrinhos abandonados,
-                        pagamentos recusados</strong> e, se tiver, <strong>visitas/produtos acessados</strong>.
+                      Se quiser adiantar, envie relatórios de{" "}
+                      <strong>pedidos e vendas, clientes e produtos</strong>. Se
+                      tiver, inclua também <strong>carrinhos, pagamentos, visitas</strong>{" "}
+                      e <strong>atendimento</strong>.
                     </div>
 
                     <button
                       type="button"
                       onClick={() => setIsFreeAnalysisModalOpen(false)}
-                      className="cursor-pointer mt-5 inline-flex rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800"
+                      className="mt-5 inline-flex cursor-pointer rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800"
                     >
                       Entendi
                     </button>
@@ -1178,7 +994,7 @@ export default function ForEcommerceLandingPage() {
                     name="mensagem"
                     required
                     rows={6}
-                    placeholder="Ex: Minha loja recebe visitas, mas vende pouco. Quero entender se o problema parece estar no carrinho, pagamento, produtos, recompra ou atendimento."
+                    placeholder="Ex: Minha loja vende pelo físico e pelo online, mas não sei onde estou perdendo recompra, cliente identificável ou continuidade."
                     className="resize-none rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
                   />
                 </label>
@@ -1192,12 +1008,12 @@ export default function ForEcommerceLandingPage() {
                 <input
                   type="hidden"
                   name="tipo_de_solicitacao"
-                  value="Leitura gratuita"
+                  value="Diagnóstico gratuito"
                 />
 
                 <div className="rounded-2xl bg-slate-50 p-4 text-sm leading-6 text-slate-600">
-                  Você não precisa enviar CSV agora. A primeira etapa é entendermos o
-                  contexto e depois indicarmos quais relatórios exportar.
+                  Você não precisa enviar CSV agora. Primeiro entendemos o contexto;
+                  depois indicamos quais relatórios exportar.
                 </div>
 
                 {freeAnalysisError && (
@@ -1209,7 +1025,7 @@ export default function ForEcommerceLandingPage() {
                 <button
                   type="submit"
                   disabled={isSubmittingFreeAnalysis}
-                  className="cursor-pointer inline-flex items-center justify-center rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-700/20 transition hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-70"
+                  className="inline-flex cursor-pointer items-center justify-center rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-700/20 transition hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   {isSubmittingFreeAnalysis ? "Enviando..." : "Enviar solicitação"}
                 </button>
@@ -1229,7 +1045,7 @@ export default function ForEcommerceLandingPage() {
                 </span>
 
                 <h2 className="mt-4 text-2xl font-bold tracking-tight text-slate-950">
-                  O que acontece depois da leitura gratuita?
+                  O que acontece depois do diagnóstico gratuito?
                 </h2>
               </div>
 
@@ -1244,9 +1060,9 @@ export default function ForEcommerceLandingPage() {
 
             <div className="mt-6 space-y-4 text-sm leading-6 text-slate-600">
               <p>
-                A análise gratuita mostra onde olhar. Se a leitura fizer sentido,
-                a Leitura Ohrly Consolidada aprofunda o contexto do negócio e
-                organiza as janelas de decisão com mais clareza.
+                O diagnóstico gratuito mostra onde olhar. Se a leitura fizer sentido,
+                a Leitura Ohrly Consolidada aprofunda o contexto e organiza as
+                janelas de decisão com mais clareza.
               </p>
 
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
@@ -1257,14 +1073,14 @@ export default function ForEcommerceLandingPage() {
                   <li>• Separação entre fato, hipótese, ruído e oportunidade</li>
                   <li>• Janelas de decisão priorizadas</li>
                   <li>• Próximos dados que aumentariam a precisão</li>
-                  <li>• Leitura final mais consolidada</li>
+                  <li>• Comportamentos para acompanhar depois</li>
                 </ul>
               </div>
 
               <p>
                 A ideia não é vender uma consultoria genérica. É entender se os
-                dados já mostram perda de continuidade na jornada do cliente e
-                quais decisões merecem ser investigadas.
+                dados já mostram perda de mensurabilidade, continuidade ou qualidade
+                na jornada do cliente.
               </p>
             </div>
 
@@ -1281,15 +1097,15 @@ export default function ForEcommerceLandingPage() {
                   setIsNextStepModalOpen(false);
                   openFreeAnalysisModal();
                 }}
-                className="cursor-pointer inline-flex flex-1 items-center justify-center rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-700/20 transition hover:bg-blue-800"
+                className="inline-flex flex-1 cursor-pointer items-center justify-center rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-700/20 transition hover:bg-blue-800"
               >
-                Começar pela análise gratuita
+                Começar pelo diagnóstico gratuito
               </button>
 
               <button
                 type="button"
                 onClick={() => setIsNextStepModalOpen(false)}
-                className="cursor-pointer inline-flex flex-1 items-center justify-center rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                className="inline-flex flex-1 cursor-pointer items-center justify-center rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
               >
                 Voltar
               </button>

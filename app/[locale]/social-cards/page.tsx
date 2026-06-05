@@ -13,7 +13,7 @@ import {
   WalletCards,
 } from "lucide-react";
 
-type CardVariant = "statement" | "journey" | "question" | "list";
+type CardVariant = "statement" | "journey" | "question" | "list" | "brand";
 
 type SocialCard = {
   id: string;
@@ -27,58 +27,79 @@ type SocialCard = {
 
 const cards: SocialCard[] = [
   {
-    id: "mais-trafego-vazamento",
-    variant: "statement",
-    eyebrow: "Antes de gastar mais com anúncio",
-    title: "Mais tráfego pode só aumentar o vazamento.",
-    subtitle:
-      "Se a jornada do cliente já está perdendo continuidade, trazer mais gente pode apenas multiplicar o problema.",
-    footer: "Ohrly • Jornada de e-commerce",
-  },
-  {
-    id: "carrinho-abandonado",
+    id: "receita-sem-relacionamento",
     variant: "question",
-    eyebrow: "Janela de decisão",
-    title: "Nem todo carrinho abandonado é venda perdida.",
+    eyebrow: "Pergunta para lojistas",
+    title: "Quantas vendas não viram relacionamento com cliente?",
     subtitle:
-      "Pode ser dúvida, frete, tamanho, comparação, intenção fraca ou uma venda que nem valia recuperar.",
-    footer: "Antes do cupom, entenda a jornada.",
+      "Nem toda venda vira cliente conhecido, recompra ou histórico útil para continuar a conversa.",
+    footer: "Ohrly • Diagnóstico gratuito para lojas",
   },
   {
-    id: "pagamento-recusado",
-    variant: "list",
-    eyebrow: "Pagamento não concluído",
-    title: "Pedido recusado pode ser muita coisa.",
-    items: [
-      "cliente real com problema no pagamento",
-      "tentativa suspeita",
-      "cartão clonado",
-      "ruído que não vale recuperar",
-    ],
-    footer: "Ohrly separa sinal, hipótese e ruído.",
-  },
-  {
-    id: "fluxo-jornada",
-    variant: "journey",
-    eyebrow: "Onde o cliente escapou?",
-    title: "Produto visto → Carrinho → Pagamento → Compra",
-    subtitle:
-      "A pergunta não é só se vendeu. É onde a continuidade se perdeu.",
-    footer: "Leitura gratuita para lojas virtuais",
-  },
-  {
-    id: "primeira-compra",
+    id: "venda-que-some",
     variant: "statement",
-    eyebrow: "Recompra",
-    title: "A venda aconteceu. Mas a relação continuou?",
+    eyebrow: "Venda que entra no caixa",
+    title: "Tem venda que acontece e depois desaparece.",
     subtitle:
-      "Cliente que compra uma vez e some também deixa um sinal importante na jornada.",
-    footer: "Ohrly • transforme relatórios em perguntas melhores",
+      "O pedido entrou, o faturamento apareceu, mas depois você não sabe se aquela pessoa voltou, compraria de novo ou precisava de outro produto.",
+    footer: "Nem toda receita vira continuidade.",
+  },
+  {
+    id: "loja-vende-sem-memoria",
+    variant: "list",
+    eyebrow: "Cliente invisível",
+    title: 'E quando não lembramos dos clientes.',
+    items: [
+      "Sem contato confiável",
+      "Sem histórico útil",
+      "Sem recompra visível",
+      "Sem clareza de continuidade",
+    ],
+    footer: "Ohrly mostra onde a relação se perdeu.",
+  },
+  {
+    id: "crescer-do-jeito-caro",
+    variant: "statement",
+    eyebrow: "Mais eficiência importa",
+    title: "Às vezes gastar mais não é a resposta.",
+    subtitle:
+      "Mais tráfego, mais desconto, mais campanha. Mas parte do crescimento pode começar olhando para quem já comprou.",
+    footer: "Antes de buscar mais gente, entenda sua base.",
+  },
+  {
+    id: "janelas-de-decisao",
+    variant: "list",
+    eyebrow: "O que o Ohrly procura",
+    title: "Relatórios simples podem revelar janelas importantes.",
+    items: [
+      "Cliente invisível",
+      "Canal que vende mas não identifica",
+      "Pedido que não confirma",
+      "Compra que não vira recompra",
+    ],
+    footer: "Transforme dados em decisões melhores.",
+  },
+  {
+    id: "nao-e-dashboard",
+    variant: "statement",
+    eyebrow: "Não é mais um dashboard",
+    title: "A pergunta não é só se vendeu.",
+    subtitle:
+      "É onde olhar, por que isso importa, qual decisão testar e o que acompanhar depois.",
+    footer: "Ohrly • janelas de decisão para lojistas",
+  },
+  {
+    id: "ohrly-fechamento",
+    variant: "brand",
+    eyebrow: "",
+    title: "Ohrly",
+    subtitle: "Diagnóstico gratuito na bio.",
+    footer: "",
   },
 ];
 
 const variantStyles: Record<
-  CardVariant,
+  Exclude<CardVariant, "brand">,
   {
     gradient: string;
     iconBg: string;
@@ -180,6 +201,35 @@ function JourneyDiagram() {
 }
 
 function SocialCardPreview({ card }: { card: SocialCard }) {
+  if (card.variant === "brand") {
+    return (
+      <div className="relative flex h-[1350px] w-[1080px] overflow-hidden rounded-[56px] bg-slate-950 p-16 text-center text-white shadow-2xl">
+        <div className="absolute -right-24 -top-24 h-96 w-96 rounded-full bg-blue-500/20 blur-3xl" />
+        <div className="absolute -bottom-32 -left-24 h-[420px] w-[420px] rounded-full bg-sky-300/10 blur-3xl" />
+
+        <div className="relative z-10 flex h-full w-full flex-col items-center justify-between">
+          <div />
+
+          <div className="flex flex-col items-center">
+            <h1 className="text-[104px] font-black tracking-[-0.08em]">
+              {card.title}
+            </h1>
+
+            {card.subtitle && (
+              <p className="mt-8 text-[30px] font-semibold text-white/55">
+                {card.subtitle}
+              </p>
+            )}
+          </div>
+
+          <p className="text-2xl font-medium text-white/35">
+            Para lojas
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   const style = variantStyles[card.variant];
 
   return (
