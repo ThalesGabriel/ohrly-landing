@@ -33,7 +33,7 @@ export default function LocaleSwitcher() {
             disabled={isPending}
             onChange={(event) => changeLocale(event.target.value)}
             aria-label="Selecionar idioma"
-            className="h-10 rounded-full border border-slate-200 bg-white/80 px-3 text-xs font-medium text-slate-700 shadow-sm outline-none transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-800 dark:bg-slate-950/70 dark:text-slate-200 dark:hover:bg-slate-900"
+            className="cursor-pointer h-10 rounded-full border border-slate-200 bg-white/80 px-3 text-xs font-medium text-slate-700 shadow-sm outline-none transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-800 dark:bg-slate-950/70 dark:text-slate-200 dark:hover:bg-slate-900"
         >
             {localeOptions.map((option) => (
                 <option key={option.value} value={option.value}>

@@ -1,980 +1,575 @@
-"use client";
+import type { Metadata } from "next";
+import type { ReactNode } from "react";
+import { getTranslations } from "next-intl/server";
+import LocaleSwitcher from "@/components/i18n/LocaleSwitcher";
 
-import { ElementType } from "react";
-import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
-import { PageShell } from "@/components/layout/PageShell";
-import {
-  ArrowRight,
-  BarChart3,
-  Bot,
-  CheckCircle2,
-  CircleDollarSign,
-  Clock3,
-  CreditCard,
-  Database,
-  Gauge,
-  GitBranch,
-  LineChart,
-  MessageCircle,
-  RefreshCw,
-  ShoppingCart,
-  Sparkle,
-  Sparkles,
-  Target,
-  Timer,
-  Truck,
-  Workflow,
-  Zap,
-} from "lucide-react";
+const formspreeEndpoint =
+  "https://formspree.io/f/mkoygpnk";
 
-function cn(...classes: Array<string | false | null | undefined>) {
-  return classes.filter(Boolean).join(" ");
-}
+type Tone = "indigo" | "orange" | "green";
 
-export default function OhrlyLandingPage() {
+type IconName =
+  | "pulse"
+  | "bot"
+  | "handoff"
+  | "fallback"
+  | "resolution"
+  | "repeat"
+  | "queue"
+  | "decision"
+  | "upload"
+  | "target"
+  | "chart"
+  | "headset"
+  | "screen"
+  | "whatsapp"
+  | "shield";
+
+type CardItem = {
+  icon: IconName;
+  title: string;
+  text: string;
+};
+
+type MetricItem = {
+  label: string;
+  value: string;
+  trend?: string;
+  tone?: Tone;
+};
+
+type ReturnStep = [string, string];
+type ComparisonRow = [string, string];
+
+const iconPaths: Record<IconName, ReactNode> = {
+  pulse: <path d="M4 12h4l2-6 4 12 2-6h4" />,
+  bot: (
+    <>
+      <path d="M12 8V5" />
+      <path d="M8 5h8" />
+      <rect x="5" y="8" width="14" height="10" rx="4" />
+      <path d="M9 13h.01" />
+      <path d="M15 13h.01" />
+      <path d="M9 17h6" />
+    </>
+  ),
+  handoff: (
+    <>
+      <path d="M8 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
+      <path d="M2 21a6 6 0 0 1 12 0" />
+      <path d="M16 6h6" />
+      <path d="m19 3 3 3-3 3" />
+      <path d="M20 14a3 3 0 1 0 0 6" />
+    </>
+  ),
+  fallback: (
+    <>
+      <path d="M12 3 2 20h20L12 3Z" />
+      <path d="M12 9v5" />
+      <path d="M12 17h.01" />
+    </>
+  ),
+  resolution: (
+    <>
+      <path d="M4 19V5" />
+      <path d="M4 19h16" />
+      <path d="m7 15 4-4 3 3 5-7" />
+    </>
+  ),
+  repeat: (
+    <>
+      <path d="M17 2l4 4-4 4" />
+      <path d="M3 11V9a3 3 0 0 1 3-3h15" />
+      <path d="M7 22l-4-4 4-4" />
+      <path d="M21 13v2a3 3 0 0 1-3 3H3" />
+    </>
+  ),
+  queue: (
+    <>
+      <path d="M8 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
+      <path d="M2 21a6 6 0 0 1 12 0" />
+      <path d="M17 11a3 3 0 1 0 0-6" />
+      <path d="M17 20a5 5 0 0 0-2-4" />
+      <path d="M21 20a5 5 0 0 0-2-4" />
+    </>
+  ),
+  decision: (
+    <>
+      <path d="M12 3v18" />
+      <path d="M5 6h10l-2 4 2 4H5" />
+    </>
+  ),
+  upload: (
+    <>
+      <path d="M12 16V4" />
+      <path d="m7 9 5-5 5 5" />
+      <path d="M5 20h14" />
+    </>
+  ),
+  target: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <circle cx="12" cy="12" r="5" />
+      <circle cx="12" cy="12" r="1" />
+    </>
+  ),
+  chart: (
+    <>
+      <path d="M4 19V5" />
+      <path d="M4 19h16" />
+      <rect x="7" y="12" width="2" height="4" />
+      <rect x="12" y="9" width="2" height="7" />
+      <rect x="17" y="6" width="2" height="10" />
+    </>
+  ),
+  headset: (
+    <>
+      <path d="M4 12a8 8 0 0 1 16 0" />
+      <path d="M4 12v4a2 2 0 0 0 2 2h2v-8H6a2 2 0 0 0-2 2Z" />
+      <path d="M20 12v4a2 2 0 0 1-2 2h-2v-8h2a2 2 0 0 1 2 2Z" />
+      <path d="M14 20h2a4 4 0 0 0 4-4" />
+    </>
+  ),
+  screen: (
+    <>
+      <rect x="3" y="4" width="18" height="12" rx="2" />
+      <path d="M8 20h8" />
+      <path d="M12 16v4" />
+    </>
+  ),
+  whatsapp: (
+    <>
+      <path d="M4 20 5.4 16.2A8 8 0 1 1 8 18.6L4 20Z" />
+      <path d="M9 9c.5 2.4 2.2 4.1 4.7 4.7l1.3-1.3" />
+    </>
+  ),
+  shield: (
+    <>
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" />
+      <path d="m9 12 2 2 4-5" />
+    </>
+  ),
+};
+
+function Icon({ name, className = "h-6 w-6" }: { name: IconName; className?: string }) {
   return (
-    <PageShell>
-      <main className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-10">
-        <section className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
-          <HeroSection />
-          <DecisionWindowChart />
-        </section>
-
-        <DecisionWindowExplanation />
-        <WhatOhrlyObserves />
-        <WhereItAppears />
-        <ComparisonStrip />
-        <ExampleReading />
-        <HowItWorks />
-        <LabSection />
-        <FinalCta />
-      </main>
-    </PageShell>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      {iconPaths[name]}
+    </svg>
   );
 }
 
-function HeroSection() {
-  const t = useTranslations("home.hero");
-
+function Section({ id, children, className = "" }: { id?: string; children: ReactNode; className?: string }) {
   return (
-    <section className="relative mt-12 overflow-hidden lg:mt-16">
-      <div className="relative mx-auto max-w-5xl">
-        <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/40 bg-cyan-50 px-3 py-1.5 text-xs font-semibold text-cyan-700 shadow-sm dark:border-cyan-300/20 dark:bg-cyan-300/10 dark:text-cyan-300">
-          <span className="h-1.5 w-1.5 rounded-full bg-cyan-500 dark:bg-cyan-300" />
-          {t("eyebrow")}
-        </div>
-
-        <h1 className="mt-7 text-4xl font-bold leading-[1.03] tracking-tight text-slate-950 dark:text-white sm:text-5xl lg:text-6xl">
-          {t("title")}
-        </h1>
-
-        <p className="mx-auto mt-6 max-w-3xl text-base leading-8 text-slate-600 dark:text-slate-300 sm:text-lg">
-          {t("description")}
-        </p>
-
-        <div className="mt-8 flex flex-col justify-start gap-3 sm:flex-row">
-          <Link
-            href="#janela-de-decisao"
-            className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-cyan-600 px-6 text-sm font-semibold text-white shadow-lg shadow-cyan-600/20 transition hover:-translate-y-0.5 hover:bg-cyan-500 dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400"
-          >
-            {t("primaryCta")}
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-
-          <Link
-            href="/request"
-            className="inline-flex h-12 items-center justify-center rounded-xl border border-slate-300 bg-white px-6 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-400 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-slate-900"
-          >
-            {t("secondaryCta")}
-          </Link>
-        </div>
-
-        <div className="mt-8 grid max-w-3xl gap-3 sm:grid-cols-3 pb-2">
-          <HeroProofItem
-            label={t("proof.notAlert.label")}
-            value={t("proof.notAlert.value")}
-          />
-          <HeroProofItem
-            label={t("proof.notDashboard.label")}
-            value={t("proof.notDashboard.value")}
-          />
-          <HeroProofItem
-            label={t("proof.notAutomation.label")}
-            value={t("proof.notAutomation.value")}
-          />
-        </div>
-      </div>
+    <section id={id} className={`mx-auto w-full max-w-7xl px-5 sm:px-8 ${className}`}>
+      {children}
     </section>
   );
 }
 
-function HeroProofItem({ label, value }: { label: string; value: string }) {
+function Button({ href, children, variant = "primary" }: { href: string; children: ReactNode; variant?: "primary" | "secondary" }) {
+  const styles =
+    variant === "primary"
+      ? "bg-[#4F46E5] text-white shadow-lg shadow-indigo-500/25 hover:bg-[#4338CA]"
+      : "border border-indigo-200 bg-white text-[#2E2A7A] hover:border-indigo-300 hover:bg-indigo-50";
+
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white/75 p-4 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-950/60">
-      <p className="text-xs font-medium text-slate-500 dark:text-slate-500">
-        {label}
-      </p>
-      <p className="mt-1 text-sm font-semibold text-slate-950 dark:text-white">
-        {value}
-      </p>
+    <a
+      href={href}
+      className={`inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold transition ${styles}`}
+    >
+      {children}
+      <span aria-hidden="true">→</span>
+    </a>
+  );
+}
+
+function MetricCard({ label, value, trend, tone = "indigo" }: MetricItem) {
+  const toneClasses = {
+    indigo: "border-indigo-100 bg-indigo-50/70 text-indigo-700",
+    orange: "border-orange-100 bg-orange-50/80 text-orange-700",
+    green: "border-emerald-100 bg-emerald-50/80 text-emerald-700",
+  } satisfies Record<Tone, string>;
+
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+      <p className="text-xs font-medium text-slate-500">{label}</p>
+      <div className="mt-2 flex items-end justify-between gap-3">
+        <strong className="text-2xl font-black tracking-tight text-slate-950">{value}</strong>
+        {trend ? <span className={`rounded-full border px-2 py-1 text-xs font-bold ${toneClasses[tone]}`}>{trend}</span> : null}
+      </div>
+      <div className="mt-4 h-10 overflow-hidden rounded-xl bg-slate-50">
+        <svg viewBox="0 0 140 40" className="h-full w-full" preserveAspectRatio="none" aria-hidden="true">
+          <path
+            d="M0 28 C16 24, 22 18, 36 21 S58 31, 70 24 S92 10, 104 14 S124 32, 140 18"
+            fill="none"
+            stroke={tone === "orange" ? "#F97316" : tone === "green" ? "#10B981" : "#4F46E5"}
+            strokeWidth="3"
+          />
+        </svg>
+      </div>
     </div>
   );
 }
 
-function DecisionWindowChart() {
-  const t = useTranslations("home.decisionChart");
-
-  const xTicks = [
-    { label: t("ticks.d1"), x: 80 },
-    { label: t("ticks.d8"), x: 220 },
-    { label: t("ticks.d12"), x: 340 },
-    { label: t("ticks.d16"), x: 460 },
-    { label: t("ticks.d20"), x: 600 },
-    { label: t("ticks.d24"), x: 740 },
-  ];
-
+function DiagnosisCard({ data }: {
+  data: {
+    label: string;
+    flow: string;
+    status: string;
+    metrics: MetricItem[];
+    openWindowLabel: string;
+    openWindowValue: string;
+    proofMetricLabel: string;
+    proofMetricValue: string;
+    readingLabel: string;
+    reading: string;
+  }
+}) {
   return (
-    <section
-      id="janela-de-decisao"
-      className="relative mt-12 w-full overflow-hidden rounded-3xl border border-slate-200 bg-white/75 p-5 shadow-xl shadow-slate-200/60 backdrop-blur dark:border-slate-800 dark:bg-slate-950/60 dark:shadow-cyan-950/20 sm:p-6"
-    >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_35%_20%,rgba(34,211,238,0.16),transparent_28%),radial-gradient(circle_at_70%_45%,rgba(139,92,246,0.14),transparent_25%)] dark:bg-[radial-gradient(circle_at_35%_20%,rgba(34,211,238,0.10),transparent_28%),radial-gradient(circle_at_70%_45%,rgba(139,92,246,0.10),transparent_25%)]" />
-
+    <div className="relative rounded-[2rem] border border-indigo-100 bg-white/90 p-5 shadow-2xl shadow-indigo-950/10 backdrop-blur md:p-7">
+      <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-indigo-200/40 blur-3xl" />
       <div className="relative">
-        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-          <div>
-            <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
-              {t("flowBehavior")}
-            </p>
-            <h2 className="mt-1 text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">
-              {t("title")}
-            </h2>
+        <div className="mb-5 flex items-center justify-between border-b border-slate-100 pb-4">
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600">
+              <Icon name="pulse" />
+            </span>
+            <div>
+              <p className="text-sm font-semibold text-indigo-600">{data.label}</p>
+              <h2 className="text-xl font-black text-slate-950">{data.flow}</h2>
+            </div>
           </div>
-
-          <span className="inline-flex w-fit items-center gap-2 rounded-full border border-cyan-300/50 bg-cyan-50 px-3 py-1.5 text-xs font-semibold text-cyan-700 dark:border-cyan-300/20 dark:bg-cyan-300/10 dark:text-cyan-300">
-            <Sparkles className="h-3.5 w-3.5" />
-            {t("badge")}
+          <span className="hidden rounded-full border border-orange-200 bg-orange-50 px-3 py-1 text-xs font-bold text-orange-700 sm:inline-flex">
+            {data.status}
           </span>
         </div>
 
-        <div className="relative h-[300px] w-full">
-          <svg
-            viewBox="0 0 820 360"
-            className="h-full w-full overflow-visible"
-            role="img"
-            aria-label={t("ariaLabel")}
-          >
-            <defs>
-              <linearGradient id="healthyBand" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0%" stopColor="rgb(16 185 129)" stopOpacity="0.24" />
-                <stop offset="100%" stopColor="rgb(16 185 129)" stopOpacity="0.04" />
-              </linearGradient>
-
-              <linearGradient id="decisionWindow" x1="0" x2="1" y1="0" y2="0">
-                <stop offset="0%" stopColor="rgb(34 211 238)" stopOpacity="0.08" />
-                <stop offset="50%" stopColor="rgb(139 92 246)" stopOpacity="0.20" />
-                <stop offset="100%" stopColor="rgb(244 63 94)" stopOpacity="0.08" />
-              </linearGradient>
-
-              <filter id="softGlow">
-                <feGaussianBlur stdDeviation="4" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-
-            <rect
-              x="24"
-              y="40"
-              width="772"
-              height="260"
-              rx="20"
-              className="fill-slate-50 stroke-slate-200 dark:fill-slate-900/50 dark:stroke-slate-800"
-            />
-
-            {[85, 135, 185, 235, 285].map((y) => (
-              <line
-                key={y}
-                x1="70"
-                y1={y}
-                x2="765"
-                y2={y}
-                className="stroke-slate-200 dark:stroke-slate-800"
-              />
-            ))}
-
-            {[
-              { label: "100", y: 88 },
-              { label: "75", y: 138 },
-              { label: "50", y: 188 },
-              { label: "25", y: 238 },
-              { label: "0", y: 288 },
-            ].map((tick) => (
-              <text
-                key={tick.label}
-                x="48"
-                y={tick.y}
-                textAnchor="end"
-                className="fill-slate-400 text-[12px] font-medium dark:fill-slate-500"
-              >
-                {tick.label}
-              </text>
-            ))}
-
-            <path
-              d="
-                M70 214
-                C120 210 155 184 205 174
-                C260 162 310 178 365 172
-                C420 166 465 154 515 168
-                C575 182 620 156 675 148
-                C720 142 750 150 765 160
-                L765 234
-                C720 222 675 212 625 216
-                C575 220 525 238 475 226
-                C425 214 385 218 335 226
-                C270 238 235 224 185 230
-                C130 236 100 230 70 240
-                Z
-              "
-              fill="url(#healthyBand)"
-            />
-
-            <rect
-              x="405"
-              y="50"
-              width="165"
-              height="240"
-              rx="18"
-              fill="url(#decisionWindow)"
-              className="stroke-cyan-300/40 dark:stroke-cyan-300/20"
-              strokeDasharray="6 8"
-            />
-
-            <path
-              d="
-                M70 214
-                C120 210 155 184 205 174
-                C260 162 310 178 365 172
-                C420 166 465 154 515 168
-                C575 182 620 156 675 148
-                C720 142 750 150 765 160
-              "
-              fill="none"
-              strokeWidth="3"
-              className="stroke-emerald-500/80 dark:stroke-emerald-400/80"
-            />
-
-            <path
-              d="
-                M70 214
-                C120 210 155 184 205 174
-                C260 162 310 178 365 172
-                C395 168 410 160 430 148
-                C450 138 465 130 485 146
-                C505 166 525 194 545 218
-                C560 236 575 246 585 252
-              "
-              fill="none"
-              strokeWidth="6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="stroke-cyan-500 dark:stroke-cyan-300"
-              filter="url(#softGlow)"
-            />
-
-            <path
-              d="
-                M585 252
-                C605 256 620 235 635 205
-                C655 168 675 128 700 110
-                C725 92 750 104 765 112
-              "
-              fill="none"
-              strokeWidth="7"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="stroke-rose-500"
-              filter="url(#softGlow)"
-            />
-
-            <line
-              x1="405"
-              y1="50"
-              x2="405"
-              y2="290"
-              strokeWidth="2"
-              className="stroke-cyan-400/80 dark:stroke-cyan-300/70"
-            />
-
-            <line
-              x1="585"
-              y1="50"
-              x2="585"
-              y2="290"
-              strokeWidth="2"
-              className="stroke-rose-400/80"
-            />
-
-            <foreignObject x="290" y="2" width="230" height="72">
-              <div className="flex h-full items-center justify-center">
-                <div className="rounded-xl border border-cyan-300/60 bg-cyan-500 px-4 py-3 text-center text-sm font-bold text-white shadow-lg shadow-cyan-500/25 dark:border-cyan-300/30 dark:bg-cyan-400 dark:text-slate-950">
-                  {t("decisionWindowOpens")}
-                </div>
-              </div>
-            </foreignObject>
-
-            <line
-              x1="405"
-              y1="72"
-              x2="405"
-              y2="148"
-              strokeWidth="2"
-              className="stroke-cyan-400 dark:stroke-cyan-300"
-            />
-
-            <foreignObject x="530" y="2" width="220" height="72">
-              <div className="flex h-full items-center justify-center">
-                <div className="rounded-xl bg-rose-600 px-4 py-3 text-center text-sm font-bold text-white shadow-lg shadow-rose-600/25">
-                  {t("obviousAnomaly")}
-                </div>
-              </div>
-            </foreignObject>
-
-            <line
-              x1="585"
-              y1="72"
-              x2="585"
-              y2="252"
-              strokeWidth="2"
-              className="stroke-rose-500"
-            />
-
-            <circle
-              cx="430"
-              cy="138"
-              r="42"
-              fill="transparent"
-              strokeWidth="2"
-              className="stroke-cyan-400/70 dark:stroke-cyan-300/70"
-            />
-
-            <circle
-              cx="585"
-              cy="252"
-              r="44"
-              fill="transparent"
-              strokeWidth="2"
-              className="stroke-rose-500/80"
-            />
-
-            {xTicks.map((tick) => (
-              <text
-                key={tick.label}
-                x={tick.x}
-                y="324"
-                textAnchor="middle"
-                className="fill-slate-400 text-[12px] font-medium dark:fill-slate-500"
-              >
-                {tick.label}
-              </text>
-            ))}
-          </svg>
+        <div className="grid gap-3 sm:grid-cols-3">
+          {data.metrics.map((metric) => <MetricCard key={metric.label} {...metric} />)}
         </div>
 
-        <div className="mt-5 grid gap-3 sm:grid-cols-3">
-          <ChartInsight
-            label={t("insights.persistentSignal.label")}
-            value={t("insights.persistentSignal.value")}
-          />
-          <ChartInsight
-            label={t("insights.decisionWindow.label")}
-            value={t("insights.decisionWindow.value")}
-            highlighted
-          />
-          <ChartInsight
-            label={t("insights.nextStage.label")}
-            value={t("insights.nextStage.value")}
-            danger
-          />
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <div className="rounded-2xl border border-orange-100 bg-orange-50/70 p-4">
+            <div className="flex items-center gap-2 text-orange-700">
+              <Icon name="fallback" className="h-5 w-5" />
+              <p className="text-xs font-bold uppercase tracking-wide">{data.openWindowLabel}</p>
+            </div>
+            <p className="mt-2 text-sm font-black text-slate-950">{data.openWindowValue}</p>
+          </div>
+          <div className="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4">
+            <div className="flex items-center gap-2 text-emerald-700">
+              <Icon name="shield" className="h-5 w-5" />
+              <p className="text-xs font-bold uppercase tracking-wide">{data.proofMetricLabel}</p>
+            </div>
+            <p className="mt-2 text-sm font-black text-slate-950">{data.proofMetricValue}</p>
+          </div>
+        </div>
+
+        <div className="mt-4 rounded-2xl bg-slate-50 p-4 text-sm leading-6 text-slate-700">
+          <strong className="text-slate-950">{data.readingLabel}</strong> {data.reading}
         </div>
       </div>
-    </section>
-  );
-}
-
-function ChartInsight({
-  label,
-  value,
-  highlighted,
-  danger,
-}: {
-  label: string;
-  value: string;
-  highlighted?: boolean;
-  danger?: boolean;
-}) {
-  return (
-    <div
-      className={cn(
-        "rounded-2xl border p-4",
-        highlighted &&
-          "border-cyan-300/50 bg-cyan-50 dark:border-cyan-300/20 dark:bg-cyan-300/10",
-        danger &&
-          "border-rose-300/50 bg-rose-50 dark:border-rose-300/20 dark:bg-rose-500/10",
-        !highlighted &&
-          !danger &&
-          "border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/60",
-      )}
-    >
-      <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
-        {label}
-      </p>
-      <p
-        className={cn(
-          "mt-1 text-sm font-semibold",
-          highlighted && "text-cyan-700 dark:text-cyan-300",
-          danger && "text-rose-700 dark:text-rose-300",
-          !highlighted && !danger && "text-slate-950 dark:text-white",
-        )}
-      >
-        {value}
-      </p>
     </div>
   );
 }
 
-function DecisionWindowExplanation() {
-  const t = useTranslations("home.decisionWindowExplanation");
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("AutomatedSupport.metadata");
 
-  const steps = [
-    { key: "normal", icon: CheckCircle2, tone: "emerald", highlighted: false },
-    { key: "variation", icon: LineChart, tone: "sky", highlighted: false },
-    { key: "attention", icon: Clock3, tone: "amber", highlighted: false },
-    {
-      key: "decisionWindow",
-      icon: Sparkles,
-      tone: "violet",
-      highlighted: true,
+  return {
+    title: t("title"),
+    description: t("description"),
+    alternates: {
+      canonical: "/atendimento-automatizado",
     },
-    { key: "operationalImpact", icon: Zap, tone: "rose", highlighted: false },
-  ] as const;
-
-  return (
-    <section className="mt-12">
-      <div className="mx-auto max-w-4xl text-center">
-        <h2 className="text-2xl font-semibold tracking-tight text-slate-950 dark:text-white sm:text-3xl">
-          {t("title")}
-        </h2>
-
-        <p className="mt-4 text-sm leading-7 text-slate-600 dark:text-slate-300 sm:text-base">
-          {t("description")}
-        </p>
-      </div>
-
-      <div className="mt-8 grid gap-4 md:grid-cols-5">
-        {steps.map((step) => (
-          <StateStep
-            key={step.key}
-            icon={step.icon}
-            title={t(`steps.${step.key}.title`)}
-            description={t(`steps.${step.key}.description`)}
-            tone={step.tone}
-            highlighted={step.highlighted}
-          />
-        ))}
-      </div>
-    </section>
-  );
+    openGraph: {
+      title: t("ogTitle"),
+      description: t("ogDescription"),
+      url: "/atendimento-automatizado",
+      type: "website",
+      images: [
+        {
+          url: "/images/og-atendimento-automatizado.png",
+          width: 1200,
+          height: 630,
+          alt: t("ogAlt"),
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("ogTitle"),
+      description: t("ogDescription"),
+      images: ["/images/og-atendimento-automatizado.png"],
+    },
+  };
 }
 
-function StateStep({
-  icon: Icon,
-  title,
-  description,
-  tone,
-  highlighted = false,
-}: {
-  icon: ElementType;
-  title: string;
-  description: string;
-  tone: "emerald" | "sky" | "amber" | "violet" | "rose";
-  highlighted?: boolean;
-}) {
-  return (
-    <div
-      className={cn(
-        "rounded-2xl border bg-white/75 p-5 shadow-lg shadow-slate-200/40 backdrop-blur dark:bg-slate-950/60 dark:shadow-cyan-950/10",
-        highlighted
-          ? "border-violet-300/60 dark:border-violet-300/30"
-          : "border-slate-200 dark:border-slate-800",
-      )}
-    >
-      <div
-        className={cn(
-          "flex h-12 w-12 items-center justify-center rounded-2xl",
-          tone === "emerald" &&
-            "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 dark:text-emerald-300",
-          tone === "sky" &&
-            "bg-sky-50 text-sky-600 dark:bg-sky-950/30 dark:text-sky-300",
-          tone === "amber" &&
-            "bg-amber-50 text-amber-600 dark:bg-amber-950/30 dark:text-amber-300",
-          tone === "violet" &&
-            "bg-violet-50 text-violet-600 dark:bg-violet-950/30 dark:text-violet-300",
-          tone === "rose" &&
-            "bg-rose-50 text-rose-600 dark:bg-rose-950/30 dark:text-rose-300",
-        )}
-      >
-        <Icon className="h-6 w-6" />
-      </div>
+export default async function AutomatedSupportLandingPage() {
+  const t = await getTranslations("AutomatedSupport");
 
-      <h3 className="mt-4 text-sm font-semibold text-slate-950 dark:text-white">
-        {title}
-      </h3>
-
-      <p className="mt-2 text-xs leading-5 text-slate-600 dark:text-slate-400">
-        {description}
-      </p>
-    </div>
-  );
-}
-
-function WhatOhrlyObserves() {
-  const t = useTranslations("home.observes");
-
-  const items = [
-    { key: "persistence", icon: Timer },
-    { key: "magnitude", icon: BarChart3 },
-    { key: "propagation", icon: GitBranch },
-    { key: "recoverability", icon: RefreshCw },
-    { key: "exposedValue", icon: CircleDollarSign },
-  ] as const;
+  const chips = t.raw("hero.chips") as string[];
+  const diagnosis = {
+    label: t("diagnosis.label"),
+    flow: t("diagnosis.flow"),
+    status: t("diagnosis.status"),
+    metrics: t.raw("diagnosis.metrics") as MetricItem[],
+    openWindowLabel: t("diagnosis.openWindowLabel"),
+    openWindowValue: t("diagnosis.openWindowValue"),
+    proofMetricLabel: t("diagnosis.proofMetricLabel"),
+    proofMetricValue: t("diagnosis.proofMetricValue"),
+    readingLabel: t("diagnosis.readingLabel"),
+    reading: t("diagnosis.reading"),
+  };
+  const problemCards = t.raw("problem.cards") as CardItem[];
+  const comparisonRows = t.raw("comparison.rows") as ComparisonRow[];
+  const howItWorks = t.raw("howItWorks.steps") as CardItem[];
+  const exampleMetrics = t.raw("example.metrics") as MetricItem[];
+  const audiences = t.raw("audiences.items") as CardItem[];
+  const returnSteps = t.raw("return.steps") as ReturnStep[];
+  const profileOptions = t.raw("contact.profileOptions") as string[];
 
   return (
-    <section className="mt-12">
-      <div className="mx-auto max-w-3xl text-center">
-        <h2 className="text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">
-          {t("title")}
-        </h2>
+    <main className="min-h-screen overflow-hidden bg-[#FBFCFF] text-slate-950">
+      <header className="sticky top-0 z-40 border-b border-slate-100 bg-white/85 backdrop-blur-xl">
+        <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-8">
+          <a href="#top" className="flex items-center gap-3" aria-label={t("nav.logoLabel")}>
+            <span className="text-2xl font-black tracking-tight">ohrly</span>
+          </a>
+          <div className="hidden items-center gap-8 text-sm font-semibold text-slate-700 md:flex">
+            <a href="#como-funciona" className="hover:text-indigo-600">{t("nav.howItWorks")}</a>
+            <a href="#exemplo" className="hover:text-indigo-600">{t("nav.example")}</a>
+            <a href="#para-quem" className="hover:text-indigo-600">{t("nav.audience")}</a>
+            <a href="#contato" className="hover:text-indigo-600">{t("nav.contact")}</a>
+          </div>
+          <div className="gap-[10px] flex">
+            <LocaleSwitcher />
+            <a href="#contato" className="rounded-2xl bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-indigo-500/25 hover:bg-indigo-700">
+              {t("nav.cta")}
+            </a>
+          </div>
+        </nav>
+      </header>
 
-        <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
-          {t("description")}
-        </p>
-      </div>
-
-      <div className="mt-7 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-        {items.map((item) => (
-          <InfoCard
-            key={item.key}
-            icon={item.icon}
-            title={t(`items.${item.key}.title`)}
-            description={t(`items.${item.key}.description`)}
-          />
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function WhereItAppears() {
-  const t = useTranslations("home.whereItAppears");
-
-  const items = [
-    { key: "ecommerce", icon: ShoppingCart },
-    { key: "bots", icon: Bot },
-    { key: "billing", icon: CreditCard },
-    { key: "journeys", icon: Workflow },
-  ] as const;
-
-  return (
-    <section className="mt-12">
-      <div className="mx-auto max-w-3xl text-center">
-        <h2 className="text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">
-          {t("title")}
-        </h2>
-
-        <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
-          {t("description")}
-        </p>
-      </div>
-
-      <div className="mt-7 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {items.map((item) => (
-          <InfoCard
-            key={item.key}
-            icon={item.icon}
-            title={t(`items.${item.key}.title`)}
-            description={t(`items.${item.key}.description`)}
-          />
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function InfoCard({
-  icon: Icon,
-  title,
-  description,
-}: {
-  icon: ElementType;
-  title: string;
-  description: string;
-}) {
-  return (
-    <div className="rounded-2xl border border-slate-200 bg-white/75 p-5 shadow-lg shadow-slate-200/40 backdrop-blur dark:border-slate-800 dark:bg-slate-950/60 dark:shadow-cyan-950/10">
-      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-50 text-cyan-600 dark:bg-cyan-950/30 dark:text-cyan-300">
-        <Icon className="h-6 w-6" />
-      </div>
-
-      <h3 className="mt-4 text-sm font-semibold text-slate-950 dark:text-white">
-        {title}
-      </h3>
-
-      <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">
-        {description}
-      </p>
-    </div>
-  );
-}
-
-function ComparisonStrip() {
-  const t = useTranslations("home.comparison");
-
-  const items = [
-    { key: "technicalObservability", icon: LineChart, highlighted: false },
-    { key: "biAnalytics", icon: BarChart3, highlighted: false },
-    { key: "anomalyDetection", icon: Sparkle, highlighted: false },
-    { key: "ohrly", icon: Gauge, highlighted: true },
-  ] as const;
-
-  return (
-    <section className="mt-12">
-      <div className="rounded-3xl border border-slate-200 bg-white/75 p-6 shadow-xl shadow-slate-200/50 dark:border-slate-800 dark:bg-slate-950/60 dark:shadow-cyan-950/10">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700 dark:text-cyan-300">
-            {t("eyebrow")}
-          </p>
-
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">
-            {t("title")}
-          </h2>
-
-          <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
-            {t("description")}
-          </p>
+      <Section id="top" className="relative grid items-center gap-10 py-16 lg:grid-cols-[0.9fr_1.1fr] lg:py-24">
+        <div className="absolute -left-40 top-20 h-80 w-80 rounded-full bg-indigo-100 blur-3xl" />
+        <div className="relative">
+          <span className="inline-flex rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-xs font-black uppercase tracking-wide text-indigo-700">
+            {t("hero.eyebrow")}
+          </span>
+          <h1 className="mt-7 max-w-3xl text-5xl font-black leading-[0.98] tracking-[-0.05em] text-slate-950 sm:text-6xl lg:text-7xl">
+            {t("hero.titleBefore")} <span className="text-indigo-600">{t("hero.titleHighlight")}</span>
+          </h1>
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">{t("hero.description")}</p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Button href="#contato">{t("hero.primaryCta")}</Button>
+            <Button href="#exemplo" variant="secondary">{t("hero.secondaryCta")}</Button>
+          </div>
+          <div className="mt-8 flex flex-wrap items-center gap-3 text-sm text-slate-600">
+            <span className="inline-flex items-center gap-2"><Icon name="whatsapp" className="h-4 w-4 text-indigo-600" /> {chips[0]}</span>
+            <span className="inline-flex items-center gap-2"><Icon name="bot" className="h-4 w-4 text-indigo-600" /> {chips[1]}</span>
+            <span className="inline-flex items-center gap-2"><Icon name="headset" className="h-4 w-4 text-indigo-600" /> {chips[2]}</span>
+            <span className="inline-flex items-center gap-2"><Icon name="shield" className="h-4 w-4 text-indigo-600" /> {chips[3]}</span>
+          </div>
         </div>
+        <DiagnosisCard data={diagnosis} />
+      </Section>
 
-        <div className="mt-7 grid gap-4 lg:grid-cols-4">
-          {items.map((item) => (
-            <ComparisonCard
-              key={item.key}
-              icon={item.icon}
-              title={t(`items.${item.key}.title`)}
-              question={t(`items.${item.key}.question`)}
-              description={t(`items.${item.key}.description`)}
-              highlighted={item.highlighted}
-            />
+      <Section className="py-10 text-center">
+        <h2 className="mx-auto max-w-3xl text-3xl font-black tracking-[-0.03em] sm:text-4xl">{t("problem.title")}</h2>
+        <p className="mx-auto mt-4 max-w-3xl text-slate-600">{t("problem.description")}</p>
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          {problemCards.map((card) => (
+            <div key={card.title} className="rounded-3xl border border-slate-200 bg-white p-6 text-left shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-950/5">
+              <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600">
+                <Icon name={card.icon} />
+              </span>
+              <h3 className="mt-5 text-lg font-black">{card.title}</h3>
+              <p className="mt-2 text-sm leading-6 text-slate-600">{card.text}</p>
+            </div>
           ))}
         </div>
-      </div>
-    </section>
-  );
-}
+      </Section>
 
-function ComparisonCard({
-  icon: Icon,
-  title,
-  question,
-  description,
-  highlighted = false,
-}: {
-  icon: ElementType;
-  title: string;
-  question: string;
-  description: string;
-  highlighted?: boolean;
-}) {
-  return (
-    <div
-      className={cn(
-        "rounded-2xl border p-5",
-        highlighted
-          ? "border-cyan-300/50 bg-cyan-50 dark:border-cyan-300/20 dark:bg-cyan-300/10"
-          : "border-slate-200 bg-white/70 dark:border-slate-800 dark:bg-slate-950/70",
-      )}
-    >
-      <div
-        className={cn(
-          "flex h-12 w-12 items-center justify-center rounded-2xl",
-          highlighted
-            ? "bg-cyan-100 text-cyan-700 dark:bg-cyan-300/10 dark:text-cyan-300"
-            : "bg-slate-100 text-slate-600 dark:bg-slate-900 dark:text-slate-300",
-        )}
-      >
-        <Icon className="h-6 w-6" />
-      </div>
+      <Section className="grid gap-8 py-16 lg:grid-cols-[1fr_0.55fr]">
+        <div>
+          <h2 className="text-3xl font-black tracking-[-0.03em]">{t("comparison.title")}</h2>
+          <div className="mt-8 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+            <div className="grid border-b border-slate-100 bg-slate-50 p-4 text-sm font-black text-slate-600 sm:grid-cols-2">
+              <span>{t("comparison.leftHeader")}</span>
+              <span className="hidden text-indigo-700 sm:block">{t("comparison.rightHeader")}</span>
+            </div>
+            {comparisonRows.map(([left, right]) => (
+              <div key={left} className="grid gap-2 border-b border-slate-100 p-4 text-sm last:border-b-0 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
+                <span className="text-slate-600">{left}</span>
+                <span className="hidden text-indigo-300 sm:block">→</span>
+                <span className="font-semibold text-slate-950">{right}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="rounded-[2rem] border border-indigo-100 bg-gradient-to-br from-indigo-50 to-white p-8 shadow-sm">
+          <span className="flex h-16 w-16 items-center justify-center rounded-3xl bg-white text-indigo-600 shadow-sm">
+            <Icon name="target" className="h-8 w-8" />
+          </span>
+          <h3 className="mt-8 text-3xl font-black tracking-[-0.03em]">{t("comparison.calloutTitle")}</h3>
+          <p className="mt-4 text-xl font-black leading-8 text-indigo-700">{t("comparison.calloutText")}</p>
+        </div>
+      </Section>
 
-      <h3
-        className={cn(
-          "mt-4 text-sm font-semibold",
-          highlighted
-            ? "text-cyan-700 dark:text-cyan-300"
-            : "text-slate-950 dark:text-white",
-        )}
-      >
-        {title}
-      </h3>
+      <Section id="como-funciona" className="py-16">
+        <div className="text-center">
+          <h2 className="text-3xl font-black tracking-[-0.03em] sm:text-4xl">{t("howItWorks.title")}</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-slate-600">{t("howItWorks.description")}</p>
+        </div>
+        <div className="mt-12 grid gap-4 md:grid-cols-5">
+          {howItWorks.map((step, index) => (
+            <div key={step.title} className="relative rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+              <span className="absolute -top-3 left-5 flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-sm font-black text-white">
+                {index + 1}
+              </span>
+              <span className="mt-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600">
+                <Icon name={step.icon} />
+              </span>
+              <h3 className="mt-5 font-black">{step.title}</h3>
+              <p className="mt-2 text-sm leading-6 text-slate-600">{step.text}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
 
-      <p className="mt-3 text-lg font-semibold tracking-tight text-slate-950 dark:text-white">
-        {question}
-      </p>
+      <Section id="exemplo" className="grid gap-8 py-14 lg:grid-cols-[1fr_0.7fr]">
+        <div className="rounded-[2rem] border border-indigo-100 bg-white p-6 shadow-xl shadow-indigo-950/5 md:p-8">
+          <div className="flex flex-col justify-between gap-4 border-b border-slate-100 pb-5 sm:flex-row sm:items-center">
+            <div>
+              <p className="text-sm font-black text-indigo-600">{t("example.label")}</p>
+              <h2 className="text-2xl font-black tracking-[-0.03em]">{t("example.title")}</h2>
+            </div>
+            <span className="rounded-full border border-orange-200 bg-orange-50 px-3 py-1 text-xs font-bold text-orange-700">{t("example.status")}</span>
+          </div>
+          <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_0.55fr]">
+            <div className="space-y-5 text-sm leading-7 text-slate-700">
+              <p>{t("example.paragraph1")}</p>
+              <p><strong className="text-slate-950">{t("example.interpretationLabel")}</strong> {t("example.interpretation")}</p>
+              <p><strong className="text-slate-950">{t("example.windowLabel")}</strong> {t("example.window")}</p>
+              <p><strong className="text-slate-950">{t("example.proofLabel")}</strong> {t("example.proof")}</p>
+            </div>
+            <div className="space-y-3">
+              {exampleMetrics.map((metric) => <MetricCard key={metric.label} {...metric} />)}
+            </div>
+          </div>
+        </div>
 
-      <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">
-        {description}
-      </p>
-    </div>
-  );
-}
+        <div id="para-quem" className="rounded-[2rem] bg-slate-950 p-6 text-white md:p-8">
+          <p className="text-sm font-black text-indigo-300">{t("audiences.label")}</p>
+          <h2 className="mt-2 text-3xl font-black tracking-[-0.03em]">{t("audiences.title")}</h2>
+          <div className="mt-7 space-y-3">
+            {audiences.map((audience) => (
+              <div key={audience.title} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <div className="flex gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-indigo-600">
+                    <Icon name={audience.icon} className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <h3 className="font-black">{audience.title}</h3>
+                    <p className="mt-1 text-sm leading-6 text-slate-300">{audience.text}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Section>
 
-function ExampleReading() {
-  const t = useTranslations("home.exampleReading");
+      <Section className="py-14">
+        <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+          <div className="grid gap-8 lg:grid-cols-[0.35fr_1fr] lg:items-center">
+            <div>
+              <h2 className="text-3xl font-black tracking-[-0.03em]">{t("return.title")}</h2>
+              <p className="mt-4 text-slate-600">{t("return.description")}</p>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {returnSteps.map(([title, text], index) => (
+                <div key={title} className="rounded-3xl bg-slate-50 p-5">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-600 text-sm font-black text-white">{index + 1}</span>
+                  <h3 className="mt-4 font-black">{title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">{text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Section>
 
-  return (
-    <section className="mt-12">
-      <div className="rounded-3xl border border-slate-200 bg-white/75 p-5 shadow-xl shadow-slate-200/60 backdrop-blur dark:border-slate-800 dark:bg-slate-950/60 dark:shadow-cyan-950/20 lg:p-6">
-        <div className="grid gap-6 lg:grid-cols-[1fr_1.4fr] lg:items-center">
+      <Section className="py-14">
+        <div className="grid overflow-hidden rounded-[2rem] bg-gradient-to-br from-indigo-700 to-violet-700 text-white shadow-2xl shadow-indigo-950/20 lg:grid-cols-[0.8fr_1fr]">
+          <div className="p-8 md:p-10">
+            <h2 className="text-3xl font-black tracking-[-0.03em]">{t("notReplacement.title")}</h2>
+            <p className="mt-4 leading-7 text-indigo-100">{t("notReplacement.description")}</p>
+          </div>
+          <div className="border-t border-white/15 bg-white/10 p-8 md:p-10 lg:border-l lg:border-t-0">
+            <h3 className="text-2xl font-black">{t("notReplacement.calloutTitle")}</h3>
+            <p className="mt-4 leading-7 text-indigo-50">{t("notReplacement.calloutText")}</p>
+          </div>
+        </div>
+      </Section>
+
+      <Section id="contato" className="py-16">
+        <div className="grid gap-8 rounded-[2rem] border border-indigo-100 bg-white p-6 shadow-2xl shadow-indigo-950/5 md:p-10 lg:grid-cols-[0.75fr_1fr]">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700 dark:text-cyan-300">
-              {t("eyebrow")}
-            </p>
-
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">
-              {t("title")}
-            </h2>
-
-            <p className="mt-4 text-sm leading-6 text-slate-600 dark:text-slate-300">
-              {t("description")}
-            </p>
+            <span className="flex h-16 w-16 items-center justify-center rounded-3xl bg-indigo-50 text-indigo-600">
+              <Icon name="target" className="h-8 w-8" />
+            </span>
+            <h2 className="mt-6 text-4xl font-black tracking-[-0.04em]">{t("contact.title")}</h2>
+            <p className="mt-4 leading-8 text-slate-600">{t("contact.description")}</p>
+            <p className="mt-6 rounded-2xl bg-indigo-50 p-4 text-sm leading-6 text-indigo-900">{t("contact.note")}</p>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-3">
-            <ReadingMetric
-              label={t("metrics.currentState.label")}
-              value={t("metrics.currentState.value")}
-              tone="amber"
-            />
-            <ReadingMetric
-              label={t("metrics.rpi.label")}
-              value={t("metrics.rpi.value")}
-              tone="cyan"
-            />
-            <ReadingMetric
-              label={t("metrics.exposedValue.label")}
-              value={t("metrics.exposedValue.value")}
-              tone="violet"
-            />
-          </div>
+          <form action={formspreeEndpoint} method="POST" className="rounded-[1.5rem] bg-slate-50 p-5 md:p-6">
+            <input type="hidden" name="_subject" value={t("contact.subject")} />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="text-sm font-bold text-slate-700">
+                {t("contact.name")}
+                <input required name="name" className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none ring-indigo-200 transition focus:ring-4" placeholder={t("contact.namePlaceholder")} />
+              </label>
+              <label className="text-sm font-bold text-slate-700">
+                {t("contact.email")}
+                <input required type="email" name="email" className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none ring-indigo-200 transition focus:ring-4" placeholder={t("contact.emailPlaceholder")} />
+              </label>
+            </div>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              <label className="text-sm font-bold text-slate-700">
+                {t("contact.company")}
+                <input name="company" className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none ring-indigo-200 transition focus:ring-4" placeholder={t("contact.companyPlaceholder")} />
+              </label>
+              <label className="text-sm font-bold text-slate-700">
+                {t("contact.profile")}
+                <select name="profile" className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none ring-indigo-200 transition focus:ring-4">
+                  {profileOptions.map((option) => <option key={option}>{option}</option>)}
+                </select>
+              </label>
+            </div>
+            <label className="mt-4 block text-sm font-bold text-slate-700">
+              {t("contact.message")}
+              <textarea required name="message" rows={5} className="mt-2 w-full resize-none rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none ring-indigo-200 transition focus:ring-4" placeholder={t("contact.messagePlaceholder")} />
+            </label>
+            <button type="submit" className="mt-5 w-full rounded-2xl bg-indigo-600 px-5 py-4 text-sm font-black text-white shadow-lg shadow-indigo-500/25 transition hover:bg-indigo-700">
+              {t("contact.submit")} →
+            </button>
+            <p className="mt-3 text-center text-xs leading-5 text-slate-500">{t("contact.privacy")}</p>
+          </form>
         </div>
-
-        <div className="mt-6 grid gap-4 lg:grid-cols-2">
-          <ReadingContrastBox
-            label={t("contrast.dashboard.label")}
-            text={t("contrast.dashboard.text")}
-          />
-
-          <ReadingContrastBox
-            label={t("contrast.ohrly.label")}
-            text={t("contrast.ohrly.text")}
-            highlighted
-          />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ReadingMetric({
-  label,
-  value,
-  tone,
-}: {
-  label: string;
-  value: string;
-  tone: "amber" | "cyan" | "violet";
-}) {
-  return (
-    <div className="rounded-2xl border border-slate-200 bg-white/70 p-4 dark:border-slate-800 dark:bg-slate-950/70">
-      <p className="text-xs font-medium text-slate-500 dark:text-slate-500">
-        {label}
-      </p>
-
-      <p
-        className={cn(
-          "mt-2 text-xl font-bold tracking-tight",
-          tone === "amber" && "text-amber-600 dark:text-amber-300",
-          tone === "cyan" && "text-cyan-700 dark:text-cyan-300",
-          tone === "violet" && "text-violet-700 dark:text-violet-300",
-        )}
-      >
-        {value}
-      </p>
-    </div>
-  );
-}
-
-function ReadingContrastBox({
-  label,
-  text,
-  highlighted = false,
-}: {
-  label: string;
-  text: string;
-  highlighted?: boolean;
-}) {
-  return (
-    <div
-      className={cn(
-        "rounded-2xl border p-4",
-        highlighted
-          ? "border-cyan-300/30 bg-cyan-50 dark:border-cyan-300/20 dark:bg-cyan-300/10"
-          : "border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/60",
-      )}
-    >
-      <p
-        className={cn(
-          "text-xs font-semibold",
-          highlighted
-            ? "text-cyan-700 dark:text-cyan-300"
-            : "text-slate-500 dark:text-slate-500",
-        )}
-      >
-        {label}
-      </p>
-
-      <p className="mt-2 text-sm leading-6 text-slate-700 dark:text-slate-300">
-        {text}
-      </p>
-    </div>
-  );
-}
-
-function HowItWorks() {
-  const t = useTranslations("home.howItWorks");
-
-  const steps = [
-    { key: "observeFlow", icon: Workflow },
-    { key: "reconstructBehavior", icon: Database },
-    { key: "recognizePersistence", icon: Timer },
-    { key: "measureRecoveryPressure", icon: Gauge },
-    { key: "translateDecision", icon: Target },
-  ] as const;
-
-  return (
-    <section className="mt-12">
-      <div className="mx-auto max-w-3xl text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700 dark:text-cyan-300">
-          {t("eyebrow")}
-        </p>
-
-        <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">
-          {t("title")}
-        </h2>
-      </div>
-
-      <div className="mt-7 grid gap-4 md:grid-cols-5">
-        {steps.map((step, index) => (
-          <InfoCard
-            key={step.key}
-            icon={step.icon}
-            title={`${index + 1}. ${t(`steps.${step.key}.title`)}`}
-            description={t(`steps.${step.key}.description`)}
-          />
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function LabSection() {
-  const t = useTranslations("home.lab");
-
-  const templates = [
-    { key: "checkout", icon: ShoppingCart },
-    { key: "chatbot", icon: MessageCircle },
-    { key: "delivery", icon: Truck },
-    { key: "billing", icon: CreditCard },
-  ] as const;
-
-  return (
-    <section id="laboratorio" className="mt-12">
-      <div className="rounded-3xl border border-slate-200 bg-white/75 p-6 shadow-xl shadow-slate-200/50 dark:border-slate-800 dark:bg-slate-950/60 dark:shadow-cyan-950/10">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700 dark:text-cyan-300">
-            {t("eyebrow")}
-          </p>
-
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">
-            {t("title")}
-          </h2>
-
-          <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
-            {t("description")}
-          </p>
-        </div>
-
-        <div className="mt-7 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {templates.map((template) => (
-            <InfoCard
-              key={template.key}
-              icon={template.icon}
-              title={t(`templates.${template.key}.title`)}
-              description={t(`templates.${template.key}.description`)}
-            />
-          ))}
-        </div>
-
-        <div className="mt-7 flex justify-center">
-          <Link
-            href="/simulations"
-            className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-cyan-600 px-6 text-sm font-semibold text-white shadow-lg shadow-cyan-600/20 transition hover:-translate-y-0.5 hover:bg-cyan-500 dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400"
-          >
-            {t("cta")}
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function FinalCta() {
-  const t = useTranslations("home.finalCta");
-
-  return (
-    <section className="mt-12 rounded-3xl border border-cyan-300/25 bg-cyan-300/10 p-6 shadow-xl shadow-cyan-500/10 backdrop-blur lg:flex lg:items-center lg:justify-between lg:gap-8 lg:p-8">
-      <div>
-        <h2 className="text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">
-          {t("title")}
-        </h2>
-
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300">
-          {t("description")}
-        </p>
-      </div>
-
-      <div className="mt-6 flex flex-col gap-3 sm:flex-row lg:mt-0">
-        <Link
-          href="/request"
-          className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-cyan-600 px-5 text-sm font-semibold text-white shadow-lg shadow-cyan-600/20 transition hover:-translate-y-0.5 hover:bg-cyan-500 dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400"
-        >
-          {t("cta")}
-          <ArrowRight className="h-4 w-4" />
-        </Link>
-      </div>
-    </section>
+      </Section>
+    </main>
   );
 }
