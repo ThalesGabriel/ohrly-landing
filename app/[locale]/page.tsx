@@ -12,7 +12,7 @@ type IconProps = {
 
 function LogoMark() {
   return (
-    <span className="text-2xl font-black tracking-[-0.06em] text-[#071545]">
+    <span className="text-2xl font-black tracking-[-0.06em] text-[#0b2f85]">
       Ohrly
     </span>
   );
@@ -28,7 +28,11 @@ function ArrowRightIcon({ className = "h-4 w-4" }: IconProps) {
       stroke="currentColor"
       strokeWidth="2"
     >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M13 6l6 6-6 6" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M5 12h14M13 6l6 6-6 6"
+      />
     </svg>
   );
 }
@@ -44,7 +48,10 @@ function SearchSignalIcon({ className = "h-5 w-5" }: IconProps) {
       strokeWidth="1.8"
     >
       <circle cx="10.5" cy="10.5" r="6.5" />
-      <path strokeLinecap="round" d="m15.2 15.2 4.3 4.3M7.7 12.2l1.8-2.1 1.7 1.5 2.1-2.7" />
+      <path
+        strokeLinecap="round"
+        d="m15.2 15.2 4.3 4.3M7.7 12.2l1.8-2.1 1.7 1.5 2.1-2.7"
+      />
     </svg>
   );
 }
@@ -111,16 +118,16 @@ function PulseIcon({ className = "h-5 w-5" }: IconProps) {
       stroke="currentColor"
       strokeWidth="1.8"
     >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3 12h4l2-5 4 10 2-5h6" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M3 12h4l2-5 4 10 2-5h6"
+      />
     </svg>
   );
 }
 
-function MiniChart({
-  persistent = false,
-}: {
-  persistent?: boolean;
-}) {
+function MiniChart({ persistent = false }: { persistent?: boolean }) {
   return (
     <svg
       aria-hidden="true"
@@ -147,23 +154,23 @@ function MiniChart({
       />
       {(persistent
         ? [
-          [4, 14],
-          [40, 18],
-          [76, 22],
-          [112, 30],
-          [148, 38],
-          [184, 48],
-          [216, 56],
-        ]
+            [4, 14],
+            [40, 18],
+            [76, 22],
+            [112, 30],
+            [148, 38],
+            [184, 48],
+            [216, 56],
+          ]
         : [
-          [4, 36],
-          [40, 18],
-          [76, 39],
-          [112, 34],
-          [148, 44],
-          [184, 24],
-          [216, 42],
-        ]
+            [4, 36],
+            [40, 18],
+            [76, 39],
+            [112, 34],
+            [148, 44],
+            [184, 24],
+            [216, 42],
+          ]
       ).map(([cx, cy]) => (
         <circle
           key={`${cx}-${cy}`}
@@ -179,7 +186,7 @@ function MiniChart({
 
 function ImpactChart() {
   return (
-    <div className="relative mt-5 overflow-hidden rounded-2xl border border-slate-200 bg-white px-4 pb-3 pt-4">
+    <div className="relative mt-5 overflow-hidden rounded-2xl border border-blue-100 bg-[#f8fbff] px-4 pb-3 pt-4">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm font-bold text-[#071545]">Evolução do impacto</p>
         <span className="inline-flex items-center gap-1 rounded-full bg-orange-50 px-3 py-1 text-xs font-bold text-[#f4511e]">
@@ -199,7 +206,7 @@ function ImpactChart() {
         <div className="relative h-44">
           <div className="absolute inset-0 flex flex-col justify-between pb-5">
             {Array.from({ length: 5 }).map((_, index) => (
-              <div key={index} className="border-t border-slate-100" />
+              <div key={index} className="border-t border-blue-50" />
             ))}
           </div>
 
@@ -269,7 +276,7 @@ function AlertPanel() {
     <div className="relative">
       <div className="absolute -inset-8 -z-10 rounded-[3rem] bg-blue-100/50 blur-3xl" />
 
-      <article className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-[0_24px_80px_rgba(7,21,69,0.12)] sm:p-7">
+      <article className="rounded-[28px] border border-blue-100 bg-white p-5 shadow-[0_24px_80px_rgba(7,21,69,0.12)] sm:p-7">
         <div className="flex items-start gap-3">
           <span className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-[#f4511e]">
             <WarningIcon />
@@ -284,7 +291,7 @@ function AlertPanel() {
           </div>
         </div>
 
-        <dl className="mt-6 grid gap-4 rounded-2xl border border-slate-200 bg-slate-50/70 p-4 sm:grid-cols-2">
+        <dl className="mt-6 grid gap-4 rounded-2xl border border-blue-100 bg-blue-50/60 p-4 sm:grid-cols-2">
           {[
             ["Fluxo", "Checkout e pagamento"],
             ["Contexto", "Mobile + Pix"],
@@ -296,12 +303,13 @@ function AlertPanel() {
                 {label}
               </dt>
               <dd
-                className={`mt-1 text-sm font-bold ${index === 2
+                className={`mt-1 text-sm font-bold ${
+                  index === 2
                     ? "text-[#f4511e]"
                     : index === 3
                       ? "text-emerald-600"
                       : "text-[#071545]"
-                  }`}
+                }`}
               >
                 {index === 3 ? (
                   <span className="inline-flex items-center gap-1.5">
@@ -320,7 +328,7 @@ function AlertPanel() {
 
         <ImpactChart />
 
-        <div className="mt-4 divide-y divide-slate-200 rounded-2xl border border-slate-200">
+        <div className="mt-4 divide-y divide-blue-100 rounded-2xl border border-blue-100">
           <div className="flex gap-3 p-4">
             <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-orange-50 text-[#f4511e]">
               <PulseIcon className="h-4 w-4" />
@@ -338,9 +346,12 @@ function AlertPanel() {
               i
             </span>
             <div>
-              <h3 className="font-bold text-[#071545]">Por que merece atenção</h3>
+              <h3 className="font-bold text-[#071545]">
+                Por que merece atenção
+              </h3>
               <p className="mt-1 text-sm leading-6 text-slate-600">
-                A mudança persiste além do normal e começou a afetar mais de um sinal da jornada.
+                A mudança persiste além do normal e começou a afetar mais de um
+                sinal da jornada.
               </p>
             </div>
           </div>
@@ -350,219 +361,492 @@ function AlertPanel() {
   );
 }
 
-function FormalLimitSection() {
-  const stages = [
-    {
-      title: "Comportamento muda",
-      description:
-        "Clientes começam a tentar mais, demorar mais ou desistir em um contexto específico.",
-      state: "Ainda não há falha",
-    },
-    {
-      title: "Sinais persistem",
-      description:
-        "A mudança deixa de ser pontual, mas continua diluída nas métricas gerais.",
-      state: "Ainda parece variação",
-    },
-    {
-      title: "Impacto se acumula",
-      description:
-        "Conversão, atendimento ou receita começam a absorver os efeitos da mudança.",
-      state: "O custo já começou",
-    },
-    {
-      title: "Limite excedido",
-      description:
-        "A condição formal é atingida e o problema finalmente gera um alerta.",
-      state: "Agora existe confirmação",
-    },
-  ];
-
-  return (
-    <section className="relative overflow-hidden bg-white py-24">
-      <div className="absolute inset-x-0 top-0 -z-10 h-full bg-[radial-gradient(circle_at_80%_20%,rgba(59,130,246,0.08),transparent_34%)]" />
-
-      <div className="mx-auto max-w-7xl px-5 lg:px-8">
-        <div className="mx-auto max-w-4xl text-center">
-          <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-700">
-            Quando o alerta chega
-          </p>
-
-          <h2 className="mt-4 text-4xl font-black tracking-[-0.05em] text-[#071545] sm:text-5xl">
-            Um limite formal não mostra necessariamente quando o problema começou.
-          </h2>
-
-          <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-slate-600">
-            Ele mostra quando uma condição definida pela operação finalmente foi
-            ultrapassada. Nesse momento, o alerta está correto — mas o impacto já
-            teve tempo para se formar.
-          </p>
-        </div>
-
-        <div className="relative mt-16">
-          <div className="absolute left-[10%] right-[10%] top-7 hidden border-t-2 border-dashed border-slate-200 lg:block" />
-
-          <div className="grid gap-5 lg:grid-cols-4">
-            {stages.map((stage, index) => (
-              <article
-                key={stage.title}
-                className={`relative rounded-3xl border p-6 ${
-                  index === stages.length - 1
-                    ? "border-orange-200 bg-orange-50 shadow-[0_18px_60px_rgba(244,81,30,0.10)]"
-                    : "border-slate-200 bg-white"
-                }`}
-              >
-                <span
-                  className={`relative z-10 inline-flex h-14 w-14 items-center justify-center rounded-full border-4 border-white text-sm font-black shadow-md ${
-                    index === stages.length - 1
-                      ? "bg-[#f4511e] text-white"
-                      : "bg-blue-50 text-blue-700"
-                  }`}
-                >
-                  {index + 1}
-                </span>
-
-                <h3 className="mt-6 text-xl font-black text-[#071545]">
-                  {stage.title}
-                </h3>
-
-                <p className="mt-3 leading-7 text-slate-600">
-                  {stage.description}
-                </p>
-
-                <p
-                  className={`mt-5 border-t pt-4 text-sm font-black ${
-                    index === stages.length - 1
-                      ? "border-orange-200 text-[#f4511e]"
-                      : "border-slate-200 text-slate-500"
-                  }`}
-                >
-                  {stage.state}
-                </p>
-              </article>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-10 overflow-hidden rounded-3xl border border-slate-200 bg-slate-50">
-          <div className="grid lg:grid-cols-[1fr_auto_1fr]">
-            <div className="p-7">
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-blue-700">
-                Antes do limite
-              </p>
-              <h3 className="mt-3 text-xl font-black text-[#071545]">
-                Janela de percepção
-              </h3>
-              <p className="mt-3 leading-7 text-slate-600">
-                O comportamento já mudou, mas a evidência ainda parece pequena,
-                reversível ou localizada.
-              </p>
-            </div>
-
-            <div className="hidden items-center justify-center px-4 text-2xl text-slate-300 lg:flex">
-              →
-            </div>
-
-            <div className="border-t border-slate-200 p-7 lg:border-l lg:border-t-0">
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#f4511e]">
-                Depois do limite
-              </p>
-              <h3 className="mt-3 text-xl font-black text-[#071545]">
-                Reação formal
-              </h3>
-              <p className="mt-3 leading-7 text-slate-600">
-                O impacto ficou evidente o suficiente para gerar alerta,
-                investigação e prioridade.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <p className="mx-auto mt-10 max-w-4xl text-center text-2xl font-black tracking-[-0.03em] text-[#071545]">
-          O limite identifica quando o impacto ficou grande o suficiente para ser
-          formalizado. O comportamento mostra quando ele começou a ser construído.
+function SignalCard({ type }: { type: "noise" | "persistent" | "context" }) {
+  if (type === "context") {
+    return (
+      <div className="rounded-3xl border border-blue-100 bg-white p-5 shadow-[0_18px_50px_rgba(7,21,69,0.08)]">
+        <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-700">
+          <TargetIcon />
+        </span>
+        <h3 className="mt-4 text-xl font-black tracking-[-0.03em] text-[#071545]">
+          Menos ruído.
+          <br />
+          Mais contexto.
+        </h3>
+        <p className="mt-3 text-sm leading-6 text-slate-600">
+          Alertas que conectam comportamento, persistência e impacto na jornada.
         </p>
       </div>
-    </section>
+    );
+  }
+
+  const persistent = type === "persistent";
+
+  return (
+    <div
+      className={`rounded-3xl border bg-white p-5 shadow-[0_18px_50px_rgba(7,21,69,0.08)] ${
+        persistent ? "border-[#f4511e] shadow-orange-100/70" : "border-blue-100"
+      }`}
+    >
+      <div className="flex items-center gap-2">
+        <span
+          className={`inline-flex h-9 w-9 items-center justify-center rounded-full ${
+            persistent
+              ? "bg-[#f4511e] text-white"
+              : "bg-slate-100 text-slate-500"
+          }`}
+        >
+          {persistent ? "↘" : "↝"}
+        </span>
+        <h3
+          className={`font-black ${
+            persistent ? "text-[#f4511e]" : "text-slate-600"
+          }`}
+        >
+          {persistent ? "Mudança persistente" : "Oscilação pontual"}
+        </h3>
+      </div>
+
+      <p className="mt-3 text-sm leading-6 text-slate-500">
+        {persistent
+          ? "Piora consistente ao longo dos dias."
+          : "Variação que segue dentro do comportamento habitual."}
+      </p>
+
+      <div className="mt-3">
+        <MiniChart persistent={persistent} />
+      </div>
+    </div>
   );
 }
 
-const signals = [
-  "clientes mobile demoram mais para concluir",
-  "o Pix começa a exigir mais tentativas",
-  "o abandono cresce depois do cálculo do frete",
-  "determinados produtos geram mais dúvidas",
-  "a aprovação continua acontecendo, mas mais lentamente",
-  "uma etapa deixa de se recuperar como antes",
+const silentSignals = [
+  "Mais tentativas antes da confirmação",
+  "Conclusão mais lenta em Mobile",
+  "Abandono concentrado depois do frete",
+  "Recuperação pior a cada dia",
 ];
 
-const factors = [
+const costs = [
+  {
+    title: "Mídia exposta",
+    text: "O investimento continua levando pessoas para uma jornada que já responde pior.",
+  },
+  {
+    title: "Clientes desistindo",
+    text: "A fricção cresce sem necessariamente gerar erro ou reclamação explícita.",
+  },
+  {
+    title: "Operação compensando",
+    text: "Atendimento e equipes internas absorvem manualmente sinais que parecem isolados.",
+  },
+  {
+    title: "Diagnóstico mais caro",
+    text: "Quando o impacto aparece, ele pode já ter alcançado mais etapas da jornada.",
+  },
+];
+
+const selectionCriteria = [
   {
     title: "Persistência",
-    text: "A mudança continua além da janela normal de recuperação.",
+    text: "A mudança continua além da recuperação habitual.",
   },
   {
     title: "Contexto",
-    text: "O problema se concentra em um canal, dispositivo, pagamento ou produto.",
+    text: "A piora se concentra em um dispositivo, pagamento, produto ou perfil.",
   },
   {
-    title: "Propagação",
-    text: "Mais de um sinal da jornada começa a se deteriorar ao mesmo tempo.",
+    title: "Recuperação",
+    text: "O fluxo deixa de voltar naturalmente ao padrão anterior.",
   },
   {
     title: "Impacto",
-    text: "O comportamento começa a expor conversão, atendimento ou receita.",
-  },
-];
-
-const flowSteps = [
-  {
-    number: "01",
-    title: "O Ohrly entende o fluxo",
-    text: "Checkout, pagamento, entrega, carrinho, recompra ou atendimento.",
-  },
-  {
-    number: "02",
-    title: "Reconhece o comportamento habitual",
-    text: "Cada contexto é comparado com o histórico relevante da própria operação.",
-  },
-  {
-    number: "03",
-    title: "Separa oscilação de regressão",
-    text: "Mudanças pontuais são filtradas. Persistência e perda de recuperação ganham prioridade.",
-  },
-  {
-    number: "04",
-    title: "Entrega uma leitura acionável",
-    text: "Você entende o que mudou, onde, há quanto tempo e por que isso merece atenção.",
+    text: "Esperar começa a expor conversão, receita ou atendimento.",
   },
 ];
 
 const examples = [
   {
     label: "Checkout",
-    before: "A conversão caiu 4%.",
-    after:
-      "A conclusão em Mobile + Pix piora há quatro dias, com mais tentativas e recuperação cada vez mais lenta.",
+    metric: "A conversão caiu.",
+    reading:
+      "A conclusão em Mobile + Pix piora há quatro dias, com mais tentativas e recuperação mais lenta.",
   },
   {
     label: "Frete",
-    before: "O abandono aumentou.",
-    after:
-      "O abandono após o cálculo de frete cresceu em pedidos de menor valor, enquanto os demais contextos permaneceram estáveis.",
+    metric: "O abandono aumentou.",
+    reading:
+      "A desistência depois do cálculo de frete cresce em pedidos de menor valor, enquanto os demais contextos seguem estáveis.",
   },
   {
     label: "Atendimento",
-    before: "Entraram mais mensagens.",
-    after:
-      "As dúvidas sobre tamanho e retirada estão aumentando antes da compra em produtos específicos.",
+    metric: "Entraram mais mensagens.",
+    reading:
+      "As dúvidas sobre tamanho e retirada aumentam antes da compra em produtos específicos.",
   },
 ];
 
+function FormalLimitSection() {
+  const stages = [
+    {
+      title: "O comportamento muda",
+      note: "Ainda parece variação",
+    },
+    {
+      title: "A mudança persiste",
+      note: "O custo começa",
+    },
+    {
+      title: "O impacto se acumula",
+      note: "A média começa a responder",
+    },
+    {
+      title: "O limite é excedido",
+      note: "O alerta finalmente chega",
+    },
+  ];
+
+  return (
+    <section
+      id="limite"
+      className="relative overflow-hidden bg-[#f3f7ff] py-20"
+    >
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_18%,rgba(59,130,246,0.12),transparent_30%),radial-gradient(circle_at_8%_85%,rgba(37,99,235,0.06),transparent_26%)]" />
+
+      <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
+        <div className="mx-auto max-w-4xl text-center">
+          <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-700">
+            Quando o alerta chega
+          </p>
+
+          <h2 className="mt-4 text-4xl font-black tracking-[-0.05em] text-[#071545] sm:text-5xl">
+            Um limite formal confirma um impacto que já teve tempo para se
+            formar.
+          </h2>
+
+          <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-slate-600">
+            Conversão abaixo da meta, abandono acima do aceitável ou reclamações
+            em alta são sinais importantes. Mas eles aparecem no fim de uma
+            trajetória, não necessariamente no começo.
+          </p>
+        </div>
+
+        <div className="relative mt-14">
+          <div className="absolute left-[10%] right-[10%] top-6 hidden border-t-2 border-dashed border-blue-200 lg:block" />
+
+          <div className="grid gap-4 lg:grid-cols-4">
+            {stages.map((stage, index) => {
+              const isLast = index === stages.length - 1;
+
+              return (
+                <article
+                  key={stage.title}
+                  className={`relative rounded-3xl border p-6 shadow-[0_16px_45px_rgba(11,47,133,0.06)] ${
+                    isLast
+                      ? "border-orange-200 bg-orange-50"
+                      : "border-blue-100 bg-white/90"
+                  }`}
+                >
+                  <span
+                    className={`relative z-10 inline-flex h-12 w-12 items-center justify-center rounded-full border-4 border-white text-sm font-black shadow-sm ${
+                      isLast
+                        ? "bg-[#f4511e] text-white"
+                        : "bg-blue-700 text-white"
+                    }`}
+                  >
+                    {index + 1}
+                  </span>
+
+                  <h3 className="mt-5 text-lg font-black text-[#071545]">
+                    {stage.title}
+                  </h3>
+
+                  <p
+                    className={`mt-3 text-sm font-bold ${
+                      isLast ? "text-[#f4511e]" : "text-blue-700/70"
+                    }`}
+                  >
+                    {stage.note}
+                  </p>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="mx-auto mt-10 max-w-4xl rounded-[26px] border border-blue-100 bg-white/80 px-6 py-6 text-center shadow-[0_16px_45px_rgba(11,47,133,0.05)] backdrop-blur sm:px-10">
+          <p className="text-xl font-black tracking-[-0.02em] text-[#071545]">
+            O limite mostra quando o impacto ficou grande o suficiente para ser
+            formalizado. O comportamento mostra quando ele começou.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function DelayedReactionCostSection() {
+  return (
+    <section
+      id="custo"
+      className="relative overflow-hidden bg-[linear-gradient(135deg,#06143e_0%,#0a2d7a_62%,#1049bd_100%)] py-20 text-white"
+    >
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_15%,rgba(96,165,250,0.16),transparent_30%),radial-gradient(circle_at_90%_85%,rgba(244,81,30,0.10),transparent_24%)]" />
+
+      <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
+        <div className="grid items-end gap-8 lg:grid-cols-[1fr_0.8fr]">
+          <div>
+            <p className="text-sm font-black uppercase tracking-[0.18em] text-orange-400">
+              O custo de reagir depois
+            </p>
+
+            <h2 className="mt-4 text-4xl font-black tracking-[-0.05em] sm:text-5xl">
+              O alerta não cria o impacto.
+              <span className="block text-orange-400">
+                Ele confirma o que já vinha se acumulando.
+              </span>
+            </h2>
+          </div>
+
+          <p className="text-lg leading-8 text-blue-100/85">
+            Enquanto a operação espera uma métrica ultrapassar seu limite,
+            clientes, mídia e equipes continuam atravessando uma jornada que já
+            responde pior.
+          </p>
+        </div>
+
+        <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {costs.map((cost, index) => (
+            <article
+              key={cost.title}
+              className="rounded-3xl border border-blue-200/15 bg-white/[0.07] p-6 shadow-[0_18px_55px_rgba(0,0,0,0.12)] backdrop-blur-sm"
+            >
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-orange-400/15 text-sm font-black text-orange-400 ring-1 ring-inset ring-orange-200/15">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <h3 className="mt-4 text-xl font-black text-white">
+                {cost.title}
+              </h3>
+              <p className="mt-3 leading-7 text-blue-100/75">{cost.text}</p>
+            </article>
+          ))}
+        </div>
+
+        <div className="mx-auto mt-10 max-w-4xl rounded-[28px] border border-blue-200/15 bg-blue-950/25 px-6 py-7 text-center backdrop-blur-sm sm:px-10">
+          <p className="text-2xl font-black tracking-[-0.03em] text-white">
+            O custo da percepção tardia é tudo o que permaneceu exposto entre o
+            início da mudança e a primeira decisão.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function EarlierDecisionSection() {
+  const traditional = [
+    "O comportamento muda",
+    "O impacto se acumula",
+    "O limite é excedido",
+    "A investigação começa",
+  ];
+
+  const ohrly = [
+    "O comportamento muda",
+    "A persistência é reconhecida",
+    "O contexto é localizado",
+    "A decisão pode começar",
+  ];
+
+  return (
+    <section id="resposta" className="relative overflow-hidden bg-white py-20">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(59,130,246,0.08),transparent_28%)]" />
+
+      <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
+        <div className="mx-auto max-w-4xl text-center">
+          <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-700">
+            Antes do impacto consolidado
+          </p>
+
+          <h2 className="mt-4 text-4xl font-black tracking-[-0.05em] text-[#071545] sm:text-5xl">
+            O Ohrly não espera a métrica assustar.
+          </h2>
+
+          <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-slate-600">
+            Ele reduz a distância entre o momento em que o comportamento muda e
+            o momento em que alguém consegue decidir.
+          </p>
+        </div>
+
+        <div className="mt-12 grid overflow-hidden rounded-[32px] border border-blue-100 bg-white shadow-[0_24px_80px_rgba(11,47,133,0.10)] lg:grid-cols-2">
+          <div className="border-b border-blue-100 bg-[#f7f9fc] p-7 lg:border-b-0 lg:border-r sm:p-9">
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">
+              Reação pelo limite
+            </p>
+
+            <div className="mt-6 space-y-4">
+              {traditional.map((item, index) => (
+                <div key={item} className="flex items-center gap-3">
+                  <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-200 text-xs font-black text-slate-600">
+                    {index + 1}
+                  </span>
+                  <p className="font-bold text-slate-600">{item}</p>
+                </div>
+              ))}
+            </div>
+
+            <p className="mt-7 border-t border-slate-200 pt-5 text-sm font-black text-slate-500">
+              A reação começa depois que o impacto se consolidou.
+            </p>
+          </div>
+
+          <div className="bg-[linear-gradient(145deg,#eef5ff_0%,#f8fbff_100%)] p-7 sm:p-9">
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-blue-700">
+              Interpretação com Ohrly
+            </p>
+
+            <div className="mt-6 space-y-4">
+              {ohrly.map((item, index) => {
+                const isLast = index === ohrly.length - 1;
+
+                return (
+                  <div key={item} className="flex items-center gap-3">
+                    <span
+                      className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-black ${
+                        isLast
+                          ? "bg-[#f4511e] text-white"
+                          : "bg-blue-700 text-white"
+                      }`}
+                    >
+                      {index + 1}
+                    </span>
+                    <p className="font-bold text-[#071545]">{item}</p>
+                  </div>
+                );
+              })}
+            </div>
+
+            <p className="mt-7 border-t border-blue-100 pt-5 text-sm font-black text-blue-700">
+              A decisão pode começar enquanto o impacto ainda está sendo
+              construído.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SelectiveAlertingSection() {
+  return (
+    <section
+      id="relevancia"
+      className="relative overflow-hidden bg-[#eef5ff] py-20"
+    >
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_22%,rgba(59,130,246,0.14),transparent_30%),radial-gradient(circle_at_8%_85%,rgba(37,99,235,0.06),transparent_24%)]" />
+
+      <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
+        <div className="mx-auto max-w-4xl text-center">
+          <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-700">
+            Relevância antes de notificação
+          </p>
+
+          <h2 className="mt-4 text-4xl font-black tracking-[-0.05em] text-[#071545] sm:text-5xl">
+            Isso não significa alertar sobre tudo.
+          </h2>
+
+          <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-slate-600">
+            O Ohrly não reage a uma variação isolada. Ele destaca mudanças
+            quando sinais diferentes começam a formar uma leitura relevante.
+          </p>
+        </div>
+
+        <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {selectionCriteria.map((criterion, index) => (
+            <article
+              key={criterion.title}
+              className="rounded-3xl border border-blue-100 bg-white/90 p-6 shadow-[0_18px_55px_rgba(11,47,133,0.07)] backdrop-blur-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-[0_22px_65px_rgba(11,47,133,0.12)]"
+            >
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-blue-700 text-sm font-black text-white shadow-md shadow-blue-200">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+
+              <h3 className="mt-5 text-xl font-black text-[#071545]">
+                {criterion.title}
+              </h3>
+
+              <p className="mt-3 leading-7 text-slate-600">{criterion.text}</p>
+            </article>
+          ))}
+        </div>
+
+        <div className="mx-auto mt-10 max-w-4xl rounded-[28px] border border-blue-300/20 bg-[linear-gradient(135deg,#071545_0%,#0b3a9f_100%)] px-6 py-7 text-center text-white shadow-[0_22px_70px_rgba(11,47,133,0.22)] sm:px-10">
+          <p className="text-2xl font-black tracking-[-0.03em]">
+            O Ohrly não antecipa qualquer alerta.
+          </p>
+
+          <p className="mt-2 text-lg font-bold leading-8 text-blue-100">
+            Ele antecipa o momento em que uma mudança já começou a merecer
+            atenção.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ReadingExamplesSection() {
+  return (
+    <section id="exemplos" className="relative overflow-hidden bg-white py-20">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_10%_10%,rgba(59,130,246,0.06),transparent_25%)]" />
+
+      <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
+        <div className="mx-auto max-w-4xl text-center">
+          <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-700">
+            Uma leitura, não apenas uma métrica
+          </p>
+
+          <h2 className="mt-4 text-4xl font-black tracking-[-0.05em] text-[#071545] sm:text-5xl">
+            Menos “o número mudou”. Mais “é aqui que a jornada começou a
+            piorar”.
+          </h2>
+        </div>
+
+        <div className="mt-12 grid gap-5 lg:grid-cols-3">
+          {examples.map((example) => (
+            <article
+              key={example.label}
+              className="overflow-hidden rounded-[28px] border border-blue-100 bg-white shadow-[0_18px_60px_rgba(11,47,133,0.08)]"
+            >
+              <div className="border-b border-blue-100 bg-[#f3f7ff] p-6">
+                <span className="rounded-full bg-blue-700 px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-white">
+                  {example.label}
+                </span>
+                <p className="mt-5 text-lg font-bold text-slate-400">
+                  “{example.metric}”
+                </p>
+              </div>
+
+              <div className="border-l-4 border-blue-600 p-6">
+                <p className="text-xs font-black uppercase tracking-[0.14em] text-blue-700">
+                  Leitura Ohrly
+                </p>
+                <p className="mt-4 text-lg font-bold leading-8 text-[#071545]">
+                  “{example.reading}”
+                </p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function EcommerceAlertsPage() {
   return (
-    <main className="min-h-screen overflow-hidden bg-white text-slate-900">
-      <header className="relative z-20 border-b border-slate-100 bg-white/90 backdrop-blur">
+    <main className="min-h-screen overflow-hidden bg-[#f8fbff] text-slate-900">
+      <header className="relative z-20 border-b border-blue-100 bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5 lg:px-8">
           <a aria-label="Ohrly — página inicial" href="/pt">
             <LogoMark />
@@ -570,21 +854,21 @@ export default function EcommerceAlertsPage() {
 
           <nav
             aria-label="Navegação principal"
-            className="hidden items-center gap-8 text-sm font-semibold text-slate-700 md:flex"
+            className="hidden items-center gap-7 text-sm font-semibold text-[#18305f] md:flex"
           >
             <a className="transition hover:text-blue-700" href="#problema">
               O problema
             </a>
-            <a className="transition hover:text-blue-700" href="#como-funciona">
-              Como funciona
+            <a className="transition hover:text-blue-700" href="#custo">
+              O custo
             </a>
-            <a className="transition hover:text-blue-700" href="#exemplos">
-              Exemplos
+            <a className="transition hover:text-blue-700" href="#resposta">
+              Como o Ohrly ajuda
             </a>
           </nav>
 
           <a
-            className="rounded-xl bg-blue-700 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-200 transition hover:-translate-y-0.5 hover:bg-blue-800"
+            className="rounded-xl bg-blue-700 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-200/70 transition hover:-translate-y-0.5 hover:bg-blue-800"
             href="/pt/contact"
           >
             Conversar com a Ohrly
@@ -592,17 +876,17 @@ export default function EcommerceAlertsPage() {
         </div>
       </header>
 
-      <section className="relative">
-        <div className="absolute inset-x-0 top-0 -z-10 h-[720px] bg-[radial-gradient(circle_at_72%_30%,rgba(59,130,246,0.13),transparent_36%),radial-gradient(circle_at_88%_44%,rgba(244,81,30,0.08),transparent_24%)]" />
+      <section className="relative bg-[#f8fbff]">
+        <div className="absolute inset-x-0 top-0 -z-10 h-[680px] bg-[radial-gradient(circle_at_72%_30%,rgba(59,130,246,0.16),transparent_36%),radial-gradient(circle_at_88%_44%,rgba(244,81,30,0.07),transparent_24%),linear-gradient(180deg,#f8fbff_0%,#ffffff_100%)]" />
 
-        <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 pb-24 pt-16 lg:grid-cols-[1.2fr_1fr] lg:px-8 lg:pb-32 lg:pt-24">
+        <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 pb-20 pt-16 lg:grid-cols-[1.1fr_1fr] lg:px-8 lg:pb-28 lg:pt-12">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/70 px-4 py-2 text-xs font-black uppercase tracking-[0.13em] text-blue-700">
               <span className="h-2 w-2 rounded-full bg-[#f4511e]" />
               Inteligência operacional para e-commerce
             </div>
 
-            <h1 className="mt-8 max-w-2xl text-5xl font-black leading-[0.98] tracking-[-0.06em] text-[#071545] sm:text-6xl lg:text-[74px]">
+            <h1 className="mt-8 max-w-2xl text-5xl font-black leading-[0.98] tracking-[-0.06em] text-[#071545] sm:text-6xl lg:text-[70px]">
               Seu e-commerce não precisa de mais alertas.
               <span className="mt-2 block text-[#f4511e]">
                 Precisa dos alertas certos.
@@ -610,13 +894,13 @@ export default function EcommerceAlertsPage() {
             </h1>
 
             <p className="mt-7 max-w-xl text-lg leading-8 text-slate-600">
-              O Ohrly interpreta continuamente o comportamento dos seus clientes para
-              revelar regressões que ainda não viraram falhas.
+              O Ohrly interpreta continuamente o comportamento dos seus clientes
+              para revelar regressões que ainda não viraram falhas.
             </p>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
               <a
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-700 px-6 py-4 text-sm font-black text-white shadow-xl shadow-blue-200 transition hover:-translate-y-0.5 hover:bg-blue-800"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-700 px-6 py-4 text-sm font-black text-white shadow-xl shadow-blue-200/70 transition hover:-translate-y-0.5 hover:bg-blue-800"
                 href="/pt/contact"
               >
                 <SearchSignalIcon />
@@ -625,252 +909,82 @@ export default function EcommerceAlertsPage() {
 
               <a
                 className="inline-flex items-center justify-center gap-2 rounded-xl px-5 py-4 text-sm font-black text-blue-700 transition hover:bg-blue-50"
-                href="#exemplo-alerta"
+                href="#resposta"
               >
-                Ver exemplo
+                Entender como funciona
                 <ArrowRightIcon />
               </a>
             </div>
 
-            <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 border-t border-slate-200 pt-6 text-sm text-slate-500">
+            <div className="mt-10 flex flex-wrap gap-x-7 gap-y-3 border-t border-blue-100 pt-6 text-sm text-[#52698f]">
               <span>Não é mais um dashboard</span>
               <span>Não dispara por qualquer oscilação</span>
-              <span>Não depende de um limite fixo</span>
+              <span>Não espera o fechamento</span>
             </div>
-          </div>
-
-          <div className="grid items-center gap-5">
-            <AlertPanel />
-            {/* <div className="grid gap-4 sm:grid-cols-3 xl:grid-cols-1">
-              <SignalCard type="noise" />
-              <SignalCard type="persistent" />
-              <SignalCard type="context" />
-            </div> */}
-          </div>
-        </div>
-      </section>
-
-      <section id="problema" className="bg-[#071545] py-24 text-white">
-        <div className="mx-auto grid max-w-7xl gap-14 px-5 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
-          <div>
-            <p className="text-sm font-black uppercase tracking-[0.18em] text-orange-400">
-              Nenhuma métrica precisa assustar
-            </p>
-            <h2 className="mt-4 text-4xl font-black tracking-[-0.05em] sm:text-5xl">
-              Sua loja pode continuar funcionando enquanto a jornada começa a piorar.
-            </h2>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-blue-100/80">
-              O sinal relevante raramente aparece como um incidente abrupto. Ele costuma
-              surgir como pequenas mudanças que persistem, se concentram e perdem a
-              capacidade natural de recuperação.
-            </p>
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-2">
-            {signals.map((signal) => (
-              <div
-                key={signal}
-                className="flex gap-3 rounded-2xl border border-white/10 bg-white/5 p-4"
-              >
-                <span className="mt-1 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-500/20 text-orange-300">
-                  <CheckIcon className="h-3.5 w-3.5" />
-                </span>
-                <p className="leading-7 text-blue-50">{signal}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <FormalLimitSection/>
-
-      <section className="py-24">
-        <div className="mx-auto max-w-7xl px-5 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-700">
-              Você já tem dados
-            </p>
-            <h2 className="mt-4 text-4xl font-black tracking-[-0.05em] text-[#071545] sm:text-5xl">
-              O que falta é saber quando eles realmente importam.
-            </h2>
-            <p className="mt-6 text-lg leading-8 text-slate-600">
-              Plataformas e dashboards mostram números. O Ohrly interpreta quando uma
-              mudança deixou de ser variação normal e começou a exigir decisão.
-            </p>
-          </div>
-
-          <div className="mt-14 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {factors.map((factor) => (
-              <article
-                key={factor.title}
-                className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_18px_60px_rgba(7,21,69,0.07)]"
-              >
-                <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 font-black text-blue-700">
-                  {factor.title.slice(0, 1)}
-                </span>
-                <h3 className="mt-5 text-xl font-black text-[#071545]">
-                  {factor.title}
-                </h3>
-                <p className="mt-3 leading-7 text-slate-600">{factor.text}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-slate-50 py-24">
-        <div className="mx-auto max-w-7xl px-5 lg:px-8">
-          <div className="grid gap-6 lg:grid-cols-3">
-            <article className="rounded-[32px] border border-slate-200 bg-white p-7">
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">
-                Sem leitura contínua
-              </p>
-              <h3 className="mt-4 text-2xl font-black text-[#071545]">
-                Nenhum alerta
-              </h3>
-              <p className="mt-4 leading-7 text-slate-600">
-                O problema só ganha prioridade quando a conversão cai, as reclamações
-                aumentam ou o fechamento mostra a perda.
-              </p>
-            </article>
-
-            <article className="rounded-[32px] border border-slate-200 bg-white p-7">
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">
-                Monitoramento tradicional
-              </p>
-              <h3 className="mt-4 text-2xl font-black text-[#071545]">
-                Alertas demais
-              </h3>
-              <p className="mt-4 leading-7 text-slate-600">
-                Toda oscilação vira notificação e alguém ainda precisa descobrir o que é
-                ruído, sazonalidade ou regressão real.
-              </p>
-            </article>
-
-            <article className="rounded-[32px] border border-orange-200 bg-orange-50 p-7 shadow-[0_18px_60px_rgba(244,81,30,0.12)]">
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#f4511e]">
-                Com o Ohrly
-              </p>
-              <h3 className="mt-4 text-2xl font-black text-[#071545]">
-                Os alertas certos
-              </h3>
-              <p className="mt-4 leading-7 text-slate-700">
-                A mudança só chega até você quando persistência, contexto e impacto começam
-                a formar uma janela real de decisão.
-              </p>
-            </article>
-          </div>
-
-          <p className="mx-auto mt-12 max-w-3xl text-center text-2xl font-black tracking-[-0.03em] text-[#071545]">
-            O Ohrly não tenta fazer você olhar mais dados. Ele mostra quais mudanças já não
-            deveriam ser ignoradas.
-          </p>
-        </div>
-      </section>
-
-      <section id="como-funciona" className="py-24">
-        <div className="mx-auto max-w-7xl px-5 lg:px-8">
-          <div className="max-w-3xl">
-            <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-700">
-              Como funciona
-            </p>
-            <h2 className="mt-4 text-4xl font-black tracking-[-0.05em] text-[#071545] sm:text-5xl">
-              Do dado bruto a uma decisão que merece atenção.
-            </h2>
-          </div>
-
-          <div className="mt-14 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {flowSteps.map((step) => (
-              <article
-                key={step.number}
-                className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6"
-              >
-                <span className="absolute right-4 top-1 text-7xl font-black text-slate-100">
-                  {step.number}
-                </span>
-                <span className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl bg-blue-700 text-sm font-black text-white">
-                  {step.number}
-                </span>
-                <h3 className="relative mt-8 text-xl font-black text-[#071545]">
-                  {step.title}
-                </h3>
-                <p className="relative mt-3 leading-7 text-slate-600">{step.text}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="exemplo-alerta" className="bg-[#071545] py-24 text-white">
-        <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 lg:grid-cols-[0.8fr_1.2fr] lg:px-8">
-          <div>
-            <p className="text-sm font-black uppercase tracking-[0.18em] text-orange-400">
-              Uma leitura, não apenas uma métrica
-            </p>
-            <h2 className="mt-4 text-4xl font-black tracking-[-0.05em] sm:text-5xl">
-              O alerta explica o que mudou e por que isso merece atenção agora.
-            </h2>
-            <p className="mt-6 text-lg leading-8 text-blue-100/80">
-              O resultado não é “conversão caiu”. É uma leitura localizada, temporal e
-              conectada ao comportamento real da jornada.
-            </p>
           </div>
 
           <AlertPanel />
         </div>
       </section>
 
-      <section id="exemplos" className="py-24">
-        <div className="mx-auto max-w-7xl px-5 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-700">
-              Mais contexto para agir
+      <section
+        id="problema"
+        className="relative overflow-hidden bg-[linear-gradient(135deg,#071545_0%,#0a2d7a_70%,#1049bd_100%)] py-20 text-white"
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_25%,rgba(96,165,250,0.16),transparent_28%)]" />
+        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
+          <div>
+            <p className="text-sm font-black uppercase tracking-[0.18em] text-orange-400">
+              Nenhuma métrica precisa assustar
             </p>
-            <h2 className="mt-4 text-4xl font-black tracking-[-0.05em] text-[#071545] sm:text-5xl">
-              Menos “o número mudou”. Mais “é aqui que a jornada começou a piorar”.
+
+            <h2 className="mt-4 text-4xl font-black tracking-[-0.05em] sm:text-5xl">
+              Sua loja pode continuar funcionando enquanto a jornada começa a
+              piorar.
             </h2>
+
+            <p className="mt-6 max-w-xl text-lg leading-8 text-blue-100/80">
+              O primeiro sinal costuma aparecer como pequenas mudanças
+              persistentes, não como uma falha explícita.
+            </p>
           </div>
 
-          <div className="mt-14 grid gap-6 lg:grid-cols-3">
-            {examples.map((example) => (
-              <article
-                key={example.label}
-                className="overflow-hidden rounded-[30px] border border-slate-200 bg-white shadow-[0_18px_60px_rgba(7,21,69,0.07)]"
+          <div className="grid gap-3 sm:grid-cols-2">
+            {silentSignals.map((signal) => (
+              <div
+                key={signal}
+                className="flex items-center gap-3 rounded-2xl border border-blue-200/15 bg-white/[0.07] p-4 backdrop-blur-sm"
               >
-                <div className="border-b border-slate-200 bg-slate-50 p-6">
-                  <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-blue-700">
-                    {example.label}
-                  </span>
-                  <p className="mt-5 text-lg font-bold text-slate-400 line-through decoration-slate-300">
-                    “{example.before}”
-                  </p>
-                </div>
-
-                <div className="p-6">
-                  <p className="text-xs font-black uppercase tracking-[0.14em] text-[#f4511e]">
-                    Leitura Ohrly
-                  </p>
-                  <p className="mt-4 text-lg font-bold leading-8 text-[#071545]">
-                    “{example.after}”
-                  </p>
-                </div>
-              </article>
+                <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-orange-500/20 text-orange-400">
+                  <CheckIcon className="h-4 w-4" />
+                </span>
+                <p className="font-bold text-blue-50">{signal}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="px-5 pb-24 lg:px-8">
-        <div className="mx-auto max-w-7xl overflow-hidden rounded-[38px] bg-[linear-gradient(135deg,#0b1d5c_0%,#0b3aa5_65%,#124fcf_100%)] px-6 py-16 text-center text-white shadow-[0_30px_100px_rgba(11,58,165,0.28)] sm:px-12">
+      <FormalLimitSection />
+      <DelayedReactionCostSection />
+      <EarlierDecisionSection />
+      <SelectiveAlertingSection />
+      <ReadingExamplesSection />
+
+      <section className="bg-white px-5 pb-20 pt-6 lg:px-8">
+        <div className="mx-auto max-w-7xl overflow-hidden rounded-[36px] bg-[linear-gradient(135deg,#0b1d5c_0%,#0b3aa5_65%,#124fcf_100%)] px-6 py-14 text-center text-white shadow-[0_30px_100px_rgba(11,58,165,0.28)] sm:px-12">
           <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-200">
             O alerta que seu e-commerce ainda não recebeu
           </p>
+
           <h2 className="mx-auto mt-5 max-w-4xl text-4xl font-black tracking-[-0.05em] sm:text-5xl">
-            Descubra o que começou a piorar antes da queda aparecer no fechamento.
+            Descubra o que começou a piorar antes da queda aparecer no
+            fechamento.
           </h2>
+
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-blue-100">
-            Seu e-commerce não precisa de mais notificações. Precisa saber quais mudanças
-            realmente merecem uma decisão.
+            Veja quais mudanças realmente merecem uma decisão, sem transformar
+            toda oscilação em mais uma notificação.
           </p>
 
           <a
@@ -883,11 +997,13 @@ export default function EcommerceAlertsPage() {
         </div>
       </section>
 
-      <footer className="border-t border-slate-200 bg-slate-50">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-8 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between lg:px-8">
+      <footer className="border-t border-blue-100 bg-[#eef5ff]">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-8 text-sm text-[#52698f] sm:flex-row sm:items-center sm:justify-between lg:px-8">
           <div>
             <LogoMark />
-            <p className="mt-2">Interpretação contínua do comportamento de fluxos digitais.</p>
+            <p className="mt-2">
+              Interpretação contínua do comportamento de fluxos digitais.
+            </p>
           </div>
 
           <p>Ohrly · Pré-incubação Porto Digital 2026.1</p>
