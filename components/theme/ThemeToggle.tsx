@@ -3,19 +3,27 @@
 
 import { Laptop, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 function cn(...classes: Array<string | false | null | undefined>) {
     return classes.filter(Boolean).join(" ");
 }
 
-export default function ThemeToggle() {
-    const [mounted, setMounted] = useState(false);
-    const { theme, setTheme } = useTheme();
+function subscribe() {
+    return () => undefined;
+}
 
-    useEffect(() => {
-        setMounted(true);
-    }, []);
+function useMounted() {
+    return useSyncExternalStore(
+        subscribe,
+        () => true,
+        () => false,
+    );
+}
+
+export default function ThemeToggle() {
+    const mounted = useMounted();
+    const { theme, setTheme } = useTheme();
 
     if (!mounted) {
         return (

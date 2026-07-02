@@ -17,90 +17,109 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://www.ohrly.com.br"),
+const baseUrl = "https://www.ohrly.com.br";
 
-  title: {
-    default: "Ohrly | Observabilidade comportamental para fluxos digitais",
-    template: "%s | Ohrly",
-  },
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const isEn = locale === "en";
 
-  description:
-    "A Ohrly ajuda empresas a identificar quando fluxos digitais começam a perder consistência antes que a degradação vire incidente, retrabalho ou perda operacional.",
+  const title = isEn
+    ? "Ohrly | Detect bottlenecks before they become rework"
+    : "Ohrly | Identifique gargalos antes que virem retrabalho";
 
-  applicationName: "Ohrly",
+  const description = isEn
+    ? "Detect bottlenecks, delays, handoff and rework in digital flows before they become queues, complaints, operational loss or incidents."
+    : "Identifique gargalos, atrasos, handoff e retrabalho em fluxos digitais antes que virem fila, reclamação, perda operacional ou incidente.";
 
-  keywords: [
-    "observabilidade comportamental",
-    "fluxos digitais",
-    "degradação operacional",
-    "operação digital",
-    "chatbot",
-    "WhatsApp",
-    "atendimento digital",
-    "monitoramento de fluxos",
-    "incidentes",
-    "eficiência operacional",
-  ],
+  return {
+    metadataBase: new URL(baseUrl),
 
-  authors: [{ name: "Ohrly" }],
-  creator: "Ohrly",
-  publisher: "Ohrly",
+    title: {
+      default: title,
+      template: "%s | Ohrly",
+    },
 
-  alternates: {
-    canonical: "/",
-  },
+    description,
+    applicationName: "Ohrly",
 
-  openGraph: {
-    title: "Ohrly | Observabilidade comportamental para fluxos digitais",
-    description:
-      "Identifique quando um fluxo digital ainda funciona, mas já começou a acumular atraso, retrabalho, transbordo ou perda de conversão.",
-    url: "/",
-    siteName: "Ohrly",
-    locale: "pt_BR",
-    type: "website",
-    images: [
-      {
-        url: "/images/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Ohrly — Observabilidade comportamental para fluxos digitais",
-      },
+    keywords: [
+      "gargalos de atendimento",
+      "gargalos operacionais",
+      "fluxos digitais",
+      "retrabalho no atendimento",
+      "fila de atendimento",
+      "handoff chatbot",
+      "atendimento digital",
+      "monitoramento de fluxos",
+      "degradação operacional",
+      "observabilidade comportamental",
     ],
-  },
 
-  twitter: {
-    card: "summary_large_image",
-    title: "Ohrly | Observabilidade comportamental para fluxos digitais",
-    description:
-      "Transforme sinais silenciosos de degradação em janelas de decisão operacional.",
-    images: ["/images/og-image.png"],
-  },
+    authors: [{ name: "Ohrly" }],
+    creator: "Ohrly",
+    publisher: "Ohrly",
 
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+    alternates: {
+      canonical: `/${locale}`,
+      languages: {
+        "pt-BR": "/pt",
+        "en-US": "/en",
+      },
+    },
+
+    openGraph: {
+      title,
+      description,
+      url: `/${locale}`,
+      siteName: "Ohrly",
+      locale: isEn ? "en_US" : "pt_BR",
+      type: "website",
+      images: [
+        {
+          url: "/images/og-image.png",
+          width: 1200,
+          height: 630,
+          alt: isEn
+            ? "Ohrly — Detect bottlenecks before they become rework"
+            : "Ohrly — Identifique gargalos antes que virem retrabalho",
+        },
+      ],
+    },
+
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/images/og-image.png"],
+    },
+
+    robots: {
       index: true,
       follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-      "max-video-preview": -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
     },
-  },
 
-  category: "technology",
+    category: "technology",
 
-  icons: {
-    icon: [
-      { url: "/favicon.ico" },
-      { url: "/favicon.png", type: "image/png", sizes: "32x32" },
-    ],
-    apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180" },
-    ],
-  },
-};
+    icons: {
+      icon: [
+        { url: "/favicon.ico" },
+        { url: "/favicon.png", type: "image/png", sizes: "32x32" },
+      ],
+      apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+    },
+  };
+}
 
 export default async function RootLayout({
   children,
@@ -117,7 +136,7 @@ export default async function RootLayout({
 
   return (
     <html
-      lang="pt-BR"
+      lang={locale === "en" ? "en-US" : "pt-BR"}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >

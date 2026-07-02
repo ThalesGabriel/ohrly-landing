@@ -1,4 +1,4 @@
-import { SiteHeader } from "@/components/layout/SiteHeader";
+import { AppHeader } from "@/components/layout/AppHeader";
 
 type PageShellProps = {
   children: React.ReactNode;
@@ -13,7 +13,7 @@ export function PageShell({ children }: PageShellProps) {
       </div>
 
       <div className="relative z-10">
-        <SiteHeader />
+        <AppHeader />
         {children}
       </div>
     </main>
