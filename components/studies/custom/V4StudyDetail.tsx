@@ -87,7 +87,7 @@ export function V4StudyDetail({ study }: { study: StudyDetail }) {
               Aplicação no Ohrly
             </h3>
             <p className="mt-2 text-sm leading-6 text-slate-600">
-              A categoria não é observabilidade. A categoria é saúde operacional
+              A categoria não é observabilidade. A categoria é saúde da sua loja digital
               de fluxos críticos.
             </p>
 
@@ -116,8 +116,8 @@ export function V4StudyDetail({ study }: { study: StudyDetail }) {
 
           <CustomSection
             eyebrow="03"
-            title="Ohrly precisa fazer o mesmo com saúde operacional"
-            text="Em vez de explicar o produto como observabilidade comportamental, o Ohrly pode se apresentar como uma plataforma de gestão da saúde operacional. O método vem antes da tela. O diagnóstico vem antes do dashboard. A decisão vem antes da métrica."
+            title="Ohrly precisa fazer o mesmo com saúde da sua loja digital"
+            text="Em vez de explicar o produto como observabilidade comportamental, o Ohrly pode se apresentar como uma plataforma de gestão da saúde da sua loja digital. O método vem antes da tela. O diagnóstico vem antes do dashboard. A decisão vem antes da métrica."
           />
 
           <div className="rounded-[2rem] border border-teal-100 bg-teal-50 p-6 sm:p-8">
@@ -127,7 +127,7 @@ export function V4StudyDetail({ study }: { study: StudyDetail }) {
             </p>
 
             <blockquote className="mt-5 text-2xl font-black leading-9 tracking-tight text-[#06183d]">
-              Ohrly é uma plataforma de gestão da saúde operacional de fluxos
+              Ohrly é uma plataforma de gestão da saúde da sua loja digital de fluxos
               críticos. Ela ajuda empresas a perceberem quando atendimento,
               venda, pagamento, entrega ou suporte começam a perder consistência
               antes disso virar fila, reclamação, retrabalho ou perda de resultado.

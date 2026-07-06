@@ -33,7 +33,7 @@ export async function generateMetadata({
 
   const description = isEn
     ? "Detect bottlenecks, delays, handoff and rework in digital flows before they become queues, complaints, operational loss or incidents."
-    : "Identifique gargalos, atrasos, handoff e retrabalho em fluxos digitais antes que virem fila, reclamação, perda operacional ou incidente.";
+    : "Identifique gargalos, atrasos, handoff e retrabalho em fluxos digitais antes que virem fila, reclamação, perda da sua loja digital ou incidente.";
 
   return {
     metadataBase: new URL(baseUrl),
@@ -55,7 +55,7 @@ export async function generateMetadata({
       "handoff chatbot",
       "atendimento digital",
       "monitoramento de fluxos",
-      "degradação operacional",
+      "degradação da sua loja digital",
       "observabilidade comportamental",
     ],
 

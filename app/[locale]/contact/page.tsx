@@ -114,7 +114,7 @@ const nextSteps = [
     },
     {
         title: "Indicamos o melhor ponto de entrada",
-        text: "Simulação, check-up operacional ou monitoramento inicial.",
+        text: "Simulação, check-up da sua loja digital ou monitoramento inicial.",
         icon: TimerReset,
     },
     {
@@ -195,7 +195,7 @@ export default function ContactPage() {
                     <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
                         <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-teal-100 bg-teal-50 px-3 py-1 text-sm font-bold text-teal-900">
                             <Sparkles className="h-4 w-4" />
-                            Check-up operacional
+                            Check-up da sua loja digital
                         </p>
 
                         <h1 className="text-2xl font-black tracking-[-0.045em] text-[#06183d]">
@@ -440,7 +440,7 @@ export default function ContactPage() {
                                                 type="submit"
                                                 className="inline-flex h-14 items-center justify-center gap-2 rounded-xl bg-[#004653] px-7 text-sm font-black text-white shadow-lg shadow-teal-900/10 transition hover:bg-[#003844]"
                                             >
-                                                Solicitar check-up operacional
+                                                Solicitar check-up da sua loja digital
                                                 <Send className="h-4 w-4" />
                                             </button>
                                         </div>

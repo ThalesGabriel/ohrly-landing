@@ -173,7 +173,7 @@ const faqs = [
   {
     question: "O check-up garante que existe degradação?",
     answer:
-      "Não. O check-up ajuda a identificar se há sinais consistentes de perda de saúde operacional ou se a variação parece normal.",
+      "Não. O check-up ajuda a identificar se há sinais consistentes de perda de saúde da sua loja digital ou se a variação parece normal.",
   },
   {
     question: "Serve só para e-commerce?",
@@ -204,7 +204,7 @@ export default function PricingPage() {
               </h1>
 
               <p className="mt-6 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
-                O Ohrly ajuda sua empresa a avaliar a saúde operacional de um
+                O Ohrly ajuda sua empresa a avaliar a saúde da sua loja digital de um
                 fluxo crítico antes que sinais dispersos virem fila, reclamação,
                 retrabalho ou perda de resultado.
               </p>
@@ -341,7 +341,7 @@ export default function PricingPage() {
               </p>
 
               <h2 className="mt-2 text-3xl font-black tracking-tight text-[#06183d]">
-                Todo check-up Ohrly entrega clareza operacional
+                Todo check-up Ohrly entrega clareza da sua loja digital
               </h2>
 
               <p className="mt-4 text-sm leading-7 text-slate-600 md:text-base">

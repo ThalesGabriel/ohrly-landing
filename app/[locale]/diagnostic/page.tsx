@@ -86,7 +86,7 @@ const impactOptions: WeightedOption[] = [
     { label: "Retrabalho da equipe", value: "retrabalho", icon: RefreshCw, score: 6 },
     { label: "Fila ou tempo de espera", value: "fila", icon: Clock, score: 6 },
     { label: "Reclamações", value: "reclamacoes", icon: MessageSquare, score: 7 },
-    { label: "Eficiência operacional", value: "eficiencia", icon: BarChart3, score: 6 },
+    { label: "Eficiência da sua loja digital", value: "eficiencia", icon: BarChart3, score: 6 },
     { label: "Decisão de gestão", value: "gestao", icon: ShieldCheck, score: 6 },
     { label: "Não sei dizer ainda", value: "nao_sei", icon: CircleHelp, score: 2 },
 ];
@@ -130,7 +130,7 @@ const dataOptions = [
         label: "Sim, consigo exportar",
         value: "exportar",
         score: 12,
-        nextStep: "Rodar um check-up operacional com dados reais.",
+        nextStep: "Rodar um check-up da sua loja digital com dados reais.",
     },
     {
         label: "Sim, mas depende de outra área",
@@ -254,7 +254,7 @@ export default function CriticalFlowEvaluatorPage() {
 
         const nextStep =
             total >= 75
-                ? selectedData?.nextStep ?? "Rodar um check-up operacional desse fluxo."
+                ? selectedData?.nextStep ?? "Rodar um check-up da sua loja digital desse fluxo."
                 : total >= 45
                     ? selectedData?.nextStep ??
                     "Começar por uma simulação ou mapeamento de sinais."
@@ -339,8 +339,8 @@ export default function CriticalFlowEvaluatorPage() {
                         </h1>
 
                         <p className="mt-5 text-base leading-7 text-slate-600">
-                            Veja se um fluxo operacional digital tem sinais suficientes 
-                            para um acompanhamento de saúde operacional.
+                            Veja se um fluxo da sua loja digital digital tem sinais suficientes 
+                            para um acompanhamento de saúde da sua loja digital.
                         </p>
 
                         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -1055,7 +1055,7 @@ function ResultPanel({
                                 href={contactHref}
                                 className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-[#004653] px-5 text-sm font-black text-white shadow-lg shadow-teal-900/10 transition hover:bg-[#003844]"
                             >
-                                Solicitar check-up operacional
+                                Solicitar check-up da sua loja digital
                                 <Send className="h-4 w-4" />
                             </a>
                         </div>

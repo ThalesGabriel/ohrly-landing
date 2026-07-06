@@ -12,8 +12,8 @@ type NavItem = {
 const navItems: NavItem[] = [
   { label: "Início", href: "/" },
   { label: "Estudos", href: "/studies" },
-  { label: "Preços", href: "/prices" },
-  { label: "Parceiros", href: "/partners" },
+  // { label: "Preços", href: "/prices" },
+  // { label: "Parceiros", href: "/partners" },
   { label: "Diagnóstico", href: "/diagnostic" },
 ];
 
@@ -33,7 +33,7 @@ export function AppHeader() {
               Ohrly
             </span>
             <span className="hidden text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400 sm:block">
-              Saúde Operacional
+              Saúde da sua loja digital
             </span>
           </div>
         </Link>

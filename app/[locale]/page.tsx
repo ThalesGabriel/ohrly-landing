@@ -132,12 +132,12 @@ const methodSteps = [
 
 const tools = [
     {
-        title: "Check-up Operacional",
+        title: "Check-up da sua loja digital",
         text: "Leitura rápida da saúde do fluxo com diagnóstico e recomendações.",
         type: "score",
     },
     {
-        title: "Painel de Saúde Operacional",
+        title: "Painel de Saúde da sua loja digital",
         text: "Acompanhe a evolução da saúde e compare fluxos e períodos.",
         type: "mini-chart",
     },
@@ -197,7 +197,7 @@ export default function OhrlyLandingPage() {
                 <div className="flex flex-col justify-center">
                     <p className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-teal-100 bg-white px-3 py-1 text-sm font-medium text-teal-800 shadow-sm">
                         <Sparkles className="h-4 w-4" />
-                        Gestão da Saúde Operacional
+                        Gerindo a saúde da sua loja digital
                     </p>
 
                     <h1 className="max-w-2xl text-4xl font-black tracking-[-0.045em] text-[#06183d] sm:text-5xl lg:text-6xl">
@@ -205,7 +205,7 @@ export default function OhrlyLandingPage() {
                     </h1>
 
                     <p className="mt-6 max-w-xl text-base leading-7 text-slate-600 sm:text-lg">
-                        O Ohrly ajuda empresas a acompanhar a saúde operacional dos seus
+                        O Ohrly ajuda empresas a acompanhar a saúde da sua loja digital dos seus
                         fluxos críticos, identificando sinais de perda de consistência antes
                         que eles virem fila, reclamação, retrabalho ou queda de resultado.
                     </p>
@@ -215,15 +215,7 @@ export default function OhrlyLandingPage() {
                             href="#checkup"
                             className="inline-flex h-12 items-center justify-center rounded-xl bg-[#003f4c] px-6 text-sm font-bold text-white shadow-lg shadow-teal-900/10 transition hover:bg-[#00313b]"
                         >
-                            Fazer um check-up operacional
-                        </a>
-
-                        <a
-                            href="#exemplo"
-                            className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-6 text-sm font-bold text-[#07364a] shadow-sm transition hover:border-teal-700"
-                        >
-                            <Play className="h-4 w-4 fill-[#07364a]" />
-                            Ver exemplo de leitura
+                            Baixar E-Book gratuito!
                         </a>
                     </div>
                 </div>
@@ -299,7 +291,7 @@ export default function OhrlyLandingPage() {
             >
                 <div>
                     <h2 className="text-3xl font-black tracking-tight text-[#06183d]">
-                        Método Ohrly de Saúde Operacional
+                        Método Ohrly de Saúde da sua loja digital
                     </h2>
                     <p className="mt-4 max-w-sm text-base leading-7 text-slate-600">
                         Um método simples para acompanhar fluxos críticos como organismos
@@ -401,7 +393,7 @@ export default function OhrlyLandingPage() {
             {/* <section className="mx-auto max-w-7xl px-6 py-8 lg:px-8">
         <div className="flex items-end justify-between gap-4">
           <h2 className="text-2xl font-black tracking-tight text-[#06183d]">
-            Estudos de Saúde Operacional
+            Estudos de Saúde da sua loja digital
           </h2>
 
           <a
@@ -448,7 +440,7 @@ export default function OhrlyLandingPage() {
                     <div className="relative z-10 grid grid-cols-1 items-center gap-8 md:grid-cols-[1fr_auto]">
                         <div>
                             <h2 className="text-3xl font-black tracking-tight">
-                                Comece com um check-up operacional
+                                Comece com um check-up da sua loja digital
                             </h2>
 
                             <p className="mt-3 max-w-2xl text-sm leading-6 text-white/80 md:text-base">
@@ -498,7 +490,7 @@ function Header() {
                     href="#checkup"
                     className="hidden rounded-xl bg-[#003f4c] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-teal-900/10 transition hover:bg-[#00313b] sm:inline-flex"
                 >
-                    Fazer check-up operacional
+                    Fazer check-up da sua loja digital
                 </a>
             </div>
         </header>
@@ -510,7 +502,7 @@ function HeroDashboard() {
         <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-2xl shadow-slate-900/10">
             <div className="mb-5 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                    <h2 className="font-black text-[#06183d]">Saúde Operacional</h2>
+                    <h2 className="font-black text-[#06183d]">Saúde da sua loja digital</h2>
 
                     <button className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-3 py-1 text-xs font-bold text-slate-600">
                         Visão geral
@@ -565,13 +557,13 @@ function HeroDashboard() {
             <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[1fr_220px]">
                 <div className="rounded-2xl border border-slate-200 bg-white p-4">
                     <h3 className="text-sm font-black text-[#06183d]">
-                        Evolução da saúde operacional
+                        Evolução da saúde da sua loja digital
                     </h3>
 
                     <div className="mt-3 flex flex-wrap gap-4 text-[11px] font-bold text-slate-500">
                         <Legend color="bg-emerald-500" label="Saudável" />
                         <Legend color="bg-amber-400" label="Em observação" />
-                        <Legend color="bg-orange-500" label="Atenção operacional" />
+                        <Legend color="bg-orange-500" label="Atenção da sua loja digital" />
                         <Legend color="bg-rose-500" label="Perda de consistência" />
                     </div>
 
@@ -589,7 +581,7 @@ function HeroDashboard() {
                         <FlowItem
                             color="bg-orange-500"
                             title="Atendimento via chatbot"
-                            status="Atenção operacional"
+                            status="Atenção da sua loja digital"
                         />
                         <FlowItem
                             color="bg-amber-400"
@@ -796,7 +788,7 @@ function ExampleReading() {
                     <ExampleInfo
                         icon={TriangleAlert}
                         label="Estado:"
-                        value="Atenção operacional"
+                        value="Atenção da sua loja digital"
                         color="text-orange-500"
                     />
                     <ExampleInfo

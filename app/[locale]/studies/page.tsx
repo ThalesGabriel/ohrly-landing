@@ -69,11 +69,11 @@ const trails = [
     {
         title: "Fundamentos",
         description:
-            "Conceitos centrais sobre saúde operacional, sinais vitais, janelas de atenção e perda de consistência.",
+            "Conceitos centrais sobre saúde da sua loja digital, sinais vitais, janelas de atenção e perda de consistência.",
         icon: Activity,
         href: "#lista",
         items: [
-            "O que é saúde operacional?",
+            "O que é saúde da sua loja digital?",
             "O que são sinais vitais de um fluxo?",
             "Quando esperar deixa de ser neutro?",
         ],
@@ -119,12 +119,12 @@ const trails = [
 const featuredStudy: Study = {
     title: "Sua operação pode estar funcionando e ainda assim não estar saudável",
     description:
-        "O estudo fundador do Ohrly sobre saúde operacional: por que nem todo problema começa quando algo quebra, e como fluxos críticos podem perder consistência antes de qualquer alerta evidente.",
+        "O estudo fundador do Ohrly sobre saúde da sua loja digital: por que nem todo problema começa quando algo quebra, e como fluxos críticos podem perder consistência antes de qualquer alerta evidente.",
     category: "Fundamentos",
     type: "Estudo fundador",
     readingTime: "8 min de leitura",
     href: "/studies/sua-operacao-pode-estar-funcionando",
-    tags: ["Fundamentos", "Saúde operacional", "Método Ohrly"],
+    tags: ["Fundamentos", "Saúde da sua loja digital", "Método Ohrly"],
     icon: Activity,
     accentClass: "text-teal-800 bg-teal-50 border-teal-100",
     visualClass: "from-[#004653] to-[#06183d]",
@@ -134,14 +134,14 @@ const featuredStudy: Study = {
 const studies: Study[] = [
     featuredStudy,
     {
-        title: "O que é saúde operacional?",
+        title: "O que é saúde da sua loja digital?",
         description:
             "Uma introdução à categoria que o Ohrly propõe: acompanhar fluxos críticos como organismos vivos, com sinais, sintomas e recuperação.",
         category: "Fundamentos",
         type: "Conceito",
         readingTime: "6 min de leitura",
-        href: "/studies/o-que-e-saude-operacional",
-        tags: ["Saúde operacional", "Categoria", "Gestão"],
+        href: "/studies/o-que-e-saude-da sua loja digital",
+        tags: ["Saúde da sua loja digital", "Categoria", "Gestão"],
         icon: Activity,
         accentClass: "text-teal-800 bg-teal-50 border-teal-100",
         visualClass: "from-teal-700 to-cyan-900",
@@ -176,7 +176,7 @@ const studies: Study[] = [
     {
         title: "Por que dashboards mostram números, mas nem sempre mostram saúde?",
         description:
-            "Dashboards ajudam a acompanhar indicadores, mas nem sempre mostram quando um fluxo começou a perder consistência operacional.",
+            "Dashboards ajudam a acompanhar indicadores, mas nem sempre mostram quando um fluxo começou a perder consistência da sua loja digital.",
         category: "Fundamentos",
         type: "Ensaio",
         readingTime: "9 min de leitura",
@@ -312,7 +312,7 @@ export default function StudiesPage() {
                         <div>
                             <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-teal-100 bg-teal-50 px-3 py-1 text-sm font-black text-teal-900">
                                 <Newspaper className="h-4 w-4" />
-                                Estudos de Saúde Operacional
+                                Estudos de Saúde da sua loja digital
                             </p>
 
                             <h1 className="max-w-3xl text-2xl font-black tracking-[-0.045em] text-[#06183d] md:text-3xl">

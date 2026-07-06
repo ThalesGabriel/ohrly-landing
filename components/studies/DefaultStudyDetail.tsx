@@ -42,7 +42,7 @@ export function DefaultStudyDetail({ study }: { study: StudyDetail }) {
 
               <div>
                 <p className="text-sm font-bold text-white/70">
-                  Estudos de Saúde Operacional
+                  Estudos de Saúde da sua loja digital
                 </p>
                 <p className="mt-3 max-w-md text-xl font-black leading-7">
                   Fluxos críticos podem continuar funcionando enquanto perdem consistência.

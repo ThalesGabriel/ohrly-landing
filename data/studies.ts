@@ -70,23 +70,23 @@ export const studies: StudyDetail[] = [
     slug: "sua-operacao-pode-estar-funcionando",
     title: "Sua operação pode estar funcionando e ainda assim não estar saudável",
     description:
-      "O estudo fundador do Ohrly sobre saúde operacional: por que nem todo problema começa quando algo quebra, e como fluxos críticos podem perder consistência antes de qualquer alerta evidente.",
+      "O estudo fundador do Ohrly sobre saúde da sua loja digital: por que nem todo problema começa quando algo quebra, e como fluxos críticos podem perder consistência antes de qualquer alerta evidente.",
     category: "Fundamentos",
     type: "Estudo fundador",
     readingTime: "8 min de leitura",
     publishedAt: "2026-07-01",
-    tags: ["Fundamentos", "Saúde operacional", "Método Ohrly"],
+    tags: ["Fundamentos", "Saúde da sua loja digital", "Método Ohrly"],
     icon: Activity,
     visualClass: "from-[#004653] to-[#06183d]",
     accentClass: "text-teal-800 bg-teal-50 border-teal-100",
     author: {
       name: "Ohrly",
-      role: "Estudos de Saúde Operacional",
+      role: "Estudos de Saúde da sua loja digital",
     },
     summary: [
-      "Nem todo problema operacional começa quando algo quebra.",
+      "Nem todo problema da sua loja digital começa quando algo quebra.",
       "Fluxos críticos podem continuar funcionando enquanto perdem consistência.",
-      "A saúde operacional aparece nos sinais intermediários antes dos indicadores finais.",
+      "A saúde da sua loja digital aparece nos sinais intermediários antes dos indicadores finais.",
       "O papel do Ohrly é tornar visível quando esperar deixa de ser neutro.",
     ],
     content: [
@@ -111,12 +111,12 @@ export const studies: StudyDetail[] = [
       },
       {
         type: "heading",
-        content: "O que chamamos de saúde operacional",
+        content: "O que chamamos de saúde da sua loja digital",
       },
       {
         type: "paragraph",
         content:
-          "Saúde operacional é a capacidade de um fluxo crítico manter consistência, recuperar-se de variações normais e não transferir custo invisível para clientes, equipes ou gestores.",
+          "Saúde da sua loja digital é a capacidade de um fluxo crítico manter consistência, recuperar-se de variações normais e não transferir custo invisível para clientes, equipes ou gestores.",
       },
       {
         type: "list",
@@ -135,30 +135,30 @@ export const studies: StudyDetail[] = [
       },
     ],
     relatedSlugs: [
-      "o-que-e-saude-operacional",
+      "o-que-e-saude-da sua loja digital",
       "sinais-vitais-de-um-fluxo",
       "quando-esperar-deixa-de-ser-neutro",
     ],
   },
   {
-    slug: "o-que-e-saude-operacional",
-    title: "O que é saúde operacional?",
+    slug: "o-que-e-saude-da sua loja digital",
+    title: "O que é saúde da sua loja digital?",
     description:
       "Uma introdução à categoria que o Ohrly propõe: acompanhar fluxos críticos como organismos vivos, com sinais, sintomas e recuperação.",
     category: "Fundamentos",
     type: "Conceito",
     readingTime: "6 min de leitura",
     publishedAt: "2026-07-01",
-    tags: ["Saúde operacional", "Categoria", "Gestão"],
+    tags: ["Saúde da sua loja digital", "Categoria", "Gestão"],
     icon: Activity,
     visualClass: "from-teal-700 to-cyan-900",
     accentClass: "text-teal-800 bg-teal-50 border-teal-100",
     author: {
       name: "Ohrly",
-      role: "Estudos de Saúde Operacional",
+      role: "Estudos de Saúde da sua loja digital",
     },
     summary: [
-      "Saúde operacional não é apenas ausência de erro.",
+      "Saúde da sua loja digital não é apenas ausência de erro.",
       "Fluxos críticos precisam ser acompanhados por sinais vitais.",
       "O objetivo é identificar perda de consistência antes da urgência.",
     ],
@@ -166,7 +166,7 @@ export const studies: StudyDetail[] = [
       {
         type: "paragraph",
         content:
-          "Saúde operacional é uma forma de olhar para fluxos críticos não apenas pelo resultado final, mas pelo comportamento que eles demonstram ao longo do tempo.",
+          "Saúde da sua loja digital é uma forma de olhar para fluxos críticos não apenas pelo resultado final, mas pelo comportamento que eles demonstram ao longo do tempo.",
       },
       {
         type: "heading",
@@ -204,7 +204,7 @@ export const studies: StudyDetail[] = [
     accentClass: "text-cyan-800 bg-cyan-50 border-cyan-100",
     author: {
       name: "Ohrly",
-      role: "Estudos de Saúde Operacional",
+      role: "Estudos de Saúde da sua loja digital",
     },
     summary: [
       "Sinais vitais são métricas que indicam a saúde comportamental de um fluxo.",
@@ -232,7 +232,7 @@ export const studies: StudyDetail[] = [
       },
     ],
     relatedSlugs: [
-      "o-que-e-saude-operacional",
+      "o-que-e-saude-da sua loja digital",
       "quando-esperar-deixa-de-ser-neutro",
     ],
   },
@@ -251,11 +251,11 @@ export const studies: StudyDetail[] = [
     accentClass: "text-amber-800 bg-amber-50 border-amber-100",
     author: {
       name: "Ohrly",
-      role: "Estudos de Saúde Operacional",
+      role: "Estudos de Saúde da sua loja digital",
     },
     summary: [
       "Esperar pode ser uma decisão válida.",
-      "O problema começa quando esperar passa a aumentar risco operacional.",
+      "O problema começa quando esperar passa a aumentar risco da sua loja digital.",
       "O Ohrly tenta identificar essa janela antes da urgência.",
     ],
     content: [
@@ -279,7 +279,7 @@ export const studies: StudyDetail[] = [
     slug: "dashboards-nem-sempre-mostram-saude",
     title: "Por que dashboards mostram números, mas nem sempre mostram saúde?",
     description:
-      "Dashboards ajudam a acompanhar indicadores, mas nem sempre mostram quando um fluxo começou a perder consistência operacional.",
+      "Dashboards ajudam a acompanhar indicadores, mas nem sempre mostram quando um fluxo começou a perder consistência da sua loja digital.",
     category: "Fundamentos",
     type: "Ensaio",
     readingTime: "9 min de leitura",
@@ -290,22 +290,22 @@ export const studies: StudyDetail[] = [
     accentClass: "text-blue-800 bg-blue-50 border-blue-100",
     author: {
       name: "Ohrly",
-      role: "Estudos de Saúde Operacional",
+      role: "Estudos de Saúde da sua loja digital",
     },
     summary: [
       "Dashboards mostram números, mas nem sempre mostram mudança de comportamento.",
       "O problema pode estar na interpretação, não na falta de dado.",
-      "Saúde operacional depende de contexto, recorrência e decisão.",
+      "Saúde da sua loja digital depende de contexto, recorrência e decisão.",
     ],
     content: [
       {
         type: "paragraph",
         content:
-          "Dashboards são importantes, mas geralmente mostram indicadores isolados. A saúde operacional depende de entender relações, contexto, recorrência e perda de consistência.",
+          "Dashboards são importantes, mas geralmente mostram indicadores isolados. A saúde da sua loja digital depende de entender relações, contexto, recorrência e perda de consistência.",
       },
     ],
     relatedSlugs: [
-      "o-que-e-saude-operacional",
+      "o-que-e-saude-da sua loja digital",
       "quando-esperar-deixa-de-ser-neutro",
     ],
   },
@@ -324,7 +324,7 @@ export const studies: StudyDetail[] = [
     accentClass: "text-violet-800 bg-violet-50 border-violet-100",
     author: {
       name: "Ohrly",
-      role: "Estudos de Saúde Operacional",
+      role: "Estudos de Saúde da sua loja digital",
     },
     summary: [
       "Um atendimento pode continuar respondendo e ainda assim perder resolução.",
@@ -358,7 +358,7 @@ export const studies: StudyDetail[] = [
     accentClass: "text-rose-800 bg-rose-50 border-rose-100",
     author: {
       name: "Ohrly",
-      role: "Estudos de Saúde Operacional",
+      role: "Estudos de Saúde da sua loja digital",
     },
     summary: [
       "Handoff não é necessariamente problema.",
@@ -392,7 +392,7 @@ export const studies: StudyDetail[] = [
     accentClass: "text-emerald-800 bg-emerald-50 border-emerald-100",
     author: {
       name: "Ohrly",
-      role: "Estudos de Saúde Operacional",
+      role: "Estudos de Saúde da sua loja digital",
     },
     summary: [
       "Checkout saudável não é apenas checkout disponível.",
@@ -426,12 +426,12 @@ export const studies: StudyDetail[] = [
     accentClass: "text-blue-800 bg-blue-50 border-blue-100",
     author: {
       name: "Ohrly",
-      role: "Estudos de Saúde Operacional",
+      role: "Estudos de Saúde da sua loja digital",
     },
     summary: [
       "Produtos fortes não vendem apenas interface.",
       "Eles vendem uma camada de gestão.",
-      "O Ohrly pode aprender com essa lógica para posicionar saúde operacional.",
+      "O Ohrly pode aprender com essa lógica para posicionar saúde da sua loja digital.",
     ],
     content: [],
     customComponent: "V4StudyDetail",

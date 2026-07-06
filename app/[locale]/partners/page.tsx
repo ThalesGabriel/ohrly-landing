@@ -57,7 +57,7 @@ const partnerTypes: PartnerType[] = [
   {
     title: "Comunidades e eventos",
     description:
-      "Para quem reúne empreendedores, gestores ou profissionais de operação e quer levar conteúdo prático sobre saúde operacional.",
+      "Para quem reúne empreendedores, gestores ou profissionais de operação e quer levar conteúdo prático sobre saúde da sua loja digital.",
     icon: Users,
   },
   {
@@ -81,7 +81,7 @@ const howItWorks = [
   },
   {
     title: "O Ohrly faz a triagem",
-    text: "A empresa passa pelo avaliador ou por uma conversa inicial para entender se existe aderência ao check-up operacional.",
+    text: "A empresa passa pelo avaliador ou por uma conversa inicial para entender se existe aderência ao check-up da sua loja digital.",
     icon: ClipboardCheck,
   },
   {
@@ -137,7 +137,7 @@ const partnerBenefits = [
     items: [
       "Possibilidade de co-criar estudos",
       "Workshops em parceria",
-      "Conteúdos sobre saúde operacional por segmento",
+      "Conteúdos sobre saúde da sua loja digital por segmento",
       "Cases com parceiros, quando houver autorização",
     ],
     icon: ShieldCheck,
@@ -154,9 +154,9 @@ const goodFits = [
 
 const weakFits = [
   "Negócios sem volume recorrente",
-  "Empresas sem fluxo digital ou operacional claro",
+  "Empresas sem fluxo digital ou da sua loja digital claro",
   "Quem busca apenas tráfego, post ou campanha",
-  "Quem quer dashboard bonito sem decisão operacional",
+  "Quem quer dashboard bonito sem decisão da sua loja digital",
   "Quem não tem abertura para olhar dados ou sinais",
 ];
 
@@ -243,7 +243,7 @@ export default function PartnersPage() {
               <p className="mt-6 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
                 O Programa de Parceiros Ohrly conecta consultores, agências,
                 mentores e comunidades a empresas que precisam entender a saúde
-                operacional de fluxos como atendimento, checkout, cobrança,
+                da sua loja digital de fluxos como atendimento, checkout, cobrança,
                 entrega, onboarding e suporte.
               </p>
 
@@ -282,7 +282,7 @@ export default function PartnersPage() {
 
                 <p className="mt-4 text-sm leading-6 text-white/75">
                   O Ohrly transforma percepções soltas sobre atendimento, vendas,
-                  cobrança ou operação em uma leitura clara de saúde operacional.
+                  cobrança ou operação em uma leitura clara de saúde da sua loja digital.
                 </p>
               </div>
 
@@ -446,7 +446,7 @@ export default function PartnersPage() {
 
             <FitCard
               title="Menos aderente agora"
-              description="Casos em que talvez ainda falte volume, fluxo claro, abertura ou decisão operacional relevante."
+              description="Casos em que talvez ainda falte volume, fluxo claro, abertura ou decisão da sua loja digital relevante."
               items={weakFits}
             />
           </div>
@@ -465,7 +465,7 @@ export default function PartnersPage() {
                 </h2>
 
                 <p className="mt-4 text-sm leading-7 text-slate-700 md:text-base">
-                  Também criamos workshops sobre saúde operacional de fluxos
+                  Também criamos workshops sobre saúde da sua loja digital de fluxos
                   críticos, mostrando como empresas podem identificar sinais de
                   perda de consistência antes que eles virem problema visível.
                 </p>
@@ -580,7 +580,7 @@ export default function PartnersPage() {
 
                 <p className="mt-4 max-w-2xl text-sm leading-6 text-white/80 md:text-base">
                   Conheça o Programa de Parceiros e ajude empresas a enxergarem
-                  a saúde operacional dos seus fluxos críticos antes que pequenos
+                  a saúde da sua loja digital dos seus fluxos críticos antes que pequenos
                   sintomas virem grandes problemas.
                 </p>
               </div>
