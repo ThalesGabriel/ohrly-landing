@@ -1,6 +1,13 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import {
+  type FocusEvent,
+  type FormEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { trackEvent } from "@/lib/analytics";
 import {
   ArrowRight,
   Bell,
@@ -197,8 +204,174 @@ function CheckList({ items }: { items: string[] }) {
   );
 }
 
+type Attribution = {
+  utmSource: string;
+  utmMedium: string;
+  utmCampaign: string;
+  utmContent: string;
+  utmTerm: string;
+};
+
+const emptyAttribution: Attribution = {
+  utmSource: "",
+  utmMedium: "",
+  utmCampaign: "",
+  utmContent: "",
+  utmTerm: "",
+};
+
+function readAttributionFromUrl(): Attribution {
+  if (typeof window === "undefined") {
+    return emptyAttribution;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+
+  return {
+    utmSource: params.get("utm_source") ?? "",
+    utmMedium: params.get("utm_medium") ?? "",
+    utmCampaign: params.get("utm_campaign") ?? "",
+    utmContent: params.get("utm_content") ?? "",
+    utmTerm: params.get("utm_term") ?? "",
+  };
+}
+
 export default function OhrlyLandingPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [attribution, setAttribution] =
+    useState<Attribution>(emptyAttribution);
+
+  const formStartedRef = useRef(false);
+  const trackedSectionsRef = useRef(new Set<string>());
+  const trackedScrollDepthsRef = useRef(new Set<number>());
+
+  useEffect(() => {
+    const currentAttribution = readAttributionFromUrl();
+    setAttribution(currentAttribution);
+
+    trackEvent("lp_view", {
+      landingVariant: "founding_customer_v1",
+    });
+
+    const engagementTimer = window.setTimeout(() => {
+      trackEvent("lp_engaged_10s", {
+        landingVariant: "founding_customer_v1",
+      });
+    }, 10_000);
+
+    return () => {
+      window.clearTimeout(engagementTimer);
+    };
+  }, []);
+
+  useEffect(() => {
+    const sectionIds = [
+      "inicio",
+      "contato",
+      "exemplo",
+      "como-funciona",
+      "piloto",
+    ];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) {
+            continue;
+          }
+
+          const section = entry.target.id;
+
+          if (
+            !section ||
+            trackedSectionsRef.current.has(section)
+          ) {
+            continue;
+          }
+
+          trackedSectionsRef.current.add(section);
+
+          trackEvent("section_view", {
+            section,
+            landingVariant: "founding_customer_v1",
+          });
+
+          if (section === "contato") {
+            trackEvent("form_view", {
+              formId: "pilot_application",
+            });
+          }
+
+          if (section === "exemplo") {
+            trackEvent("example_view", {
+              exampleId: "account_trajectory",
+            });
+          }
+
+          if (section === "piloto") {
+            trackEvent("pilot_details_view", {
+              pilotId: "founding_customer_v1",
+            });
+          }
+        }
+      },
+      {
+        threshold: 0.45,
+      },
+    );
+
+    for (const sectionId of sectionIds) {
+      const element = document.getElementById(sectionId);
+
+      if (element) {
+        observer.observe(element);
+      }
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    function handleScroll() {
+      const documentHeight =
+        document.documentElement.scrollHeight -
+        window.innerHeight;
+
+      if (documentHeight <= 0) {
+        return;
+      }
+
+      const depth = Math.min(
+        100,
+        Math.round((window.scrollY / documentHeight) * 100),
+      );
+
+      for (const threshold of [25, 50, 75, 90]) {
+        if (
+          depth >= threshold &&
+          !trackedScrollDepthsRef.current.has(threshold)
+        ) {
+          trackedScrollDepthsRef.current.add(threshold);
+
+          trackEvent(`scroll_${threshold}`, {
+            depthPercent: threshold,
+          });
+        }
+      }
+    }
+
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
+
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   const [submitStatus, setSubmitStatus] = useState<{
     type: "idle" | "success" | "error";
     message: string;
@@ -207,11 +380,37 @@ export default function OhrlyLandingPage() {
     message: "",
   });
 
+  function handleFormFocus() {
+    if (formStartedRef.current) {
+      return;
+    }
+
+    formStartedRef.current = true;
+
+    trackEvent("form_start", {
+      formId: "pilot_application",
+    });
+  }
+
+  function handleFieldBlur(
+    event:
+      | FocusEvent<HTMLInputElement>
+      | FocusEvent<HTMLTextAreaElement>,
+  ) {
+    trackEvent("form_field_blur", {
+      formId: "pilot_application",
+      fieldName: event.currentTarget.name,
+      hasValue: event.currentTarget.value.trim().length > 0,
+    });
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const form = event.currentTarget;
-    const formId = "mkoygpnk";
+    const formId =
+      process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID ??
+      "mkoygpnk";
 
     if (!formId) {
       setSubmitStatus({
@@ -221,6 +420,10 @@ export default function OhrlyLandingPage() {
       });
       return;
     }
+
+    trackEvent("form_submit_attempt", {
+      formId: "pilot_application",
+    });
 
     setIsSubmitting(true);
     setSubmitStatus({
@@ -258,6 +461,11 @@ export default function OhrlyLandingPage() {
       }
 
       form.reset();
+      formStartedRef.current = false;
+
+      trackEvent("form_submit_success", {
+        formId: "pilot_application",
+      });
 
       setSubmitStatus({
         type: "success",
@@ -265,6 +473,11 @@ export default function OhrlyLandingPage() {
           "Recebemos sua mensagem. Em breve entraremos em contato para entender sua operação e avaliar se o piloto faz sentido.",
       });
     } catch (error) {
+      trackEvent("form_submit_error", {
+        formId: "pilot_application",
+        errorType: "formspree_request_failed",
+      });
+
       setSubmitStatus({
         type: "error",
         message:
@@ -302,6 +515,13 @@ export default function OhrlyLandingPage() {
 
           <a
             href="#exemplo"
+            onClick={() =>
+              trackEvent("cta_click", {
+                location: "header",
+                ctaId: "see_example",
+                target: "example",
+              })
+            }
             className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-emerald-700 hover:text-emerald-800"
           >
             Ver exemplo
@@ -442,9 +662,44 @@ export default function OhrlyLandingPage() {
 
           <form
             onSubmit={handleSubmit}
+            onFocusCapture={handleFormFocus}
             className="rounded-[28px] border border-slate-200 bg-slate-50 p-5 shadow-sm sm:p-7"
           >
-            <input type="hidden" name="source" value="Ohrly landing page - programa piloto" />
+            <input
+              type="hidden"
+              name="source"
+              value="Ohrly landing page - programa piloto"
+            />
+            <input
+              type="hidden"
+              name="landing_variant"
+              value="founding_customer_v1"
+            />
+            <input
+              type="hidden"
+              name="utm_source"
+              value={attribution.utmSource}
+            />
+            <input
+              type="hidden"
+              name="utm_medium"
+              value={attribution.utmMedium}
+            />
+            <input
+              type="hidden"
+              name="utm_campaign"
+              value={attribution.utmCampaign}
+            />
+            <input
+              type="hidden"
+              name="utm_content"
+              value={attribution.utmContent}
+            />
+            <input
+              type="hidden"
+              name="utm_term"
+              value={attribution.utmTerm}
+            />
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="space-y-2 text-sm font-medium text-slate-700">
                 Nome
@@ -454,6 +709,7 @@ export default function OhrlyLandingPage() {
                   placeholder="Seu nome"
                   autoComplete="name"
                   required
+                  onBlur={handleFieldBlur}
                   className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
                 />
               </label>
@@ -466,6 +722,7 @@ export default function OhrlyLandingPage() {
                   placeholder="Nome da empresa"
                   autoComplete="organization"
                   required
+                  onBlur={handleFieldBlur}
                   className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
                 />
               </label>
@@ -479,6 +736,7 @@ export default function OhrlyLandingPage() {
                 placeholder="voce@empresa.com"
                 autoComplete="email"
                 required
+                onBlur={handleFieldBlur}
                 className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
               />
             </label>
@@ -490,6 +748,7 @@ export default function OhrlyLandingPage() {
                 rows={5}
                 placeholder="Conte brevemente como funciona o processo atual."
                 required
+                onBlur={handleFieldBlur}
                 className="mt-2 w-full resize-none rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
               />
             </label>
@@ -732,6 +991,13 @@ export default function OhrlyLandingPage() {
           <div >
               <a
                 href="#contato"
+                onClick={() =>
+                  trackEvent("cta_click", {
+                    location: "pilot",
+                    ctaId: "evaluate_pilot",
+                    target: "contact",
+                  })
+                }
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-900 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800"
               >
                 Quero avaliar um piloto
