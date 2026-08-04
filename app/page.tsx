@@ -93,17 +93,17 @@ const sourceCards = [
 ];
 
 const deliverables = [
-  "Integração inicial",
-  "Leitura comportamental das contas",
-  "Revisões semanais",
-  "Evolução com feedback real",
+  "Integração inicial com uma ou duas fontes",
+  "Leitura contextual das contas selecionadas",
+  "Revisões semanais com o time",
+  "Evolução orientada pelo feedback real",
 ];
 
 const requirements = [
-  "Dados mínimos disponíveis",
-  "Responsável por retenção / CS",
-  "Revisão semanal de casos",
-  "Disposição para construir junto",
+  "Histórico mínimo de uso ou relacionamento",
+  "Responsável por retenção, CS ou operações",
+  "Disponibilidade para revisar casos",
+  "Um problema de retenção bem delimitado",
 ];
 
 function LineChart() {
@@ -262,7 +262,7 @@ export default function OhrlyLandingPage() {
       setSubmitStatus({
         type: "success",
         message:
-          "Recebemos sua mensagem. Em breve entraremos em contato para conhecer sua operação.",
+          "Recebemos sua mensagem. Em breve entraremos em contato para entender sua operação e avaliar se o piloto faz sentido.",
       });
     } catch (error) {
       setSubmitStatus({
@@ -289,8 +289,8 @@ export default function OhrlyLandingPage() {
             <a className="transition hover:text-emerald-800" href="#como-funciona">
               Como funciona
             </a>
-            <a className="transition hover:text-emerald-800" href="#cliente-fundador">
-              Cliente fundador
+            <a className="transition hover:text-emerald-800" href="#piloto">
+              Programa piloto
             </a>
             <a className="transition hover:text-emerald-800" href="#exemplo">
               Exemplo
@@ -301,10 +301,10 @@ export default function OhrlyLandingPage() {
           </nav>
 
           <a
-            href="#contato"
-            className="rounded-xl bg-emerald-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800"
+            href="#exemplo"
+            className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-emerald-700 hover:text-emerald-800"
           >
-            Falar com a gente
+            Ver exemplo
           </a>
         </div>
       </header>
@@ -317,7 +317,7 @@ export default function OhrlyLandingPage() {
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800">
               <Users className="h-4 w-4" />
-              Primeiros clientes fundadores
+              Em validação com operações SaaS B2B
             </div>
 
             <h1 className="mt-7 max-w-xl text-4xl font-semibold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-5xl lg:text-6xl">
@@ -330,21 +330,7 @@ export default function OhrlyLandingPage() {
               as ferramentas que sua empresa já utiliza.
             </p>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a
-                href="#contato"
-                className="inline-flex items-center justify-center rounded-xl bg-emerald-900 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800"
-              >
-                Quero avaliar minha operação
-              </a>
 
-              <a
-                href="#exemplo"
-                className="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3.5 text-sm font-semibold text-slate-800 transition hover:border-emerald-700 hover:text-emerald-800"
-              >
-                Ver um exemplo de análise
-              </a>
-            </div>
           </div>
 
           <div className="rounded-[28px] border border-slate-200 bg-white p-4 shadow-[0_24px_70px_rgba(15,23,42,0.09)] sm:p-6">
@@ -417,8 +403,127 @@ export default function OhrlyLandingPage() {
         </div>
       </section>
 
-      <section className="px-5 py-16 lg:px-8 lg:py-20">
-        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.78fr_1.22fr]">
+      <section id="contato" className="border-b border-slate-200 px-5 py-16 lg:px-8 lg:py-20">
+        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.82fr_1.18fr]">
+          <div>
+            <h2 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+              Quantas telas seu time precisa abrir para entender uma conta em
+              risco?
+            </h2>
+
+            <p className="mt-5 max-w-xl text-base leading-7 text-slate-600">
+              Vamos entender como seu time investiga contas em risco e avaliar
+              se existe um recorte pequeno e útil para um primeiro piloto.
+            </p>
+
+            <div className="mt-9 grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+              <div className="flex items-start gap-3">
+                <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-emerald-800" />
+                <p className="text-sm leading-6 text-slate-600">
+                  Segurança e privacidade levadas a sério
+                </p>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <LockKeyhole className="mt-0.5 h-5 w-5 shrink-0 text-emerald-800" />
+                <p className="text-sm leading-6 text-slate-600">
+                  Seus dados ficam sempre sob controle
+                </p>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <Users className="mt-0.5 h-5 w-5 shrink-0 text-emerald-800" />
+                <p className="text-sm leading-6 text-slate-600">
+                  Desenvolvido junto com uma operação parceira
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <form
+            onSubmit={handleSubmit}
+            className="rounded-[28px] border border-slate-200 bg-slate-50 p-5 shadow-sm sm:p-7"
+          >
+            <input type="hidden" name="source" value="Ohrly landing page - programa piloto" />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="space-y-2 text-sm font-medium text-slate-700">
+                Nome
+                <input
+                  name="name"
+                  type="text"
+                  placeholder="Seu nome"
+                  autoComplete="name"
+                  required
+                  className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
+                />
+              </label>
+
+              <label className="space-y-2 text-sm font-medium text-slate-700">
+                Empresa
+                <input
+                  name="company"
+                  type="text"
+                  placeholder="Nome da empresa"
+                  autoComplete="organization"
+                  required
+                  className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
+                />
+              </label>
+            </div>
+
+            <label className="mt-4 block space-y-2 text-sm font-medium text-slate-700">
+              E-mail corporativo
+              <input
+                name="email"
+                type="email"
+                placeholder="voce@empresa.com"
+                autoComplete="email"
+                required
+                className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
+              />
+            </label>
+
+            <label className="mt-4 block space-y-2 text-sm font-medium text-slate-700">
+              Como vocês identificam contas em risco hoje?
+              <textarea
+                name="message"
+                rows={5}
+                placeholder="Conte brevemente como funciona o processo atual."
+                required
+                className="mt-2 w-full resize-none rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
+              />
+            </label>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-900 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {isSubmitting
+                ? "Enviando..."
+                : "Quero avaliar um piloto"}
+              {!isSubmitting && <ArrowRight className="h-4 w-4" />}
+            </button>
+
+            {submitStatus.type !== "idle" && (
+              <p
+                role={submitStatus.type === "error" ? "alert" : "status"}
+                aria-live="polite"
+                className={`mt-4 rounded-xl border px-4 py-3 text-sm leading-6 ${
+                  submitStatus.type === "success"
+                    ? "border-emerald-200 bg-emerald-50 text-emerald-900"
+                    : "border-rose-200 bg-rose-50 text-rose-800"
+                }`}
+              >
+                {submitStatus.message}
+              </p>
+            )}
+          </form>
+        </div>
+      </section>
+
+      <section className="bg-white px-5 py-16 lg:px-8 lg:py-20">
+        <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-[0.78fr_1.22fr]">
           <div>
             <h2 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
               Uma conta aparece como risco. E agora?
@@ -467,7 +572,7 @@ export default function OhrlyLandingPage() {
 
       <section
         id="exemplo"
-        className="border-y border-slate-200 bg-white px-5 py-16 lg:px-8 lg:py-20"
+        className="border-y border-slate-200 px-5 py-16 lg:px-8 lg:py-20"
       >
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.72fr_1.28fr]">
           <div>
@@ -543,7 +648,7 @@ export default function OhrlyLandingPage() {
         </div>
       </section>
 
-      <section id="como-funciona" className="px-5 py-16 lg:px-8 lg:py-20">
+      <section id="como-funciona" className="bg-white border-b border-slate-200 px-5 py-16 lg:px-8 lg:py-20">
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
@@ -591,20 +696,21 @@ export default function OhrlyLandingPage() {
       </section>
 
       <section
-        id="cliente-fundador"
+        id="piloto"
         className="border-y border-emerald-100 bg-emerald-50/45 px-5 py-16 lg:px-8 lg:py-20"
       >
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.82fr_1.18fr]">
           <div className="self-center">
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-800">
-              Programa de cliente fundador
+              Programa piloto acompanhado
             </p>
             <h2 className="mt-4 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
-              Estamos procurando a primeira empresa para construir isso conosco
+              Aplicamos o Ohrly a um problema real da sua operação
             </h2>
             <p className="mt-5 max-w-lg text-base leading-7 text-slate-600">
-              Um ciclo curto, com um problema real de retenção, dados mínimos
-              disponíveis e revisões semanais junto com quem toma a decisão.
+              Selecionaremos uma operação para um ciclo de 6 a 8 semanas,
+              com escopo reduzido, revisão semanal e aprendizado compartilhado
+              sobre quais sinais realmente ajudam o time a decidir.
             </p>
           </div>
 
@@ -623,126 +729,20 @@ export default function OhrlyLandingPage() {
               <CheckList items={requirements} />
             </article>
           </div>
-        </div>
-      </section>
-
-      <section id="contato" className="bg-white px-5 py-16 lg:px-8 lg:py-20">
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.82fr_1.18fr]">
-          <div>
-            <h2 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
-              Quantas telas seu time precisa abrir para entender uma conta em
-              risco?
-            </h2>
-
-            <p className="mt-5 max-w-xl text-base leading-7 text-slate-600">
-              Vamos conversar sobre sua operação e mostrar como o Ohrly pode
-              transformar sinais dispersos em decisões mais rápidas e
-              confiáveis.
-            </p>
-
-            <div className="mt-9 grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-              <div className="flex items-start gap-3">
-                <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-emerald-800" />
-                <p className="text-sm leading-6 text-slate-600">
-                  Segurança e privacidade levadas a sério
-                </p>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <LockKeyhole className="mt-0.5 h-5 w-5 shrink-0 text-emerald-800" />
-                <p className="text-sm leading-6 text-slate-600">
-                  Seus dados ficam sempre sob controle
-                </p>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <Users className="mt-0.5 h-5 w-5 shrink-0 text-emerald-800" />
-                <p className="text-sm leading-6 text-slate-600">
-                  Construído junto com clientes fundadores
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <form
-            onSubmit={handleSubmit}
-            className="rounded-[28px] border border-slate-200 bg-slate-50 p-5 shadow-sm sm:p-7"
-          >
-            <input type="hidden" name="source" value="Ohrly landing page" />
-            <div className="grid gap-4 sm:grid-cols-2">
-              <label className="space-y-2 text-sm font-medium text-slate-700">
-                Nome
-                <input
-                  name="name"
-                  type="text"
-                  placeholder="Seu nome"
-                  autoComplete="name"
-                  required
-                  className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
-                />
-              </label>
-
-              <label className="space-y-2 text-sm font-medium text-slate-700">
-                Empresa
-                <input
-                  name="company"
-                  type="text"
-                  placeholder="Nome da empresa"
-                  autoComplete="organization"
-                  required
-                  className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
-                />
-              </label>
-            </div>
-
-            <label className="mt-4 block space-y-2 text-sm font-medium text-slate-700">
-              E-mail corporativo
-              <input
-                name="email"
-                type="email"
-                placeholder="voce@empresa.com"
-                autoComplete="email"
-                required
-                className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
-              />
-            </label>
-
-            <label className="mt-4 block space-y-2 text-sm font-medium text-slate-700">
-              Hoje, como vocês identificam contas em risco?
-              <textarea
-                name="message"
-                rows={5}
-                placeholder="Conte brevemente como funciona o processo atual."
-                required
-                className="mt-2 w-full resize-none rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
-              />
-            </label>
-
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-900 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {isSubmitting
-                ? "Enviando..."
-                : "Quero conversar sobre minha operação"}
-              {!isSubmitting && <ArrowRight className="h-4 w-4" />}
-            </button>
-
-            {submitStatus.type !== "idle" && (
-              <p
-                role={submitStatus.type === "error" ? "alert" : "status"}
-                aria-live="polite"
-                className={`mt-4 rounded-xl border px-4 py-3 text-sm leading-6 ${
-                  submitStatus.type === "success"
-                    ? "border-emerald-200 bg-emerald-50 text-emerald-900"
-                    : "border-rose-200 bg-rose-50 text-rose-800"
-                }`}
+          <div >
+              <a
+                href="#contato"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-900 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800"
               >
-                {submitStatus.message}
+                Quero avaliar um piloto
+                <ArrowRight className="h-4 w-4" />
+              </a>
+              <p className="mt-3 text-xs leading-5 text-slate-500">
+                Começamos com um único problema de retenção, uma população de
+                contas e uma ou duas fontes de dados, sem substituir suas
+                ferramentas atuais.
               </p>
-            )}
-          </form>
+            </div>
         </div>
       </section>
 
