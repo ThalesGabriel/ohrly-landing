@@ -105,7 +105,7 @@ export function trackEvent(
     visitorId,
     sessionId,
     pagePath: window.location.pathname,
-    landingVariant: "founding_customer_v1",
+    landingVariant: "churn_target_v2",
     attribution: readAttribution(),
     referrerHost: getReferrerHost(),
     properties,
