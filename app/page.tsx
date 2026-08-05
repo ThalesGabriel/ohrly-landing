@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  type ChangeEvent,
   type FocusEvent,
   type FormEvent,
   useEffect,
@@ -10,199 +11,127 @@ import {
 import { trackEvent } from "@/lib/analytics";
 import {
   ArrowRight,
-  Bell,
-  BookOpen,
-  Box,
+  BarChart3,
   CalendarDays,
   Check,
   CheckCircle2,
-  CreditCard,
+  Clock3,
   Headphones,
   Lightbulb,
-  LockKeyhole,
-  Search,
+  RefreshCcw,
   ShieldCheck,
-  TriangleAlert,
   TrendingDown,
+  UserRoundCheck,
   Users,
 } from "lucide-react";
+import Image from "next/image";
+
+const LANDING_VARIANT = "churn_target_v2";
+const FORM_ID = "pilot_application";
 
 const evidenceCards = [
   {
-    title: "Frequência caiu 34%",
+    title: "Frequência de uso",
+    value: "↓ 34%",
     icon: TrendingDown,
     iconClass: "bg-emerald-50 text-emerald-700",
   },
   {
-    title: "Mudança persistente há 5 semanas",
-    icon: CalendarDays,
-    iconClass: "bg-violet-50 text-violet-700",
-  },
-  {
-    title: "Adoção interna mais concentrada",
+    title: "Usuários recorrentes",
+    value: "8 → 3",
     icon: Users,
     iconClass: "bg-blue-50 text-blue-700",
   },
   {
-    title: "Sem sinais claros de recuperação",
-    icon: TrendingDown,
+    title: "Contatos com suporte",
+    value: "↑ 2,4x",
+    icon: Headphones,
+    iconClass: "bg-violet-50 text-violet-700",
+  },
+  {
+    title: "Recuperação sustentada",
+    value: "Não observada",
+    icon: RefreshCcw,
     iconClass: "bg-rose-50 text-rose-700",
+  },
+];
+
+const timelineItems = [
+  {
+    week: "Semana 1",
+    title: "A frequência fica abaixo do padrão",
+    description:
+      "A conta começa a se afastar do próprio comportamento histórico.",
+  },
+  {
+    week: "Semana 2",
+    title: "A mudança permanece",
+    description:
+      "O desvio deixa de parecer apenas uma oscilação pontual.",
+  },
+  {
+    week: "Semana 3",
+    title: "Menos usuários continuam ativos",
+    description:
+      "A adoção passa a se concentrar em um grupo menor dentro da conta.",
+  },
+  {
+    week: "Semana 4",
+    title: "O uso se concentra em uma pessoa",
+    description:
+      "A dependência de poucos usuários aumenta a fragilidade da relação.",
+  },
+  {
+    week: "Semana 5",
+    title: "Há melhora parcial, mas não recuperação",
+    description:
+      "A conta ainda permanece materialmente distante do padrão anterior.",
   },
 ];
 
 const problemCards = [
   {
-    title: "Alertas sem contexto",
-    description: "Sinais importam, mas chegam sem explicação.",
-    icon: Bell,
-    iconClass: "bg-amber-50 text-amber-600",
+    title: "Os sinais estão espalhados",
+    description:
+      "Uso, atendimento, CRM e contexto comercial contam partes diferentes da história.",
+    icon: BarChart3,
   },
   {
-    title: "Investigação manual",
-    description: "Muitas telas, planilhas e mensagens soltas.",
-    icon: Search,
-    iconClass: "bg-cyan-50 text-cyan-700",
+    title: "A conta ainda parece normal",
+    description:
+      "Pequenas mudanças são tratadas como ruído até se acumularem por várias semanas.",
+    icon: Clock3,
   },
   {
-    title: "Falsos positivos",
-    description: "Alertas que não viram ação nem aprendizado.",
-    icon: TriangleAlert,
-    iconClass: "bg-rose-50 text-rose-600",
-  },
-  {
-    title: "Aprendizado disperso",
-    description: "Cada caso fica com quem atendeu, não com o time.",
-    icon: BookOpen,
-    iconClass: "bg-indigo-50 text-indigo-700",
+    title: "O time precisa priorizar",
+    description:
+      "Com muitas contas, o CSM não consegue reconstruir manualmente cada trajetória.",
+    icon: Users,
   },
 ];
 
-const timelineItems = [
-  "O que mudou",
-  "Quando começou",
-  "Se persistiu",
-  "Se houve recuperação",
-  "Qual hipótese merece investigação",
-];
-
-const readingItems = [
-  { label: "Uso do produto em queda", icon: TrendingDown },
-  { label: "Menos usuários recorrentes", icon: Users },
-  { label: "Atendimento aumentou", icon: Headphones },
-  { label: "Padrão semelhante no passado", icon: CalendarDays },
-];
-
-const sourceCards = [
-  { label: "Produto", icon: Box },
-  { label: "Atendimento", icon: Headphones },
-  { label: "CRM / CS", icon: Users },
-  { label: "Billing", icon: CreditCard },
+const pilotSteps = [
+  "Selecionamos uma população de contas.",
+  "Usamos o histórico de comportamento e relacionamento.",
+  "Reconstruímos trajetórias anteriores ao churn.",
+  "Comparamos contas churnadas, recuperadas e saudáveis.",
+  "Revisamos os casos com quem conhece a operação.",
 ];
 
 const deliverables = [
-  "Integração inicial com uma ou duas fontes",
-  "Leitura contextual das contas selecionadas",
-  "Revisões semanais com o time",
-  "Evolução orientada pelo feedback real",
+  "Trajetórias reconstruídas por conta",
+  "Mudanças que apareceram antes do churn",
+  "Casos em que houve recuperação",
+  "Sinais que já estavam ou não no radar do time",
+  "Hipóteses para o primeiro monitoramento contínuo",
 ];
 
-const requirements = [
-  "Histórico mínimo de uso ou relacionamento",
-  "Responsável por retenção, CS ou operações",
-  "Disponibilidade para revisar casos",
-  "Um problema de retenção bem delimitado",
+const nonPromises = [
+  "Prever todo churn",
+  "Identificar causa raiz automaticamente",
+  "Substituir o julgamento do CSM",
+  "Provar prevenção antes do piloto",
 ];
-
-function LineChart() {
-  const points = [
-    [0, 14],
-    [22, 20],
-    [46, 48],
-    [70, 60],
-    [94, 56],
-    [118, 65],
-    [142, 48],
-    [166, 60],
-    [190, 71],
-    [214, 88],
-  ];
-
-  const path = points
-    .map(([x, y], index) => `${index === 0 ? "M" : "L"} ${x} ${y}`)
-    .join(" ");
-
-  return (
-    <div className="mt-5">
-      <div className="relative h-44 overflow-hidden rounded-2xl bg-white">
-        <svg
-          viewBox="0 0 220 110"
-          className="h-full w-full"
-          role="img"
-          aria-label="Trajetória descendente da conta entre março e julho"
-          preserveAspectRatio="none"
-        >
-          {[14, 39, 64, 89].map((y) => (
-            <line
-              key={y}
-              x1="0"
-              y1={y}
-              x2="220"
-              y2={y}
-              stroke="#E5E7EB"
-              strokeWidth="1"
-              strokeDasharray="3 4"
-            />
-          ))}
-
-          <path
-            d={`${path} L 214 110 L 0 110 Z`}
-            fill="url(#area)"
-            opacity="0.7"
-          />
-          <path
-            d={path}
-            fill="none"
-            stroke="#047857"
-            strokeWidth="2.3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <circle cx="214" cy="88" r="3.5" fill="#DC2626" />
-
-          <defs>
-            <linearGradient id="area" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stopColor="#A7F3D0" stopOpacity="0.55" />
-              <stop offset="100%" stopColor="#ECFDF5" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-        </svg>
-
-        <div className="absolute inset-x-0 bottom-2 flex justify-between px-4 text-[10px] font-medium text-slate-400">
-          <span>Mar</span>
-          <span>Abr</span>
-          <span>Mai</span>
-          <span>Jun</span>
-          <span>Jul</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function CheckList({ items }: { items: string[] }) {
-  return (
-    <ul className="mt-5 space-y-3">
-      {items.map((item) => (
-        <li key={item} className="flex items-start gap-3 text-sm text-slate-600">
-          <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
-            <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
-          </span>
-          <span>{item}</span>
-        </li>
-      ))}
-    </ul>
-  );
-}
 
 type Attribution = {
   utmSource: string;
@@ -236,26 +165,140 @@ function readAttributionFromUrl(): Attribution {
   };
 }
 
+function LineChart() {
+  const points = [
+    [0, 20],
+    [24, 24],
+    [48, 30],
+    [72, 42],
+    [96, 51],
+    [120, 66],
+    [144, 71],
+    [168, 65],
+    [192, 73],
+    [216, 82],
+  ];
+
+  const path = points
+    .map(([x, y], index) => `${index === 0 ? "M" : "L"} ${x} ${y}`)
+    .join(" ");
+
+  return (
+    <div className="mt-4">
+      <div className="relative h-36 overflow-hidden rounded-2xl bg-white sm:h-44">
+        <svg
+          viewBox="0 0 220 110"
+          className="h-full w-full"
+          role="img"
+          aria-label="Trajetória de deterioração da conta ao longo de cinco semanas"
+          preserveAspectRatio="none"
+        >
+          {[18, 42, 66, 90].map((y) => (
+            <line
+              key={y}
+              x1="0"
+              y1={y}
+              x2="220"
+              y2={y}
+              stroke="#E5E7EB"
+              strokeWidth="1"
+              strokeDasharray="3 4"
+            />
+          ))}
+
+          <path
+            d={`${path} L 216 110 L 0 110 Z`}
+            fill="url(#area)"
+            opacity="0.75"
+          />
+
+          <path
+            d={path}
+            fill="none"
+            stroke="#047857"
+            strokeWidth="2.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+
+          <circle cx="216" cy="82" r="4" fill="#DC2626" />
+
+          <defs>
+            <linearGradient id="area" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="#A7F3D0" stopOpacity="0.58" />
+              <stop offset="100%" stopColor="#ECFDF5" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+        </svg>
+
+        <div className="absolute inset-x-0 bottom-2 flex justify-between px-4 text-[10px] font-medium text-slate-400">
+          <span>S1</span>
+          <span>S2</span>
+          <span>S3</span>
+          <span>S4</span>
+          <span>S5</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CheckList({
+  items,
+  tone = "positive",
+}: {
+  items: string[];
+  tone?: "positive" | "neutral";
+}) {
+  return (
+    <ul className="mt-5 space-y-3">
+      {items.map((item) => (
+        <li key={item} className="flex items-start gap-3 text-sm text-slate-600">
+          <span
+            className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${tone === "positive"
+                ? "bg-emerald-50 text-emerald-700"
+                : "bg-slate-100 text-slate-500"
+              }`}
+          >
+            <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
+          </span>
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export default function OhrlyLandingPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [attribution, setAttribution] =
     useState<Attribution>(emptyAttribution);
+  const [submitStatus, setSubmitStatus] = useState<{
+    type: "idle" | "success" | "error";
+    message: string;
+  }>({
+    type: "idle",
+    message: "",
+  });
 
+  const formRef = useRef<HTMLFormElement | null>(null);
   const formStartedRef = useRef(false);
+  const formViewTrackedRef = useRef(false);
   const trackedSectionsRef = useRef(new Set<string>());
   const trackedScrollDepthsRef = useRef(new Set<number>());
+  const trackedStartedFieldsRef = useRef(new Set<string>());
 
   useEffect(() => {
     const currentAttribution = readAttributionFromUrl();
     setAttribution(currentAttribution);
 
     trackEvent("lp_view", {
-      landingVariant: "founding_customer_v1",
+      landingVariant: LANDING_VARIANT,
     });
 
     const engagementTimer = window.setTimeout(() => {
       trackEvent("lp_engaged_10s", {
-        landingVariant: "founding_customer_v1",
+        landingVariant: LANDING_VARIANT,
       });
     }, 10_000);
 
@@ -267,10 +310,13 @@ export default function OhrlyLandingPage() {
   useEffect(() => {
     const sectionIds = [
       "inicio",
-      "contato",
+      "ponte-churn",
       "exemplo",
+      "problema",
       "como-funciona",
       "piloto",
+      "fundador",
+      "contato",
     ];
 
     const observer = new IntersectionObserver(
@@ -293,30 +339,33 @@ export default function OhrlyLandingPage() {
 
           trackEvent("section_view", {
             section,
-            landingVariant: "founding_customer_v1",
+            landingVariant: LANDING_VARIANT,
           });
 
-          if (section === "contato") {
-            trackEvent("form_view", {
-              formId: "pilot_application",
+          if (section === "ponte-churn") {
+            trackEvent("churn_bridge_view", {
+              landingVariant: LANDING_VARIANT,
             });
           }
 
           if (section === "exemplo") {
             trackEvent("example_view", {
               exampleId: "account_trajectory",
+              landingVariant: LANDING_VARIANT,
             });
           }
 
           if (section === "piloto") {
             trackEvent("pilot_details_view", {
-              pilotId: "founding_customer_v1",
+              pilotId: LANDING_VARIANT,
+              landingVariant: LANDING_VARIANT,
             });
           }
         }
       },
       {
-        threshold: 0.45,
+        threshold: 0.01,
+        rootMargin: "0px 0px -10% 0px",
       },
     );
 
@@ -327,6 +376,42 @@ export default function OhrlyLandingPage() {
         observer.observe(element);
       }
     }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    const form = formRef.current;
+
+    if (!form) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (
+          entry.isIntersecting &&
+          !formViewTrackedRef.current
+        ) {
+          formViewTrackedRef.current = true;
+
+          trackEvent("form_view", {
+            formId: FORM_ID,
+            landingVariant: LANDING_VARIANT,
+          });
+
+          observer.disconnect();
+        }
+      },
+      {
+        threshold: 0.01,
+        rootMargin: "0px 0px -10% 0px",
+      },
+    );
+
+    observer.observe(form);
 
     return () => {
       observer.disconnect();
@@ -357,6 +442,7 @@ export default function OhrlyLandingPage() {
 
           trackEvent(`scroll_${threshold}`, {
             depthPercent: threshold,
+            landingVariant: LANDING_VARIANT,
           });
         }
       }
@@ -372,13 +458,6 @@ export default function OhrlyLandingPage() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  const [submitStatus, setSubmitStatus] = useState<{
-    type: "idle" | "success" | "error";
-    message: string;
-  }>({
-    type: "idle",
-    message: "",
-  });
 
   function handleFormFocus() {
     if (formStartedRef.current) {
@@ -388,31 +467,73 @@ export default function OhrlyLandingPage() {
     formStartedRef.current = true;
 
     trackEvent("form_start", {
-      formId: "pilot_application",
+      formId: FORM_ID,
+      landingVariant: LANDING_VARIANT,
     });
+  }
+
+  function handleFieldChange(
+    event:
+      | ChangeEvent<HTMLInputElement>
+      | ChangeEvent<HTMLTextAreaElement>
+      | ChangeEvent<HTMLSelectElement>,
+  ) {
+    const fieldName = event.currentTarget.name;
+    const fieldValue =
+      event.currentTarget instanceof HTMLInputElement &&
+        event.currentTarget.type === "checkbox"
+        ? event.currentTarget.checked
+          ? event.currentTarget.value
+          : ""
+        : event.currentTarget.value;
+
+    if (
+      fieldValue.trim().length > 0 &&
+      !trackedStartedFieldsRef.current.has(fieldName)
+    ) {
+      trackedStartedFieldsRef.current.add(fieldName);
+
+      trackEvent("form_field_started", {
+        formId: FORM_ID,
+        fieldName,
+        landingVariant: LANDING_VARIANT,
+      });
+    }
   }
 
   function handleFieldBlur(
     event:
       | FocusEvent<HTMLInputElement>
-      | FocusEvent<HTMLTextAreaElement>,
+      | FocusEvent<HTMLTextAreaElement>
+      | FocusEvent<HTMLSelectElement>,
   ) {
+    const value =
+      event.currentTarget instanceof HTMLInputElement &&
+        event.currentTarget.type === "checkbox"
+        ? event.currentTarget.checked
+          ? event.currentTarget.value
+          : ""
+        : event.currentTarget.value;
+
     trackEvent("form_field_blur", {
-      formId: "pilot_application",
+      formId: FORM_ID,
       fieldName: event.currentTarget.name,
-      hasValue: event.currentTarget.value.trim().length > 0,
+      hasValue: value.trim().length > 0,
+      landingVariant: LANDING_VARIANT,
     });
   }
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(
+    event: FormEvent<HTMLFormElement>,
+  ) {
     event.preventDefault();
 
     const form = event.currentTarget;
-    const formId =
+    const formspreeFormId =
       process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID ??
       "mkoygpnk";
 
-    if (!formId) {
+    if (!formspreeFormId) {
       setSubmitStatus({
         type: "error",
         message:
@@ -422,7 +543,8 @@ export default function OhrlyLandingPage() {
     }
 
     trackEvent("form_submit_attempt", {
-      formId: "pilot_application",
+      formId: FORM_ID,
+      landingVariant: LANDING_VARIANT,
     });
 
     setIsSubmitting(true);
@@ -432,20 +554,23 @@ export default function OhrlyLandingPage() {
     });
 
     try {
-      const response = await fetch(`https://formspree.io/f/${formId}`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
+      const response = await fetch(
+        `https://formspree.io/f/${formspreeFormId}`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+          },
+          body: new FormData(form),
         },
-        body: new FormData(form),
-      });
+      );
 
       const result = (await response.json().catch(() => null)) as
         | {
-            errors?: Array<{
-              message?: string;
-            }>;
-          }
+          errors?: Array<{
+            message?: string;
+          }>;
+        }
         | null;
 
       if (!response.ok) {
@@ -456,26 +581,29 @@ export default function OhrlyLandingPage() {
 
         throw new Error(
           formspreeMessage ||
-            "Não foi possível enviar sua mensagem. Tente novamente em instantes.",
+          "Não foi possível enviar sua mensagem. Tente novamente em instantes.",
         );
       }
 
       form.reset();
       formStartedRef.current = false;
+      trackedStartedFieldsRef.current.clear();
 
       trackEvent("form_submit_success", {
-        formId: "pilot_application",
+        formId: FORM_ID,
+        landingVariant: LANDING_VARIANT,
       });
 
       setSubmitStatus({
         type: "success",
         message:
-          "Recebemos sua mensagem. Em breve entraremos em contato para entender sua operação e avaliar se o piloto faz sentido.",
+          "Recebemos suas informações. Entraremos em contato para avaliar a aderência da operação ao piloto.",
       });
     } catch (error) {
       trackEvent("form_submit_error", {
-        formId: "pilot_application",
+        formId: FORM_ID,
         errorType: "formspree_request_failed",
+        landingVariant: LANDING_VARIANT,
       });
 
       setSubmitStatus({
@@ -494,22 +622,31 @@ export default function OhrlyLandingPage() {
     <main className="min-h-screen bg-[#fbfcfb] text-slate-950">
       <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
-          <a href="#inicio" className="text-2xl font-semibold tracking-tight">
+          <a
+            href="#inicio"
+            className="text-2xl font-semibold tracking-tight"
+          >
             Ohrly
           </a>
 
           <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 lg:flex">
-            <a className="transition hover:text-emerald-800" href="#como-funciona">
-              Como funciona
-            </a>
-            <a className="transition hover:text-emerald-800" href="#piloto">
-              Programa piloto
-            </a>
-            <a className="transition hover:text-emerald-800" href="#exemplo">
+            <a
+              className="transition hover:text-emerald-800"
+              href="#exemplo"
+            >
               Exemplo
             </a>
-            <a className="transition hover:text-emerald-800" href="#contato">
-              Contato
+            <a
+              className="transition hover:text-emerald-800"
+              href="#como-funciona"
+            >
+              Como funciona
+            </a>
+            <a
+              className="transition hover:text-emerald-800"
+              href="#piloto"
+            >
+              Piloto
             </a>
           </nav>
 
@@ -518,95 +655,131 @@ export default function OhrlyLandingPage() {
             onClick={() =>
               trackEvent("cta_click", {
                 location: "header",
-                ctaId: "see_example",
+                ctaId: "see_analysis",
                 target: "example",
+                landingVariant: LANDING_VARIANT,
               })
             }
             className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-emerald-700 hover:text-emerald-800"
           >
-            Ver exemplo
+            Ver análise
           </a>
         </div>
       </header>
 
       <section
         id="inicio"
-        className="border-b border-slate-200 bg-white px-5 py-16 sm:py-20 lg:px-8 lg:py-24"
+        className="border-b border-slate-200 bg-white px-5 py-14 sm:py-20 lg:px-8 lg:py-24"
       >
-        <div className="mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-[0.8fr_1.2fr]">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[0.88fr_1.12fr]">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800">
               <Users className="h-4 w-4" />
-              Em validação com operações SaaS B2B
+              Para times de CS de SaaS B2B
             </div>
 
-            <h1 className="mt-7 max-w-xl text-4xl font-semibold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-5xl lg:text-6xl">
-              Seu sistema mostra o risco. Mostramos o que está por trás dele.
+            <h1 className="mt-7 max-w-2xl text-4xl font-semibold leading-[1.06] tracking-[-0.035em] text-slate-950 sm:text-5xl lg:text-6xl">
+              O churn do seu SaaS B2B está acima da meta?
             </h1>
 
             <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">
-              Conectamos sinais de produto, atendimento e relacionamento para
-              explicar o que mudou na trajetória de cada conta, sem substituir
-              as ferramentas que sua empresa já utiliza.
+              Identifique quais contas começaram a mudar antes do pedido de
+              cancelamento, e entenda quais ainda não demonstraram
+              recuperação.
             </p>
 
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a
+                href="#exemplo"
+                onClick={() =>
+                  trackEvent("cta_click", {
+                    location: "hero",
+                    ctaId: "see_analysis",
+                    target: "example",
+                    landingVariant: LANDING_VARIANT,
+                  })
+                }
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-900 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800"
+              >
+                Ver uma análise de exemplo
+                <ArrowRight className="h-4 w-4" />
+              </a>
 
+              <a
+                href="#piloto"
+                onClick={() =>
+                  trackEvent("cta_click", {
+                    location: "hero",
+                    ctaId: "evaluate_pilot_fit",
+                    target: "pilot",
+                    landingVariant: LANDING_VARIANT,
+                  })
+                }
+                className="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3.5 text-sm font-semibold text-slate-700 transition hover:border-emerald-700 hover:text-emerald-800"
+              >
+                Avaliar aderência ao piloto
+              </a>
+            </div>
+
+            <p className="mt-4 text-sm leading-6 text-slate-500">
+              Sem substituir seu CRM, plataforma de CS ou processo atual.
+            </p>
           </div>
 
           <div className="rounded-[28px] border border-slate-200 bg-white p-4 shadow-[0_24px_70px_rgba(15,23,42,0.09)] sm:p-6">
             <div className="flex flex-col gap-3 border-b border-slate-100 pb-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <span className="text-xs font-medium uppercase tracking-[0.16em] text-slate-400">
-                  Análise de conta
+                  Trajetória de conta
                 </span>
-                <h2 className="mt-1 text-xl font-semibold">Seu negócio</h2>
+                <h2 className="mt-1 text-xl font-semibold">
+                  Acme Logistics
+                </h2>
               </div>
 
-              <div className="flex flex-wrap gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-700">
-                  <TriangleAlert className="h-3.5 w-3.5" />
-                  Risco atual: alto
-                </span>
-                <span className="rounded-full bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-700">
-                  Health score: 42
-                </span>
-              </div>
+              <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-700">
+                <CalendarDays className="h-3.5 w-3.5" />
+                Mudança começou há 5 semanas
+              </span>
             </div>
 
-            <div className="grid gap-4 pt-5 xl:grid-cols-[1.08fr_0.92fr]">
+            <div className="grid gap-4 pt-5 xl:grid-cols-[1.04fr_0.96fr]">
               <div className="rounded-2xl border border-slate-200 bg-slate-50/60 p-4">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-3">
                   <div>
                     <p className="text-sm font-semibold text-slate-800">
-                      Trajetória da conta
+                      Distância do padrão anterior
                     </p>
                     <p className="mt-1 text-xs text-slate-500">
-                      Últimos cinco meses
+                      Cinco semanas de trajetória
                     </p>
                   </div>
-                  <span className="rounded-lg bg-white px-2 py-1 text-[11px] font-medium text-slate-500 shadow-sm">
-                    Uso consolidado
-                  </span>
                 </div>
+
                 <LineChart />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                {evidenceCards.map(({ title, icon: Icon, iconClass }) => (
-                  <div
-                    key={title}
-                    className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm"
-                  >
+                {evidenceCards.map(
+                  ({ title, value, icon: Icon, iconClass }) => (
                     <div
-                      className={`flex h-9 w-9 items-center justify-center rounded-xl ${iconClass}`}
+                      key={title}
+                      className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm"
                     >
-                      <Icon className="h-4.5 w-4.5" />
+                      <div
+                        className={`flex h-9 w-9 items-center justify-center rounded-xl ${iconClass}`}
+                      >
+                        <Icon className="h-4.5 w-4.5" />
+                      </div>
+                      <p className="mt-3 text-xs leading-5 text-slate-500">
+                        {title}
+                      </p>
+                      <p className="text-sm font-semibold leading-5 text-slate-800">
+                        {value}
+                      </p>
                     </div>
-                    <p className="mt-3 text-sm font-semibold leading-5 text-slate-800">
-                      {title}
-                    </p>
-                  </div>
-                ))}
+                  ),
+                )}
               </div>
             </div>
 
@@ -614,53 +787,387 @@ export default function OhrlyLandingPage() {
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-emerald-800 shadow-sm">
                 <Lightbulb className="h-5 w-5" />
               </span>
-              <p className="text-sm leading-6 text-emerald-950">
-                <strong>Leitura contextual:</strong> o risco parece mais ligado à
-                perda de adoção do que a um problema contratual.
-              </p>
+              <div>
+                <p className="text-sm font-semibold text-emerald-950">
+                  Leitura Ohrly
+                </p>
+                <p className="mt-1 text-sm leading-6 text-emerald-950">
+                  A conta continua distante do padrão anterior. A
+                  deterioração merece investigação.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4 flex flex-wrap items-center gap-2 text-xs font-medium text-slate-500">
+              <span className="rounded-full bg-slate-100 px-3 py-1.5">
+                Ruptura
+              </span>
+              <ArrowRight className="h-3.5 w-3.5" />
+              <span className="rounded-full bg-slate-100 px-3 py-1.5">
+                Persistência
+              </span>
+              <ArrowRight className="h-3.5 w-3.5" />
+              <span className="rounded-full bg-rose-50 px-3 py-1.5 text-rose-700">
+                Sem recuperação
+              </span>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="contato" className="border-b border-slate-200 px-5 py-16 lg:px-8 lg:py-20">
+      <section
+        id="ponte-churn"
+        className="border-b border-slate-200 bg-emerald-950 px-5 py-16 text-white lg:px-8 lg:py-20"
+      >
+        <div className="mx-auto max-w-4xl text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-300">
+            Antes do cancelamento
+          </p>
+
+          <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
+            O cancelamento é o fim da história. O Ohrly procura onde ela
+            começou.
+          </h2>
+
+          <p className="mx-auto mt-6 max-w-3xl text-base leading-8 text-emerald-50/80 sm:text-lg">
+            Antes de alguns churns, a conta passa por mudanças graduais de
+            uso, adoção, atendimento ou relacionamento. Nenhum sinal
+            isolado prova que haverá cancelamento. O que importa é saber se
+            a mudança persistiu e qual trajetória está em curso.
+          </p>
+
+          <div className="mx-auto mt-10 grid max-w-5xl gap-3 sm:grid-cols-5">
+            {[
+              "Comportamento habitual",
+              "Primeira mudança",
+              "Persistência",
+              "Não recuperação",
+              "Churn evidente",
+            ].map((item, index) => (
+              <div
+                key={item}
+                className="relative rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-sm font-medium text-white"
+              >
+                <span className="mb-2 block text-xs font-semibold text-emerald-300">
+                  0{index + 1}
+                </span>
+                {item}
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-5 text-sm font-semibold text-emerald-300">
+            A janela de investigação acontece antes de o churn ficar
+            evidente.
+          </p>
+        </div>
+      </section>
+
+      <section
+        id="exemplo"
+        className="border-b border-slate-200 bg-white px-5 py-16 lg:px-8 lg:py-20"
+      >
         <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.82fr_1.18fr]">
           <div>
-            <h2 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
-              Quantas telas seu time precisa abrir para entender uma conta em
-              risco?
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-800">
+              Exemplo de análise
+            </p>
+
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+              Como o Ohrly leria uma conta antes do cancelamento
             </h2>
 
             <p className="mt-5 max-w-xl text-base leading-7 text-slate-600">
-              Vamos entender como seu time investiga contas em risco e avaliar
-              se existe um recorte pequeno e útil para um primeiro piloto.
+              O objetivo não é afirmar que a conta vai churnar. É mostrar
+              quando uma mudança deixou de parecer apenas uma semana ruim.
             </p>
 
-            <div className="mt-9 grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+            <div className="mt-8 rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
+              <p className="text-sm font-semibold text-emerald-950">
+                O que o time poderia investigar
+              </p>
+              <p className="mt-2 text-sm leading-6 text-emerald-900">
+                Adoção interna, mudança de champion, fricção no produto ou
+                problema recorrente no suporte.
+              </p>
+            </div>
+          </div>
+
+          <ol className="relative space-y-4 before:absolute before:bottom-6 before:left-[17px] before:top-6 before:w-px before:bg-emerald-200">
+            {timelineItems.map((item, index) => (
+              <li
+                key={item.week}
+                className="relative flex gap-4 rounded-2xl border border-slate-200 bg-slate-50/70 p-4"
+              >
+                <span className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-900 text-xs font-bold text-white ring-4 ring-white">
+                  {index + 1}
+                </span>
+
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-emerald-700">
+                    {item.week}
+                  </p>
+                  <h3 className="mt-1 text-base font-semibold text-slate-900">
+                    {item.title}
+                  </h3>
+                  <p className="mt-1 text-sm leading-6 text-slate-600">
+                    {item.description}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section
+        id="problema"
+        className="border-b border-slate-200 px-5 py-16 lg:px-8 lg:py-20"
+      >
+        <div className="mx-auto max-w-7xl">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+              Por que o churn costuma parecer repentino?
+            </h2>
+
+            <p className="mt-5 text-base leading-7 text-slate-600">
+              O problema não é a ausência de dados. É transformar sinais
+              pequenos e dispersos em uma leitura que ajude o time a decidir.
+            </p>
+          </div>
+
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
+            {problemCards.map(({ title, description, icon: Icon }) => (
+              <article
+                key={title}
+                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+              >
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 text-emerald-800">
+                  <Icon className="h-5 w-5" />
+                </span>
+
+                <h3 className="mt-5 text-lg font-semibold text-slate-900">
+                  {title}
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  {description}
+                </p>
+              </article>
+            ))}
+          </div>
+
+          <div className="mx-auto mt-10 max-w-3xl border-l-2 border-emerald-700 pl-5">
+            <p className="text-base leading-7 text-slate-700">
+              O Ohrly não tenta transformar toda oscilação em alerta.
+              <strong className="block text-emerald-800">
+                Ele mostra quando uma mudança persistente deixou de parecer
+                apenas variação.
+              </strong>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="como-funciona"
+        className="border-b border-slate-200 bg-white px-5 py-16 lg:px-8 lg:py-20"
+      >
+        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.82fr_1.18fr]">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-800">
+              Como o estudo começa
+            </p>
+
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+              Começamos com um problema pequeno e verificável
+            </h2>
+
+            <p className="mt-5 max-w-xl text-base leading-7 text-slate-600">
+              O objetivo inicial não é prometer que todo churn pode ser
+              previsto. É descobrir se existem mudanças que o seu time
+              poderia ter percebido enquanto ainda havia algo a fazer.
+            </p>
+          </div>
+
+          <ol className="grid gap-4 sm:grid-cols-2">
+            {pilotSteps.map((step, index) => (
+              <li
+                key={step}
+                className="flex gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-900 text-sm font-bold text-white">
+                  {index + 1}
+                </span>
+                <p className="text-sm font-medium leading-6 text-slate-700">
+                  {step}
+                </p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section
+        id="piloto"
+        className="border-b border-emerald-100 bg-emerald-50/45 px-5 py-16 lg:px-8 lg:py-20"
+      >
+        <div className="mx-auto max-w-7xl">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-800">
+              Programa piloto acompanhado
+            </p>
+
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+              Vamos investigar se os seus churns anteriores deixaram sinais
+              antes do cancelamento
+            </h2>
+
+            <p className="mt-5 text-base leading-7 text-slate-600">
+              Selecionaremos uma operação para um ciclo de 6 a 8 semanas,
+              com escopo reduzido, revisão dos casos e aprendizado
+              compartilhado.
+            </p>
+          </div>
+
+          <div className="mt-12 grid gap-5 md:grid-cols-2">
+            <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+              <h3 className="text-lg font-semibold text-slate-900">
+                O que entregamos
+              </h3>
+              <CheckList items={deliverables} />
+            </article>
+
+            <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+              <h3 className="text-lg font-semibold text-slate-900">
+                O que não prometemos
+              </h3>
+              <CheckList items={nonPromises} tone="neutral" />
+            </article>
+          </div>
+
+          <div className="mt-8 text-center">
+            <a
+              href="#contato"
+              onClick={() =>
+                trackEvent("cta_click", {
+                  location: "pilot",
+                  ctaId: "evaluate_pilot_fit",
+                  target: "contact",
+                  landingVariant: LANDING_VARIANT,
+                })
+              }
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-900 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800"
+            >
+              Quero avaliar aderência ao piloto
+              <ArrowRight className="h-4 w-4" />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="fundador"
+        className="border-b border-slate-200 bg-white px-5 py-16 lg:px-8 lg:py-20"
+      >
+        <div className="mx-auto grid max-w-5xl gap-6 rounded-[28px] border border-slate-200 bg-slate-50 p-6 shadow-sm sm:grid-cols-[96px_1fr] sm:items-center sm:p-8 lg:grid-cols-[112px_1fr_auto] lg:gap-8">
+          <div className="relative mx-auto h-24 w-24 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:mx-0 lg:h-28 lg:w-28">
+            <Image
+              src="/images/thales_profile.png"
+              alt="Thales Araujo, fundador do Ohrly"
+              fill
+              sizes="(min-width: 1024px) 112px, 96px"
+              className="object-cover"
+            />
+          </div>
+
+          <div className="text-center sm:text-left">
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-800">
+              Acompanhamento direto
+            </p>
+
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">
+              O piloto será conduzido diretamente por Thales Araujo
+            </h2>
+
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600">
+              Engenheiro de software e fundador do Ohrly, com experiência em
+              sistemas conversacionais e operações digitais. As revisões dos casos
+              e a evolução do modelo serão realizadas em conjunto com a operação
+              parceira.
+            </p>
+
+            <div className="mt-4 flex flex-wrap justify-center gap-2 sm:justify-start">
+              <span className="rounded-full border border-emerald-200 bg-white px-3 py-1.5 text-xs font-medium text-emerald-800">
+                Revisões dos casos
+              </span>
+
+              <span className="rounded-full border border-emerald-200 bg-white px-3 py-1.5 text-xs font-medium text-emerald-800">
+                Escopo reduzido
+              </span>
+
+              <span className="rounded-full border border-emerald-200 bg-white px-3 py-1.5 text-xs font-medium text-emerald-800">
+                Evolução conjunta
+              </span>
+            </div>
+          </div>
+
+          <a
+            href="#contato"
+            onClick={() =>
+              trackEvent("cta_click", {
+                location: "founder",
+                ctaId: "talk_to_founder",
+                target: "contact",
+                landingVariant: LANDING_VARIANT,
+              })
+            }
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3.5 text-sm font-semibold text-slate-700 transition hover:border-emerald-700 hover:text-emerald-800 sm:col-start-2 sm:w-fit lg:col-start-auto"
+          >
+            Conversar com o fundador
+            <ArrowRight className="h-4 w-4" />
+          </a>
+        </div>
+      </section>
+
+      <section
+        id="contato"
+        className="px-5 py-16 lg:px-8 lg:py-20"
+      >
+        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.78fr_1.22fr]">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-800">
+              Avaliação de aderência
+            </p>
+
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+              Sua operação tem o recorte certo para o primeiro piloto?
+            </h2>
+
+            <p className="mt-5 max-w-xl text-base leading-7 text-slate-600">
+              Conte o essencial sobre a empresa. A conversa inicial serve
+              para verificar se existe histórico, volume de contas e um
+              problema de retenção adequado ao estudo.
+            </p>
+
+            <div className="mt-8 space-y-4">
               <div className="flex items-start gap-3">
                 <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-emerald-800" />
                 <p className="text-sm leading-6 text-slate-600">
-                  Segurança e privacidade levadas a sério
+                  Nenhuma contratação é feita nesta etapa.
                 </p>
               </div>
 
               <div className="flex items-start gap-3">
-                <LockKeyhole className="mt-0.5 h-5 w-5 shrink-0 text-emerald-800" />
+                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-800" />
                 <p className="text-sm leading-6 text-slate-600">
-                  Seus dados ficam sempre sob controle
-                </p>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <Users className="mt-0.5 h-5 w-5 shrink-0 text-emerald-800" />
-                <p className="text-sm leading-6 text-slate-600">
-                  Desenvolvido junto com uma operação parceira
+                  O escopo inicial é reduzido e acompanhado diretamente.
                 </p>
               </div>
             </div>
           </div>
 
           <form
+            ref={formRef}
             onSubmit={handleSubmit}
             onFocusCapture={handleFormFocus}
             className="rounded-[28px] border border-slate-200 bg-slate-50 p-5 shadow-sm sm:p-7"
@@ -668,12 +1175,12 @@ export default function OhrlyLandingPage() {
             <input
               type="hidden"
               name="source"
-              value="Ohrly landing page - programa piloto"
+              value="Ohrly landing page - churn target v2"
             />
             <input
               type="hidden"
               name="landing_variant"
-              value="founding_customer_v1"
+              value={LANDING_VARIANT}
             />
             <input
               type="hidden"
@@ -700,6 +1207,7 @@ export default function OhrlyLandingPage() {
               name="utm_term"
               value={attribution.utmTerm}
             />
+
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="space-y-2 text-sm font-medium text-slate-700">
                 Nome
@@ -709,6 +1217,7 @@ export default function OhrlyLandingPage() {
                   placeholder="Seu nome"
                   autoComplete="name"
                   required
+                  onChange={handleFieldChange}
                   onBlur={handleFieldBlur}
                   className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
                 />
@@ -722,6 +1231,7 @@ export default function OhrlyLandingPage() {
                   placeholder="Nome da empresa"
                   autoComplete="organization"
                   required
+                  onChange={handleFieldChange}
                   onBlur={handleFieldBlur}
                   className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
                 />
@@ -736,18 +1246,104 @@ export default function OhrlyLandingPage() {
                 placeholder="voce@empresa.com"
                 autoComplete="email"
                 required
+                onChange={handleFieldChange}
                 onBlur={handleFieldBlur}
                 className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
               />
             </label>
 
-            <label className="mt-4 block space-y-2 text-sm font-medium text-slate-700">
-              Como vocês identificam contas em risco hoje?
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              <label className="space-y-2 text-sm font-medium text-slate-700">
+                Quantas contas ativas vocês possuem?
+                <select
+                  name="account_count"
+                  required
+                  defaultValue=""
+                  onChange={handleFieldChange}
+                  onBlur={handleFieldBlur}
+                  className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
+                >
+                  <option value="" disabled>
+                    Selecione
+                  </option>
+                  <option value="up_to_50">Até 50</option>
+                  <option value="51_100">51–100</option>
+                  <option value="101_300">101–300</option>
+                  <option value="301_500">301–500</option>
+                  <option value="more_than_500">Mais de 500</option>
+                </select>
+              </label>
+
+              <label className="space-y-2 text-sm font-medium text-slate-700">
+                Como acompanham risco de churn hoje?
+                <select
+                  name="risk_tracking"
+                  required
+                  defaultValue=""
+                  onChange={handleFieldChange}
+                  onBlur={handleFieldBlur}
+                  className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
+                >
+                  <option value="" disabled>
+                    Selecione
+                  </option>
+                  <option value="manual">
+                    Acompanhamento manual
+                  </option>
+                  <option value="crm_or_spreadsheet">
+                    CRM ou planilha
+                  </option>
+                  <option value="health_score">
+                    Health Score
+                  </option>
+                  <option value="cs_platform">
+                    Plataforma de Customer Success
+                  </option>
+                  <option value="unstructured">
+                    Ainda não temos um processo estruturado
+                  </option>
+                </select>
+              </label>
+            </div>
+
+            <fieldset className="mt-5">
+              <legend className="text-sm font-medium text-slate-700">
+                Quais fontes poderiam ser usadas no piloto?
+              </legend>
+
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                {[
+                  ["intercom", "Intercom"],
+                  ["product_usage", "Dados de uso do produto"],
+                  ["crm", "CRM"],
+                  ["billing", "Billing"],
+                  ["other", "Outra"],
+                ].map(([value, label]) => (
+                  <label
+                    key={value}
+                    className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700"
+                  >
+                    <input
+                      type="checkbox"
+                      name="data_sources"
+                      value={value}
+                      onChange={handleFieldChange}
+                      onBlur={handleFieldBlur}
+                      className="h-4 w-4 rounded border-slate-300 text-emerald-800 focus:ring-emerald-200"
+                    />
+                    {label}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+
+            <label className="mt-5 block space-y-2 text-sm font-medium text-slate-700">
+              Há algo importante sobre a operação que deveríamos saber?
               <textarea
                 name="message"
-                rows={5}
-                placeholder="Conte brevemente como funciona o processo atual."
-                required
+                rows={4}
+                placeholder="Campo opcional"
+                onChange={handleFieldChange}
                 onBlur={handleFieldBlur}
                 className="mt-2 w-full resize-none rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
               />
@@ -760,19 +1356,24 @@ export default function OhrlyLandingPage() {
             >
               {isSubmitting
                 ? "Enviando..."
-                : "Quero avaliar um piloto"}
-              {!isSubmitting && <ArrowRight className="h-4 w-4" />}
+                : "Quero avaliar aderência ao piloto"}
+              {!isSubmitting && (
+                <ArrowRight className="h-4 w-4" />
+              )}
             </button>
 
             {submitStatus.type !== "idle" && (
               <p
-                role={submitStatus.type === "error" ? "alert" : "status"}
+                role={
+                  submitStatus.type === "error"
+                    ? "alert"
+                    : "status"
+                }
                 aria-live="polite"
-                className={`mt-4 rounded-xl border px-4 py-3 text-sm leading-6 ${
-                  submitStatus.type === "success"
+                className={`mt-4 rounded-xl border px-4 py-3 text-sm leading-6 ${submitStatus.type === "success"
                     ? "border-emerald-200 bg-emerald-50 text-emerald-900"
                     : "border-rose-200 bg-rose-50 text-rose-800"
-                }`}
+                  }`}
               >
                 {submitStatus.message}
               </p>
@@ -781,241 +1382,15 @@ export default function OhrlyLandingPage() {
         </div>
       </section>
 
-      <section className="bg-white px-5 py-16 lg:px-8 lg:py-20">
-        <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-[0.78fr_1.22fr]">
-          <div>
-            <h2 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
-              Uma conta aparece como risco. E agora?
-            </h2>
-            <p className="mt-5 max-w-lg text-base leading-7 text-slate-600">
-              Times de receita precisam abrir várias ferramentas, juntar pedaços
-              de informação e reconstruir a história para entender o que
-              realmente está acontecendo.
-            </p>
-
-            <div className="mt-8 border-l-2 border-emerald-700 pl-5">
-              <p className="max-w-lg text-base leading-7 text-slate-700">
-                O problema nem sempre é descobrir o risco.
-                <strong className="block text-emerald-800">
-                  É transformar o risco em contexto suficiente para decidir.
-                </strong>
-              </p>
-            </div>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {problemCards.map(
-              ({ title, description, icon: Icon, iconClass }) => (
-                <article
-                  key={title}
-                  className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
-                >
-                  <span
-                    className={`flex h-12 w-12 items-center justify-center rounded-full ${iconClass}`}
-                  >
-                    <Icon className="h-5 w-5" />
-                  </span>
-
-                  <h3 className="mt-5 text-base font-semibold text-slate-900">
-                    {title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-500">
-                    {description}
-                  </p>
-                </article>
-              ),
-            )}
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="exemplo"
-        className="border-y border-slate-200 px-5 py-16 lg:px-8 lg:py-20"
-      >
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.72fr_1.28fr]">
-          <div>
-            <h2 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
-              Uma leitura única da trajetória da conta
-            </h2>
-
-            <ol className="relative mt-9 space-y-6 before:absolute before:bottom-4 before:left-4 before:top-4 before:w-px before:bg-emerald-200">
-              {timelineItems.map((item, index) => (
-                <li key={item} className="relative flex items-center gap-4">
-                  <span className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-900 text-xs font-bold text-white ring-4 ring-white">
-                    {index + 1}
-                  </span>
-                  <span className="text-base font-medium text-slate-700">
-                    {item}
-                  </span>
-                </li>
-              ))}
-            </ol>
-          </div>
-
-          <div className="rounded-[28px] border border-slate-200 bg-slate-50 p-5 sm:p-7">
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700">
-                    Exemplo de leitura
-                  </p>
-                  <h3 className="mt-2 text-xl font-semibold text-slate-900">
-                    O que merece investigação agora
-                  </h3>
-                </div>
-                <span className="rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800">
-                  Contexto consolidado
-                </span>
-              </div>
-
-              <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                {readingItems.map(({ label, icon: Icon }) => (
-                  <div
-                    key={label}
-                    className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/70 p-4"
-                  >
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-800">
-                      <Icon className="h-4.5 w-4.5" />
-                    </span>
-                    <span className="text-sm font-medium text-slate-700">
-                      {label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-5 flex flex-wrap gap-2">
-              {[
-                "fora do padrão",
-                "persistência",
-                "recuperação",
-                "adoção",
-                "suporte",
-                "trajetória",
-              ].map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full border border-emerald-200 bg-white px-3 py-1.5 text-xs font-medium text-emerald-800"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="como-funciona" className="bg-white border-b border-slate-200 px-5 py-16 lg:px-8 lg:py-20">
-        <div className="mx-auto max-w-7xl">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-              Não substituímos sua ferramenta atual
-            </h2>
-            <p className="mt-4 text-base leading-7 text-slate-600">
-              O Ohrly funciona sobre o que sua empresa já utiliza.
-            </p>
-          </div>
-
-          <div className="mt-12 grid items-center gap-6 lg:grid-cols-[1fr_auto_0.48fr_auto_0.48fr]">
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {sourceCards.map(({ label, icon: Icon }) => (
-                <div
-                  key={label}
-                  className="rounded-2xl border border-slate-200 bg-white p-4 text-center shadow-sm"
-                >
-                  <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-xl bg-slate-50 text-slate-700">
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <p className="mt-3 text-sm font-medium text-slate-700">{label}</p>
-                </div>
-              ))}
-            </div>
-
-            <ArrowRight className="mx-auto hidden h-6 w-6 text-slate-400 lg:block" />
-
-            <div className="rounded-2xl bg-emerald-900 px-6 py-8 text-center text-2xl font-semibold text-white shadow-lg shadow-emerald-950/10">
-              Ohrly
-            </div>
-
-            <ArrowRight className="mx-auto hidden h-6 w-6 text-slate-400 lg:block" />
-
-            <div className="flex min-h-28 items-center justify-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-6 text-center text-sm font-semibold text-emerald-900">
-              <CheckCircle2 className="h-6 w-6 shrink-0" />
-              Contexto para agir
-            </div>
-          </div>
-
-          <p className="mt-7 text-center text-sm text-slate-500">
-            Sua ferramenta aponta a conta. O Ohrly ajuda o time a entender a
-            trajetória.
-          </p>
-        </div>
-      </section>
-
-      <section
-        id="piloto"
-        className="border-y border-emerald-100 bg-emerald-50/45 px-5 py-16 lg:px-8 lg:py-20"
-      >
-        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.82fr_1.18fr]">
-          <div className="self-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-800">
-              Programa piloto acompanhado
-            </p>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
-              Aplicamos o Ohrly a um problema real da sua operação
-            </h2>
-            <p className="mt-5 max-w-lg text-base leading-7 text-slate-600">
-              Selecionaremos uma operação para um ciclo de 6 a 8 semanas,
-              com escopo reduzido, revisão semanal e aprendizado compartilhado
-              sobre quais sinais realmente ajudam o time a decidir.
-            </p>
-          </div>
-
-          <div className="grid gap-5 sm:grid-cols-2">
-            <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h3 className="text-lg font-semibold text-slate-900">
-                O que entregamos
-              </h3>
-              <CheckList items={deliverables} />
-            </article>
-
-            <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h3 className="text-lg font-semibold text-slate-900">
-                O que precisamos
-              </h3>
-              <CheckList items={requirements} />
-            </article>
-          </div>
-          <div >
-              <a
-                href="#contato"
-                onClick={() =>
-                  trackEvent("cta_click", {
-                    location: "pilot",
-                    ctaId: "evaluate_pilot",
-                    target: "contact",
-                  })
-                }
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-900 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800"
-              >
-                Quero avaliar um piloto
-                <ArrowRight className="h-4 w-4" />
-              </a>
-              <p className="mt-3 text-xs leading-5 text-slate-500">
-                Começamos com um único problema de retenção, uma população de
-                contas e uma ou duas fontes de dados, sem substituir suas
-                ferramentas atuais.
-              </p>
-            </div>
-        </div>
-      </section>
-
       <footer className="border-t border-slate-200 bg-white px-5 py-8 lg:px-8">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 text-center text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:text-left">
-          <span>© {new Date().getFullYear()} Ohrly. Todos os direitos reservados.</span>
-          <span>Contexto comportamental para decisões de retenção.</span>
+          <span>
+            © {new Date().getFullYear()} Ohrly. Todos os direitos
+            reservados.
+          </span>
+          <span>
+            Contexto comportamental para decisões de retenção.
+          </span>
         </div>
       </footer>
     </main>

@@ -4,15 +4,26 @@ import { NextResponse } from "next/server";
 const allowedEvents = new Set([
   "lp_view",
   "lp_engaged_10s",
+
   "section_view",
+  "churn_bridge_view",
   "example_view",
   "pilot_details_view",
+
   "cta_click",
+
   "form_view",
   "form_start",
+  "form_field_started",
+  "form_field_blur",
   "form_submit_attempt",
   "form_submit_success",
   "form_submit_error",
+
+  "scroll_25",
+  "scroll_50",
+  "scroll_75",
+  "scroll_90",
 ]);
 
 type AnalyticsPayload = {
