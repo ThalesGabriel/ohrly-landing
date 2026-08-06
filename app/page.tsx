@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { trackEvent } from "@/lib/analytics";
+import { trackMetaLead } from "@/lib/meta-pixel";
 import {
   ArrowRight,
   BarChart3,
@@ -593,6 +594,8 @@ export default function OhrlyLandingPage() {
         formId: FORM_ID,
         landingVariant: LANDING_VARIANT,
       });
+
+      trackMetaLead();
 
       setSubmitStatus({
         type: "success",
