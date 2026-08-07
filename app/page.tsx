@@ -13,49 +13,25 @@ import { trackMetaLead } from "@/lib/meta-pixel";
 import {
   ArrowRight,
   BarChart3,
-  CalendarDays,
+  BookOpen,
   Check,
   CheckCircle2,
   Clock3,
-  Headphones,
-  Lightbulb,
+  Download,
+  LockKeyhole,
   RefreshCcw,
   ShieldCheck,
   TrendingDown,
-  UserRoundCheck,
   Users,
 } from "lucide-react";
 import Image from "next/image";
 
-const LANDING_VARIANT = "churn_target_v3_short_form";
-const FORM_ID = "pilot_application";
-
-const evidenceCards = [
-  {
-    title: "Frequência de uso",
-    value: "↓ 34%",
-    icon: TrendingDown,
-    iconClass: "bg-emerald-50 text-emerald-700",
-  },
-  {
-    title: "Usuários recorrentes",
-    value: "8 → 3",
-    icon: Users,
-    iconClass: "bg-blue-50 text-blue-700",
-  },
-  {
-    title: "Contatos com suporte",
-    value: "↑ 2,4x",
-    icon: Headphones,
-    iconClass: "bg-violet-50 text-violet-700",
-  },
-  {
-    title: "Recuperação sustentada",
-    value: "Não observada",
-    icon: RefreshCcw,
-    iconClass: "bg-rose-50 text-rose-700",
-  },
-];
+const LANDING_VARIANT = "churn_ebook_v1_hero_form";
+const EBOOK_FORM_ID = "ebook_download";
+const PILOT_FORM_ID = "pilot_application";
+const EBOOK_URL =
+  process.env.NEXT_PUBLIC_EBOOK_URL ??
+  "/antes_do_churn.pdf";
 
 const timelineItems = [
   {
@@ -166,84 +142,6 @@ function readAttributionFromUrl(): Attribution {
   };
 }
 
-function LineChart() {
-  const points = [
-    [0, 20],
-    [24, 24],
-    [48, 30],
-    [72, 42],
-    [96, 51],
-    [120, 66],
-    [144, 71],
-    [168, 65],
-    [192, 73],
-    [216, 82],
-  ];
-
-  const path = points
-    .map(([x, y], index) => `${index === 0 ? "M" : "L"} ${x} ${y}`)
-    .join(" ");
-
-  return (
-    <div className="mt-4">
-      <div className="relative h-36 overflow-hidden rounded-2xl bg-white sm:h-44">
-        <svg
-          viewBox="0 0 220 110"
-          className="h-full w-full"
-          role="img"
-          aria-label="Trajetória de deterioração da conta ao longo de cinco semanas"
-          preserveAspectRatio="none"
-        >
-          {[18, 42, 66, 90].map((y) => (
-            <line
-              key={y}
-              x1="0"
-              y1={y}
-              x2="220"
-              y2={y}
-              stroke="#E5E7EB"
-              strokeWidth="1"
-              strokeDasharray="3 4"
-            />
-          ))}
-
-          <path
-            d={`${path} L 216 110 L 0 110 Z`}
-            fill="url(#area)"
-            opacity="0.75"
-          />
-
-          <path
-            d={path}
-            fill="none"
-            stroke="#047857"
-            strokeWidth="2.4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-
-          <circle cx="216" cy="82" r="4" fill="#DC2626" />
-
-          <defs>
-            <linearGradient id="area" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stopColor="#A7F3D0" stopOpacity="0.58" />
-              <stop offset="100%" stopColor="#ECFDF5" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-        </svg>
-
-        <div className="absolute inset-x-0 bottom-2 flex justify-between px-4 text-[10px] font-medium text-slate-400">
-          <span>S1</span>
-          <span>S2</span>
-          <span>S3</span>
-          <span>S4</span>
-          <span>S5</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function CheckList({
   items,
   tone = "positive",
@@ -271,20 +169,30 @@ function CheckList({
 }
 
 export default function OhrlyLandingPage() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [attribution, setAttribution] =
-    useState<Attribution>(emptyAttribution);
-  const [submitStatus, setSubmitStatus] = useState<{
+  type SubmitStatus = {
     type: "idle" | "success" | "error";
     message: string;
-  }>({
+  };
+
+  const idleSubmitStatus: SubmitStatus = {
     type: "idle",
     message: "",
+  };
+
+  const [submittingFormId, setSubmittingFormId] = useState<string | null>(null);
+  const [attribution, setAttribution] =
+    useState<Attribution>(emptyAttribution);
+  const [submitStatusByForm, setSubmitStatusByForm] = useState<
+    Record<string, SubmitStatus>
+  >({
+    [EBOOK_FORM_ID]: idleSubmitStatus,
+    [PILOT_FORM_ID]: idleSubmitStatus,
   });
 
-  const formRef = useRef<HTMLFormElement | null>(null);
-  const formStartedRef = useRef(false);
-  const formViewTrackedRef = useRef(false);
+  const ebookFormRef = useRef<HTMLFormElement | null>(null);
+  const pilotFormRef = useRef<HTMLFormElement | null>(null);
+  const formStartedRef = useRef(new Set<string>());
+  const formViewTrackedRef = useRef(new Set<string>());
   const trackedSectionsRef = useRef(new Set<string>());
   const trackedScrollDepthsRef = useRef(new Set<number>());
   const trackedStartedFieldsRef = useRef(new Set<string>());
@@ -329,10 +237,7 @@ export default function OhrlyLandingPage() {
 
           const section = entry.target.id;
 
-          if (
-            !section ||
-            trackedSectionsRef.current.has(section)
-          ) {
+          if (!section || trackedSectionsRef.current.has(section)) {
             continue;
           }
 
@@ -384,26 +289,34 @@ export default function OhrlyLandingPage() {
   }, []);
 
   useEffect(() => {
-    const form = formRef.current;
+    const forms = [ebookFormRef.current, pilotFormRef.current].filter(
+      (form): form is HTMLFormElement => Boolean(form),
+    );
 
-    if (!form) {
+    if (forms.length === 0) {
       return;
     }
 
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (
-          entry.isIntersecting &&
-          !formViewTrackedRef.current
-        ) {
-          formViewTrackedRef.current = true;
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) {
+            continue;
+          }
+
+          const form = entry.target as HTMLFormElement;
+          const formId = form.dataset.formId;
+
+          if (!formId || formViewTrackedRef.current.has(formId)) {
+            continue;
+          }
+
+          formViewTrackedRef.current.add(formId);
 
           trackEvent("form_view", {
-            formId: FORM_ID,
+            formId,
             landingVariant: LANDING_VARIANT,
           });
-
-          observer.disconnect();
         }
       },
       {
@@ -412,7 +325,9 @@ export default function OhrlyLandingPage() {
       },
     );
 
-    observer.observe(form);
+    for (const form of forms) {
+      observer.observe(form);
+    }
 
     return () => {
       observer.disconnect();
@@ -422,8 +337,7 @@ export default function OhrlyLandingPage() {
   useEffect(() => {
     function handleScroll() {
       const documentHeight =
-        document.documentElement.scrollHeight -
-        window.innerHeight;
+        document.documentElement.scrollHeight - window.innerHeight;
 
       if (documentHeight <= 0) {
         return;
@@ -460,15 +374,32 @@ export default function OhrlyLandingPage() {
     };
   }, []);
 
-  function handleFormFocus() {
-    if (formStartedRef.current) {
+  function getFormIdFromElement(element: Element) {
+    return (
+      element.closest("form")?.getAttribute("data-form-id") ??
+      "unknown_form"
+    );
+  }
+
+  function setFormStatus(formId: string, status: SubmitStatus) {
+    setSubmitStatusByForm((current) => ({
+      ...current,
+      [formId]: status,
+    }));
+  }
+
+  function handleFormFocus(event: FocusEvent<HTMLFormElement>) {
+    const formId =
+      event.currentTarget.dataset.formId ?? "unknown_form";
+
+    if (formStartedRef.current.has(formId)) {
       return;
     }
 
-    formStartedRef.current = true;
+    formStartedRef.current.add(formId);
 
     trackEvent("form_start", {
-      formId: FORM_ID,
+      formId,
       landingVariant: LANDING_VARIANT,
     });
   }
@@ -479,10 +410,12 @@ export default function OhrlyLandingPage() {
       | ChangeEvent<HTMLTextAreaElement>
       | ChangeEvent<HTMLSelectElement>,
   ) {
+    const formId = getFormIdFromElement(event.currentTarget);
     const fieldName = event.currentTarget.name;
+    const fieldKey = `${formId}:${fieldName}`;
     const fieldValue =
       event.currentTarget instanceof HTMLInputElement &&
-        event.currentTarget.type === "checkbox"
+      event.currentTarget.type === "checkbox"
         ? event.currentTarget.checked
           ? event.currentTarget.value
           : ""
@@ -490,12 +423,12 @@ export default function OhrlyLandingPage() {
 
     if (
       fieldValue.trim().length > 0 &&
-      !trackedStartedFieldsRef.current.has(fieldName)
+      !trackedStartedFieldsRef.current.has(fieldKey)
     ) {
-      trackedStartedFieldsRef.current.add(fieldName);
+      trackedStartedFieldsRef.current.add(fieldKey);
 
       trackEvent("form_field_started", {
-        formId: FORM_ID,
+        formId,
         fieldName,
         landingVariant: LANDING_VARIANT,
       });
@@ -508,20 +441,31 @@ export default function OhrlyLandingPage() {
       | FocusEvent<HTMLTextAreaElement>
       | FocusEvent<HTMLSelectElement>,
   ) {
+    const formId = getFormIdFromElement(event.currentTarget);
     const value =
       event.currentTarget instanceof HTMLInputElement &&
-        event.currentTarget.type === "checkbox"
+      event.currentTarget.type === "checkbox"
         ? event.currentTarget.checked
           ? event.currentTarget.value
           : ""
         : event.currentTarget.value;
 
     trackEvent("form_field_blur", {
-      formId: FORM_ID,
+      formId,
       fieldName: event.currentTarget.name,
       hasValue: value.trim().length > 0,
       landingVariant: LANDING_VARIANT,
     });
+  }
+
+  function triggerEbookDownload() {
+    const anchor = document.createElement("a");
+    anchor.href = EBOOK_URL;
+    anchor.download = "churn-antes-do-churn-ohrly.pdf";
+    anchor.rel = "noopener";
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
   }
 
   async function handleSubmit(
@@ -530,12 +474,14 @@ export default function OhrlyLandingPage() {
     event.preventDefault();
 
     const form = event.currentTarget;
+    const formId = form.dataset.formId ?? "unknown_form";
+    const isEbookForm = formId === EBOOK_FORM_ID;
     const formspreeFormId =
       process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID ??
       "mkoygpnk";
 
     if (!formspreeFormId) {
-      setSubmitStatus({
+      setFormStatus(formId, {
         type: "error",
         message:
           "O formulário ainda não foi configurado. Defina NEXT_PUBLIC_FORMSPREE_FORM_ID.",
@@ -544,15 +490,12 @@ export default function OhrlyLandingPage() {
     }
 
     trackEvent("form_submit_attempt", {
-      formId: FORM_ID,
+      formId,
       landingVariant: LANDING_VARIANT,
     });
 
-    setIsSubmitting(true);
-    setSubmitStatus({
-      type: "idle",
-      message: "",
-    });
+    setSubmittingFormId(formId);
+    setFormStatus(formId, idleSubmitStatus);
 
     try {
       const response = await fetch(
@@ -568,10 +511,10 @@ export default function OhrlyLandingPage() {
 
       const result = (await response.json().catch(() => null)) as
         | {
-          errors?: Array<{
-            message?: string;
-          }>;
-        }
+            errors?: Array<{
+              message?: string;
+            }>;
+          }
         | null;
 
       if (!response.ok) {
@@ -582,34 +525,57 @@ export default function OhrlyLandingPage() {
 
         throw new Error(
           formspreeMessage ||
-          "Não foi possível enviar sua mensagem. Tente novamente em instantes.",
+            "Não foi possível enviar suas informações. Tente novamente em instantes.",
         );
       }
 
       form.reset();
-      formStartedRef.current = false;
-      trackedStartedFieldsRef.current.clear();
+      formStartedRef.current.delete(formId);
+
+      for (const fieldKey of Array.from(
+        trackedStartedFieldsRef.current,
+      )) {
+        if (fieldKey.startsWith(`${formId}:`)) {
+          trackedStartedFieldsRef.current.delete(fieldKey);
+        }
+      }
 
       trackEvent("form_submit_success", {
-        formId: FORM_ID,
+        formId,
         landingVariant: LANDING_VARIANT,
       });
 
       trackMetaLead();
 
-      setSubmitStatus({
-        type: "success",
-        message:
-          "Recebemos suas informações. Entraremos em contato para avaliar a aderência da operação ao piloto.",
-      });
+      if (isEbookForm) {
+        trackEvent("ebook_download", {
+          ebookId: "churn_antes_do_churn",
+          source: "hero_form",
+          landingVariant: LANDING_VARIANT,
+        });
+
+        triggerEbookDownload();
+
+        setFormStatus(formId, {
+          type: "success",
+          message:
+            "Pronto. O download do ebook foi iniciado. Se ele não abrir automaticamente, use o link abaixo.",
+        });
+      } else {
+        setFormStatus(formId, {
+          type: "success",
+          message:
+            "Recebemos suas informações. Entraremos em contato para avaliar a aderência da operação ao piloto.",
+        });
+      }
     } catch (error) {
       trackEvent("form_submit_error", {
-        formId: FORM_ID,
+        formId,
         errorType: "formspree_request_failed",
         landingVariant: LANDING_VARIANT,
       });
 
-      setSubmitStatus({
+      setFormStatus(formId, {
         type: "error",
         message:
           error instanceof Error
@@ -617,9 +583,16 @@ export default function OhrlyLandingPage() {
             : "Ocorreu um erro inesperado durante o envio.",
       });
     } finally {
-      setIsSubmitting(false);
+      setSubmittingFormId(null);
     }
   }
+
+  const ebookSubmitStatus =
+    submitStatusByForm[EBOOK_FORM_ID] ?? idleSubmitStatus;
+  const pilotSubmitStatus =
+    submitStatusByForm[PILOT_FORM_ID] ?? idleSubmitStatus;
+  const ebookIsSubmitting = submittingFormId === EBOOK_FORM_ID;
+  const pilotIsSubmitting = submittingFormId === PILOT_FORM_ID;
 
   return (
     <main className="min-h-screen bg-[#fbfcfb] text-slate-950">
@@ -654,167 +627,275 @@ export default function OhrlyLandingPage() {
           </nav>
 
           <a
-            href="#exemplo"
+            href="#ebook-form"
             onClick={() =>
               trackEvent("cta_click", {
                 location: "header",
-                ctaId: "see_analysis",
-                target: "example",
+                ctaId: "download_ebook",
+                target: "ebook_form",
                 landingVariant: LANDING_VARIANT,
               })
             }
-            className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-emerald-700 hover:text-emerald-800"
+            className="rounded-xl bg-emerald-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-800"
           >
-            Ver análise
+            Baixar ebook
           </a>
         </div>
       </header>
 
       <section
         id="inicio"
-        className="border-b border-slate-200 bg-white px-5 py-14 sm:py-20 lg:px-8 lg:py-24"
+        className="relative overflow-hidden border-b border-slate-200 bg-[#fbfcf9] px-5 py-14 sm:py-20 lg:px-8 lg:py-24"
       >
-        <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[0.88fr_1.12fr]">
-          <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800">
-              <Users className="h-4 w-4" />
-              Para times de CS de SaaS B2B
+        <div className="pointer-events-none absolute -right-40 -top-40 h-[34rem] w-[34rem] rounded-full bg-emerald-50/70" />
+        <div className="pointer-events-none absolute right-[8%] top-24 hidden grid-cols-6 gap-3 opacity-50 lg:grid">
+          {Array.from({ length: 24 }).map((_, index) => (
+            <span
+              key={index}
+              className="h-1 w-1 rounded-full bg-emerald-800"
+            />
+          ))}
+        </div>
+
+        <div className="relative mx-auto grid max-w-7xl items-start gap-12 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16">
+          <div className="lg:pt-8">
+            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/80 px-3 py-1.5 text-xs font-semibold text-emerald-800 shadow-sm">
+              <BookOpen className="h-4 w-4" />
+              Ebook gratuito para SaaS B2B
             </div>
 
-            <h1 className="mt-7 max-w-2xl text-4xl font-semibold leading-[1.06] tracking-[-0.035em] text-slate-950 sm:text-5xl lg:text-6xl">
+            <h1 className="mt-7 max-w-2xl text-4xl font-semibold leading-[1.04] tracking-[-0.04em] text-slate-950 sm:text-5xl lg:text-6xl">
               O churn do seu SaaS B2B está acima da meta?
             </h1>
 
+            <div className="mt-6 h-1.5 w-24 rounded-full bg-emerald-900" />
+
             <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">
-              Identifique quais contas começaram a mudar antes do pedido de
-              cancelamento, e entenda quais ainda não demonstraram
-              recuperação.
+              Descubra onde o comportamento do cliente começa a mudar antes
+              do cancelamento — e por que olhar apenas o estado atual pode
+              esconder parte da história.
             </p>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a
-                href="#exemplo"
-                onClick={() =>
-                  trackEvent("cta_click", {
-                    location: "hero",
-                    ctaId: "see_analysis",
-                    target: "example",
-                    landingVariant: LANDING_VARIANT,
-                  })
-                }
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-900 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800"
-              >
-                Ver uma análise de exemplo
-                <ArrowRight className="h-4 w-4" />
-              </a>
+            <div className="mt-8 max-w-xl rounded-2xl border border-slate-200 bg-white/90 p-5 shadow-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
+                Exemplo ilustrativo
+              </p>
 
-              <a
-                href="#piloto"
-                onClick={() =>
-                  trackEvent("cta_click", {
-                    location: "hero",
-                    ctaId: "evaluate_pilot_fit",
-                    target: "pilot",
-                    landingVariant: LANDING_VARIANT,
-                  })
-                }
-                className="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3.5 text-sm font-semibold text-slate-700 transition hover:border-emerald-700 hover:text-emerald-800"
-              >
-                Avaliar aderência ao piloto
-              </a>
-            </div>
-
-            <p className="mt-4 text-sm leading-6 text-slate-500">
-              Sem substituir seu CRM, plataforma de CS ou processo atual.
-            </p>
-          </div>
-
-          <div className="rounded-[28px] border border-slate-200 bg-white p-4 shadow-[0_24px_70px_rgba(15,23,42,0.09)] sm:p-6">
-            <div className="flex flex-col gap-3 border-b border-slate-100 pb-5 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <span className="text-xs font-medium uppercase tracking-[0.16em] text-slate-400">
-                  Trajetória de conta
-                </span>
-                <h2 className="mt-1 text-xl font-semibold">
-                  Acme Logistics
-                </h2>
-              </div>
-
-              <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-700">
-                <CalendarDays className="h-3.5 w-3.5" />
-                Mudança começou há 5 semanas
-              </span>
-            </div>
-
-            <div className="grid gap-4 pt-5 xl:grid-cols-[1.04fr_0.96fr]">
-              <div className="rounded-2xl border border-slate-200 bg-slate-50/60 p-4">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-sm font-semibold text-slate-800">
-                      Distância do padrão anterior
-                    </p>
-                    <p className="mt-1 text-xs text-slate-500">
-                      Cinco semanas de trajetória
-                    </p>
-                  </div>
+              <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-5">
+                <div>
+                  <p className="text-sm font-medium text-slate-600">
+                    Meta de churn
+                  </p>
+                  <p className="mt-1 text-5xl font-medium tracking-tight text-emerald-900">
+                    3%
+                  </p>
                 </div>
 
-                <LineChart />
-              </div>
+                <div className="h-20 w-px bg-slate-200" />
 
-              <div className="grid grid-cols-2 gap-3">
-                {evidenceCards.map(
-                  ({ title, value, icon: Icon, iconClass }) => (
-                    <div
-                      key={title}
-                      className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm"
-                    >
-                      <div
-                        className={`flex h-9 w-9 items-center justify-center rounded-xl ${iconClass}`}
-                      >
-                        <Icon className="h-4.5 w-4.5" />
-                      </div>
-                      <p className="mt-3 text-xs leading-5 text-slate-500">
-                        {title}
-                      </p>
-                      <p className="text-sm font-semibold leading-5 text-slate-800">
-                        {value}
-                      </p>
-                    </div>
-                  ),
-                )}
+                <div>
+                  <p className="text-sm font-medium text-slate-600">Atual</p>
+                  <div className="mt-1 flex items-center gap-3">
+                    <p className="text-5xl font-semibold tracking-tight text-slate-950">
+                      5,1%
+                    </p>
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-rose-50 text-rose-700">
+                      <TrendingDown className="h-5 w-5 rotate-180" />
+                    </span>
+                  </div>
+                  <p className="mt-1 text-sm font-semibold text-rose-700">
+                    Acima da meta
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div className="mt-4 flex gap-3 rounded-2xl border border-emerald-200 bg-emerald-50/80 p-4">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-emerald-800 shadow-sm">
-                <Lightbulb className="h-5 w-5" />
-              </span>
-              <div>
-                <p className="text-sm font-semibold text-emerald-950">
-                  Leitura Ohrly
-                </p>
-                <p className="mt-1 text-sm leading-6 text-emerald-950">
-                  A conta continua distante do padrão anterior. A
-                  deterioração merece investigação.
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-4 flex flex-wrap items-center gap-2 text-xs font-medium text-slate-500">
-              <span className="rounded-full bg-slate-100 px-3 py-1.5">
-                Ruptura
-              </span>
-              <ArrowRight className="h-3.5 w-3.5" />
-              <span className="rounded-full bg-slate-100 px-3 py-1.5">
-                Persistência
-              </span>
-              <ArrowRight className="h-3.5 w-3.5" />
-              <span className="rounded-full bg-rose-50 px-3 py-1.5 text-rose-700">
-                Sem recuperação
-              </span>
+            <div className="mt-7 grid max-w-xl gap-3 sm:grid-cols-3">
+              {[
+                {
+                  label: "snapshot ≠ trajetória",
+                  icon: TrendingDown,
+                },
+                {
+                  label: "melhorar ≠ recuperar",
+                  icon: RefreshCcw,
+                },
+                {
+                  label: "quando esperar deixa de ser neutro?",
+                  icon: Clock3,
+                },
+              ].map(({ label, icon: Icon }) => (
+                <div
+                  key={label}
+                  className="flex items-start gap-2.5 border-t border-slate-200 pt-3 text-sm leading-5 text-slate-600"
+                >
+                  <Icon className="mt-0.5 h-4 w-4 shrink-0 text-emerald-800" />
+                  <span>{label}</span>
+                </div>
+              ))}
             </div>
           </div>
+
+          <form
+            id="ebook-form"
+            ref={ebookFormRef}
+            data-form-id={EBOOK_FORM_ID}
+            onSubmit={handleSubmit}
+            onFocusCapture={handleFormFocus}
+            className="relative rounded-[28px] border border-slate-200 bg-white p-5 shadow-[0_24px_70px_rgba(15,23,42,0.11)] sm:p-7 lg:p-8"
+          >
+            <input
+              type="hidden"
+              name="source"
+              value="Ohrly landing page - ebook Churn antes do churn"
+            />
+            <input type="hidden" name="intent" value="ebook_download" />
+            <input
+              type="hidden"
+              name="ebook"
+              value="churn_antes_do_churn"
+            />
+            <input
+              type="hidden"
+              name="landing_variant"
+              value={LANDING_VARIANT}
+            />
+            <input type="hidden" name="utm_source" value={attribution.utmSource} />
+            <input type="hidden" name="utm_medium" value={attribution.utmMedium} />
+            <input type="hidden" name="utm_campaign" value={attribution.utmCampaign} />
+            <input type="hidden" name="utm_content" value={attribution.utmContent} />
+            <input type="hidden" name="utm_term" value={attribution.utmTerm} />
+
+            <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800">
+              <BookOpen className="h-4 w-4" />
+              Ebook gratuito
+            </div>
+
+            <h2 className="mt-5 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+              Baixe Churn antes do churn
+            </h2>
+
+            <p className="mt-3 max-w-xl text-sm leading-6 text-slate-600 sm:text-base sm:leading-7">
+              Uma leitura curta sobre trajetória, recuperação e o momento em
+              que esperar por mais certeza começa a consumir a janela de
+              decisão.
+            </p>
+
+            <div className="mt-6 space-y-4">
+              <label className="block text-sm font-medium text-slate-700">
+                Nome
+                <input
+                  name="name"
+                  type="text"
+                  placeholder="Seu nome"
+                  autoComplete="name"
+                  required
+                  onChange={handleFieldChange}
+                  onBlur={handleFieldBlur}
+                  className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
+                />
+              </label>
+
+              <label className="block text-sm font-medium text-slate-700">
+                E-mail profissional
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="voce@empresa.com"
+                  autoComplete="email"
+                  inputMode="email"
+                  required
+                  onChange={handleFieldChange}
+                  onBlur={handleFieldBlur}
+                  className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
+                />
+              </label>
+
+              <label className="block text-sm font-medium text-slate-700">
+                Empresa
+                <input
+                  name="company"
+                  type="text"
+                  placeholder="Nome da empresa"
+                  autoComplete="organization"
+                  required
+                  onChange={handleFieldChange}
+                  onBlur={handleFieldBlur}
+                  className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
+                />
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              disabled={ebookIsSubmitting}
+              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-900 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {ebookIsSubmitting ? "Preparando download..." : "Baixar ebook gratuito"}
+              {!ebookIsSubmitting && <Download className="h-4 w-4" />}
+            </button>
+
+            <div className="mt-3 flex items-center justify-center gap-2 text-xs leading-5 text-slate-500">
+              <LockKeyhole className="h-3.5 w-3.5" />
+              <span>Sem spam. Apenas o material.</span>
+            </div>
+
+            {ebookSubmitStatus.type !== "idle" && (
+              <div
+                role={ebookSubmitStatus.type === "error" ? "alert" : "status"}
+                aria-live="polite"
+                className={`mt-4 rounded-xl border px-4 py-3 text-sm leading-6 ${
+                  ebookSubmitStatus.type === "success"
+                    ? "border-emerald-200 bg-emerald-50 text-emerald-900"
+                    : "border-rose-200 bg-rose-50 text-rose-800"
+                }`}
+              >
+                <p>{ebookSubmitStatus.message}</p>
+                {ebookSubmitStatus.type === "success" && (
+                  <a
+                    href={EBOOK_URL}
+                    download="churn-antes-do-churn-ohrly.pdf"
+                    onClick={() =>
+                      trackEvent("ebook_download_fallback", {
+                        ebookId: "churn_antes_do_churn",
+                        landingVariant: LANDING_VARIANT,
+                      })
+                    }
+                    className="mt-2 inline-flex items-center gap-1.5 font-semibold underline underline-offset-4"
+                  >
+                    Baixar novamente
+                    <Download className="h-3.5 w-3.5" />
+                  </a>
+                )}
+              </div>
+            )}
+
+            <div className="mt-7 flex items-end justify-between gap-6 border-t border-slate-100 pt-5">
+              <div className="flex items-center gap-3 text-sm text-slate-600">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-50 text-emerald-800">
+                  <Clock3 className="h-4.5 w-4.5" />
+                </span>
+                <div>
+                  <p className="font-semibold text-slate-800">Leitura rápida</p>
+                  <p className="text-xs text-slate-500">5 páginas · SaaS B2B</p>
+                </div>
+              </div>
+
+              <div className="hidden h-36 w-24 rotate-2 rounded-sm border border-stone-200 bg-[#faf9f4] p-3 shadow-[8px_10px_24px_rgba(15,23,42,0.12)] sm:block">
+                <p className="text-[7px] font-semibold tracking-[0.22em] text-slate-800">
+                  OHRLY
+                </p>
+                <p className="mt-5 text-lg font-semibold leading-5 tracking-tight text-slate-900">
+                  Churn
+                  <br />
+                  antes do
+                  <br />
+                  churn
+                </p>
+                <div className="mt-5 h-7 w-7 rounded-full bg-emerald-100" />
+              </div>
+            </div>
+          </form>
         </div>
       </section>
 
@@ -1181,7 +1262,8 @@ export default function OhrlyLandingPage() {
           </div>
       
           <form
-            ref={formRef}
+            ref={pilotFormRef}
+            data-form-id={PILOT_FORM_ID}
             onSubmit={handleSubmit}
             onFocusCapture={handleFormFocus}
             className="rounded-[28px] border border-slate-200 bg-slate-50 p-5 shadow-sm sm:p-7"
@@ -1189,7 +1271,7 @@ export default function OhrlyLandingPage() {
             <input
               type="hidden"
               name="source"
-              value="Ohrly landing page - churn target v3 short form"
+              value="Ohrly landing page - pilot application"
             />
       
             <input
@@ -1275,14 +1357,14 @@ export default function OhrlyLandingPage() {
       
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={pilotIsSubmitting}
               className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-900 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {isSubmitting
+              {pilotIsSubmitting
                 ? "Enviando..."
                 : "Quero conversar sobre o piloto"}
       
-              {!isSubmitting && (
+              {!pilotIsSubmitting && (
                 <ArrowRight className="h-4 w-4" />
               )}
             </button>
@@ -1292,21 +1374,21 @@ export default function OhrlyLandingPage() {
               um retorno por e-mail para combinar a conversa inicial.
             </p>
       
-            {submitStatus.type !== "idle" && (
+            {pilotSubmitStatus.type !== "idle" && (
               <p
                 role={
-                  submitStatus.type === "error"
+                  pilotSubmitStatus.type === "error"
                     ? "alert"
                     : "status"
                 }
                 aria-live="polite"
                 className={`mt-4 rounded-xl border px-4 py-3 text-sm leading-6 ${
-                  submitStatus.type === "success"
+                  pilotSubmitStatus.type === "success"
                     ? "border-emerald-200 bg-emerald-50 text-emerald-900"
                     : "border-rose-200 bg-rose-50 text-rose-800"
                 }`}
               >
-                {submitStatus.message}
+                {pilotSubmitStatus.message}
               </p>
             )}
           </form>
