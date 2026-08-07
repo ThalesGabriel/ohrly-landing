@@ -105,7 +105,7 @@ export function trackEvent(
     visitorId,
     sessionId,
     pagePath: window.location.pathname,
-    landingVariant: "churn_target_v3_short_form",
+    landingVariant: "churn_target_v4_ebook",
     attribution: readAttribution(),
     referrerHost: getReferrerHost(),
     properties,
