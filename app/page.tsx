@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
-const LANDING_VARIANT = "churn_target_v2";
+const LANDING_VARIANT = "churn_target_v3_short_form";
 const FORM_ID = "pilot_application";
 
 const evidenceCards = [
@@ -1136,39 +1136,50 @@ export default function OhrlyLandingPage() {
         id="contato"
         className="px-5 py-16 lg:px-8 lg:py-20"
       >
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.78fr_1.22fr]">
+        <div className="mx-auto grid max-w-6xl items-start gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-800">
-              Avaliação de aderência
+              Primeiro contato
             </p>
-
+      
             <h2 className="mt-4 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
-              Sua operação tem o recorte certo para o primeiro piloto?
+              Vamos entender se o piloto faz sentido para sua operação
             </h2>
-
+      
             <p className="mt-5 max-w-xl text-base leading-7 text-slate-600">
-              Conte o essencial sobre a empresa. A conversa inicial serve
-              para verificar se existe histórico, volume de contas e um
-              problema de retenção adequado ao estudo.
+              Deixe seus dados de contato. Vou analisar pessoalmente o
+              contexto da empresa e retornar para uma conversa inicial,
+              sem compromisso.
             </p>
-
+      
             <div className="mt-8 space-y-4">
               <div className="flex items-start gap-3">
                 <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-emerald-800" />
+      
                 <p className="text-sm leading-6 text-slate-600">
                   Nenhuma contratação é feita nesta etapa.
                 </p>
               </div>
-
+      
               <div className="flex items-start gap-3">
                 <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-800" />
+      
                 <p className="text-sm leading-6 text-slate-600">
-                  O escopo inicial é reduzido e acompanhado diretamente.
+                  O preenchimento leva menos de 30 segundos.
+                </p>
+              </div>
+      
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-800" />
+      
+                <p className="text-sm leading-6 text-slate-600">
+                  Volume de contas, fontes de dados e cenário de churn serão
+                  discutidos somente depois.
                 </p>
               </div>
             </div>
           </div>
-
+      
           <form
             ref={formRef}
             onSubmit={handleSubmit}
@@ -1178,39 +1189,45 @@ export default function OhrlyLandingPage() {
             <input
               type="hidden"
               name="source"
-              value="Ohrly landing page - churn target v2"
+              value="Ohrly landing page - churn target v3 short form"
             />
+      
             <input
               type="hidden"
               name="landing_variant"
               value={LANDING_VARIANT}
             />
+      
             <input
               type="hidden"
               name="utm_source"
               value={attribution.utmSource}
             />
+      
             <input
               type="hidden"
               name="utm_medium"
               value={attribution.utmMedium}
             />
+      
             <input
               type="hidden"
               name="utm_campaign"
               value={attribution.utmCampaign}
             />
+      
             <input
               type="hidden"
               name="utm_content"
               value={attribution.utmContent}
             />
+      
             <input
               type="hidden"
               name="utm_term"
               value={attribution.utmTerm}
             />
-
+      
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="space-y-2 text-sm font-medium text-slate-700">
                 Nome
@@ -1225,7 +1242,7 @@ export default function OhrlyLandingPage() {
                   className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
                 />
               </label>
-
+      
               <label className="space-y-2 text-sm font-medium text-slate-700">
                 Empresa
                 <input
@@ -1240,7 +1257,7 @@ export default function OhrlyLandingPage() {
                 />
               </label>
             </div>
-
+      
             <label className="mt-4 block space-y-2 text-sm font-medium text-slate-700">
               E-mail corporativo
               <input
@@ -1248,110 +1265,14 @@ export default function OhrlyLandingPage() {
                 type="email"
                 placeholder="voce@empresa.com"
                 autoComplete="email"
+                inputMode="email"
                 required
                 onChange={handleFieldChange}
                 onBlur={handleFieldBlur}
                 className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
               />
             </label>
-
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <label className="space-y-2 text-sm font-medium text-slate-700">
-                Quantas contas ativas vocês possuem?
-                <select
-                  name="account_count"
-                  required
-                  defaultValue=""
-                  onChange={handleFieldChange}
-                  onBlur={handleFieldBlur}
-                  className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
-                >
-                  <option value="" disabled>
-                    Selecione
-                  </option>
-                  <option value="up_to_50">Até 50</option>
-                  <option value="51_100">51–100</option>
-                  <option value="101_300">101–300</option>
-                  <option value="301_500">301–500</option>
-                  <option value="more_than_500">Mais de 500</option>
-                </select>
-              </label>
-
-              <label className="space-y-2 text-sm font-medium text-slate-700">
-                Como acompanham risco de churn hoje?
-                <select
-                  name="risk_tracking"
-                  required
-                  defaultValue=""
-                  onChange={handleFieldChange}
-                  onBlur={handleFieldBlur}
-                  className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
-                >
-                  <option value="" disabled>
-                    Selecione
-                  </option>
-                  <option value="manual">
-                    Acompanhamento manual
-                  </option>
-                  <option value="crm_or_spreadsheet">
-                    CRM ou planilha
-                  </option>
-                  <option value="health_score">
-                    Health Score
-                  </option>
-                  <option value="cs_platform">
-                    Plataforma de Customer Success
-                  </option>
-                  <option value="unstructured">
-                    Ainda não temos um processo estruturado
-                  </option>
-                </select>
-              </label>
-            </div>
-
-            <fieldset className="mt-5">
-              <legend className="text-sm font-medium text-slate-700">
-                Quais fontes poderiam ser usadas no piloto?
-              </legend>
-
-              <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                {[
-                  ["intercom", "Intercom"],
-                  ["product_usage", "Dados de uso do produto"],
-                  ["crm", "CRM"],
-                  ["billing", "Billing"],
-                  ["other", "Outra"],
-                ].map(([value, label]) => (
-                  <label
-                    key={value}
-                    className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700"
-                  >
-                    <input
-                      type="checkbox"
-                      name="data_sources"
-                      value={value}
-                      onChange={handleFieldChange}
-                      onBlur={handleFieldBlur}
-                      className="h-4 w-4 rounded border-slate-300 text-emerald-800 focus:ring-emerald-200"
-                    />
-                    {label}
-                  </label>
-                ))}
-              </div>
-            </fieldset>
-
-            <label className="mt-5 block space-y-2 text-sm font-medium text-slate-700">
-              Há algo importante sobre a operação que deveríamos saber?
-              <textarea
-                name="message"
-                rows={4}
-                placeholder="Campo opcional"
-                onChange={handleFieldChange}
-                onBlur={handleFieldBlur}
-                className="mt-2 w-full resize-none rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
-              />
-            </label>
-
+      
             <button
               type="submit"
               disabled={isSubmitting}
@@ -1359,12 +1280,18 @@ export default function OhrlyLandingPage() {
             >
               {isSubmitting
                 ? "Enviando..."
-                : "Quero avaliar aderência ao piloto"}
+                : "Quero conversar sobre o piloto"}
+      
               {!isSubmitting && (
                 <ArrowRight className="h-4 w-4" />
               )}
             </button>
-
+      
+            <p className="mt-3 text-center text-xs leading-5 text-slate-500">
+              Sem compromisso e sem contratação automática. Você receberá
+              um retorno por e-mail para combinar a conversa inicial.
+            </p>
+      
             {submitStatus.type !== "idle" && (
               <p
                 role={
@@ -1373,10 +1300,11 @@ export default function OhrlyLandingPage() {
                     : "status"
                 }
                 aria-live="polite"
-                className={`mt-4 rounded-xl border px-4 py-3 text-sm leading-6 ${submitStatus.type === "success"
+                className={`mt-4 rounded-xl border px-4 py-3 text-sm leading-6 ${
+                  submitStatus.type === "success"
                     ? "border-emerald-200 bg-emerald-50 text-emerald-900"
                     : "border-rose-200 bg-rose-50 text-rose-800"
-                  }`}
+                }`}
               >
                 {submitStatus.message}
               </p>
