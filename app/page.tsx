@@ -672,7 +672,7 @@ export default function OhrlyLandingPage() {
 
             <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">
               Descubra onde o comportamento do cliente começa a mudar antes
-              do cancelamento — e por que olhar apenas o estado atual pode
+              do cancelamento, e por que olhar apenas o estado atual pode
               esconder parte da história.
             </p>
 
