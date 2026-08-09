@@ -11,6 +11,11 @@ type Attribution = {
 const VISITOR_KEY = "ohrly_visitor_id";
 const SESSION_KEY = "ohrly_session_id";
 const ATTRIBUTION_KEY = "ohrly_first_attribution";
+const ANALYTICS_OPT_OUT_KEY = "ohrly_analytics_opt_out";
+
+export const LANDING_VARIANT = "return_predictability_v1";
+
+import { track as trackVercel } from "@vercel/analytics";
 
 function getOrCreateId(
   storage: Storage,
@@ -105,7 +110,7 @@ export function trackEvent(
     visitorId,
     sessionId,
     pagePath: window.location.pathname,
-    landingVariant: "churn_target_v4_ebook",
+    landingVariant: LANDING_VARIANT,
     attribution: readAttribution(),
     referrerHost: getReferrerHost(),
     properties,
@@ -124,10 +129,19 @@ export function trackEvent(
       error,
     );
   });
-}
 
-const ANALYTICS_OPT_OUT_KEY =
-  "ohrly_analytics_opt_out";
+  try {
+    trackVercel(
+      eventName,
+      toVercelProperties(properties),
+    );
+  } catch (error) {
+    console.warn(
+      `Vercel Analytics event failed: ${eventName}`,
+      error,
+    );
+  }
+}
 
 export function disableAnalytics(): void {
   if (typeof window === "undefined") {
@@ -160,4 +174,35 @@ function isAnalyticsDisabled(): boolean {
       ANALYTICS_OPT_OUT_KEY,
     ) === "true"
   );
+}
+
+type VercelAnalyticsValue =
+  | string
+  | number
+  | boolean
+  | null;
+
+type VercelAnalyticsProperties =
+  Record<string, VercelAnalyticsValue>;
+
+function toVercelProperties(
+  properties: AnalyticsProperties,
+): VercelAnalyticsProperties {
+  const result: VercelAnalyticsProperties = {};
+
+  for (const [key, value] of Object.entries(properties)) {
+    if (
+      typeof value === "string" ||
+      typeof value === "number" ||
+      typeof value === "boolean" ||
+      value === null
+    ) {
+      result[key] =
+        typeof value === "string"
+          ? value.slice(0, 255)
+          : value;
+    }
+  }
+
+  return result;
 }

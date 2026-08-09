@@ -1,1409 +1,398 @@
-"use client";
+import type { Metadata } from "next";
+import { PilotForm } from "./components/PilotForm";
+import { LandingAnalytics } from "./components/LandingAnalytics";
 
-import {
-  type ChangeEvent,
-  type FocusEvent,
-  type FormEvent,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { trackEvent } from "@/lib/analytics";
-import { trackMetaLead } from "@/lib/meta-pixel";
-import {
-  ArrowRight,
-  BarChart3,
-  BookOpen,
-  Check,
-  CheckCircle2,
-  Clock3,
-  Download,
-  LockKeyhole,
-  RefreshCcw,
-  ShieldCheck,
-  TrendingDown,
-  Users,
-} from "lucide-react";
-import Image from "next/image";
-
-const LANDING_VARIANT = "churn_ebook_v1_hero_form";
-const EBOOK_FORM_ID = "ebook_download";
-const PILOT_FORM_ID = "pilot_application";
-const EBOOK_URL =
-  process.env.NEXT_PUBLIC_EBOOK_URL ??
-  "/antes_do_churn.pdf";
-
-const timelineItems = [
-  {
-    week: "Semana 1",
-    title: "A frequência fica abaixo do padrão",
-    description:
-      "A conta começa a se afastar do próprio comportamento histórico.",
-  },
-  {
-    week: "Semana 2",
-    title: "A mudança permanece",
-    description:
-      "O desvio deixa de parecer apenas uma oscilação pontual.",
-  },
-  {
-    week: "Semana 3",
-    title: "Menos usuários continuam ativos",
-    description:
-      "A adoção passa a se concentrar em um grupo menor dentro da conta.",
-  },
-  {
-    week: "Semana 4",
-    title: "O uso se concentra em uma pessoa",
-    description:
-      "A dependência de poucos usuários aumenta a fragilidade da relação.",
-  },
-  {
-    week: "Semana 5",
-    title: "Há melhora parcial, mas não recuperação",
-    description:
-      "A conta ainda permanece materialmente distante do padrão anterior.",
-  },
-];
-
-const problemCards = [
-  {
-    title: "Os sinais estão espalhados",
-    description:
-      "Uso, atendimento, CRM e contexto comercial contam partes diferentes da história.",
-    icon: BarChart3,
-  },
-  {
-    title: "A conta ainda parece normal",
-    description:
-      "Pequenas mudanças são tratadas como ruído até se acumularem por várias semanas.",
-    icon: Clock3,
-  },
-  {
-    title: "O time precisa priorizar",
-    description:
-      "Com muitas contas, o CSM não consegue reconstruir manualmente cada trajetória.",
-    icon: Users,
-  },
-];
-
-const pilotSteps = [
-  "Selecionamos uma população de contas.",
-  "Usamos o histórico de comportamento e relacionamento.",
-  "Reconstruímos trajetórias anteriores ao churn.",
-  "Comparamos contas churnadas, recuperadas e saudáveis.",
-  "Revisamos os casos com quem conhece a operação.",
-];
-
-const deliverables = [
-  "Trajetórias reconstruídas por conta",
-  "Mudanças que apareceram antes do churn",
-  "Casos em que houve recuperação",
-  "Sinais que já estavam ou não no radar do time",
-  "Hipóteses para o primeiro monitoramento contínuo",
-];
-
-const nonPromises = [
-  "Prever todo churn",
-  "Identificar causa raiz automaticamente",
-  "Substituir o julgamento do CSM",
-  "Provar prevenção antes do piloto",
-];
-
-type Attribution = {
-  utmSource: string;
-  utmMedium: string;
-  utmCampaign: string;
-  utmContent: string;
-  utmTerm: string;
+export const metadata: Metadata = {
+  title: "Ohrly — Previsibilidade de receita recorrente",
+  description:
+    "Descubra onde o ritmo de retorno dos seus clientes começou a mudar e quanto de receita recorrente está associado a essa mudança.",
 };
 
-const emptyAttribution: Attribution = {
-  utmSource: "",
-  utmMedium: "",
-  utmCampaign: "",
-  utmContent: "",
-  utmTerm: "",
-};
+const Check = () => (
+  <svg
+    aria-hidden="true"
+    viewBox="0 0 24 24"
+    className="h-4 w-4 shrink-0"
+    fill="none"
+  >
+    <path
+      d="m5 12.5 4.1 4.1L19 6.8"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
-function readAttributionFromUrl(): Attribution {
-  if (typeof window === "undefined") {
-    return emptyAttribution;
-  }
+const Arrow = () => (
+  <svg
+    aria-hidden="true"
+    viewBox="0 0 24 24"
+    className="h-4 w-4"
+    fill="none"
+  >
+    <path
+      d="M5 12h14M14 7l5 5-5 5"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
-  const params = new URLSearchParams(window.location.search);
+const Divider = () => <div className="h-px w-full bg-[#dfe8e4]" />;
 
-  return {
-    utmSource: params.get("utm_source") ?? "",
-    utmMedium: params.get("utm_medium") ?? "",
-    utmCampaign: params.get("utm_campaign") ?? "",
-    utmContent: params.get("utm_content") ?? "",
-    utmTerm: params.get("utm_term") ?? "",
-  };
-}
-
-function CheckList({
-  items,
-  tone = "positive",
-}: {
-  items: string[];
-  tone?: "positive" | "neutral";
-}) {
+export default function PilotPage() {
   return (
-    <ul className="mt-5 space-y-3">
-      {items.map((item) => (
-        <li key={item} className="flex items-start gap-3 text-sm text-slate-600">
-          <span
-            className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${tone === "positive"
-                ? "bg-emerald-50 text-emerald-700"
-                : "bg-slate-100 text-slate-500"
-              }`}
-          >
-            <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
-          </span>
-          <span>{item}</span>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-export default function OhrlyLandingPage() {
-  type SubmitStatus = {
-    type: "idle" | "success" | "error";
-    message: string;
-  };
-
-  const idleSubmitStatus: SubmitStatus = {
-    type: "idle",
-    message: "",
-  };
-
-  const [submittingFormId, setSubmittingFormId] = useState<string | null>(null);
-  const [attribution, setAttribution] =
-    useState<Attribution>(emptyAttribution);
-  const [submitStatusByForm, setSubmitStatusByForm] = useState<
-    Record<string, SubmitStatus>
-  >({
-    [EBOOK_FORM_ID]: idleSubmitStatus,
-    [PILOT_FORM_ID]: idleSubmitStatus,
-  });
-
-  const ebookFormRef = useRef<HTMLFormElement | null>(null);
-  const pilotFormRef = useRef<HTMLFormElement | null>(null);
-  const formStartedRef = useRef(new Set<string>());
-  const formViewTrackedRef = useRef(new Set<string>());
-  const trackedSectionsRef = useRef(new Set<string>());
-  const trackedScrollDepthsRef = useRef(new Set<number>());
-  const trackedStartedFieldsRef = useRef(new Set<string>());
-
-  useEffect(() => {
-    const currentAttribution = readAttributionFromUrl();
-    setAttribution(currentAttribution);
-
-    trackEvent("lp_view", {
-      landingVariant: LANDING_VARIANT,
-    });
-
-    const engagementTimer = window.setTimeout(() => {
-      trackEvent("lp_engaged_10s", {
-        landingVariant: LANDING_VARIANT,
-      });
-    }, 10_000);
-
-    return () => {
-      window.clearTimeout(engagementTimer);
-    };
-  }, []);
-
-  useEffect(() => {
-    const sectionIds = [
-      "inicio",
-      "ponte-churn",
-      "exemplo",
-      "problema",
-      "como-funciona",
-      "piloto",
-      "fundador",
-      "contato",
-    ];
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) {
-            continue;
-          }
-
-          const section = entry.target.id;
-
-          if (!section || trackedSectionsRef.current.has(section)) {
-            continue;
-          }
-
-          trackedSectionsRef.current.add(section);
-
-          trackEvent("section_view", {
-            section,
-            landingVariant: LANDING_VARIANT,
-          });
-
-          if (section === "ponte-churn") {
-            trackEvent("churn_bridge_view", {
-              landingVariant: LANDING_VARIANT,
-            });
-          }
-
-          if (section === "exemplo") {
-            trackEvent("example_view", {
-              exampleId: "account_trajectory",
-              landingVariant: LANDING_VARIANT,
-            });
-          }
-
-          if (section === "piloto") {
-            trackEvent("pilot_details_view", {
-              pilotId: LANDING_VARIANT,
-              landingVariant: LANDING_VARIANT,
-            });
-          }
-        }
-      },
-      {
-        threshold: 0.01,
-        rootMargin: "0px 0px -10% 0px",
-      },
-    );
-
-    for (const sectionId of sectionIds) {
-      const element = document.getElementById(sectionId);
-
-      if (element) {
-        observer.observe(element);
-      }
-    }
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    const forms = [ebookFormRef.current, pilotFormRef.current].filter(
-      (form): form is HTMLFormElement => Boolean(form),
-    );
-
-    if (forms.length === 0) {
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) {
-            continue;
-          }
-
-          const form = entry.target as HTMLFormElement;
-          const formId = form.dataset.formId;
-
-          if (!formId || formViewTrackedRef.current.has(formId)) {
-            continue;
-          }
-
-          formViewTrackedRef.current.add(formId);
-
-          trackEvent("form_view", {
-            formId,
-            landingVariant: LANDING_VARIANT,
-          });
-        }
-      },
-      {
-        threshold: 0.01,
-        rootMargin: "0px 0px -10% 0px",
-      },
-    );
-
-    for (const form of forms) {
-      observer.observe(form);
-    }
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    function handleScroll() {
-      const documentHeight =
-        document.documentElement.scrollHeight - window.innerHeight;
-
-      if (documentHeight <= 0) {
-        return;
-      }
-
-      const depth = Math.min(
-        100,
-        Math.round((window.scrollY / documentHeight) * 100),
-      );
-
-      for (const threshold of [25, 50, 75, 90]) {
-        if (
-          depth >= threshold &&
-          !trackedScrollDepthsRef.current.has(threshold)
-        ) {
-          trackedScrollDepthsRef.current.add(threshold);
-
-          trackEvent(`scroll_${threshold}`, {
-            depthPercent: threshold,
-            landingVariant: LANDING_VARIANT,
-          });
-        }
-      }
-    }
-
-    window.addEventListener("scroll", handleScroll, {
-      passive: true,
-    });
-
-    handleScroll();
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
-  function getFormIdFromElement(element: Element) {
-    return (
-      element.closest("form")?.getAttribute("data-form-id") ??
-      "unknown_form"
-    );
-  }
-
-  function setFormStatus(formId: string, status: SubmitStatus) {
-    setSubmitStatusByForm((current) => ({
-      ...current,
-      [formId]: status,
-    }));
-  }
-
-  function handleFormFocus(event: FocusEvent<HTMLFormElement>) {
-    const formId =
-      event.currentTarget.dataset.formId ?? "unknown_form";
-
-    if (formStartedRef.current.has(formId)) {
-      return;
-    }
-
-    formStartedRef.current.add(formId);
-
-    trackEvent("form_start", {
-      formId,
-      landingVariant: LANDING_VARIANT,
-    });
-  }
-
-  function handleFieldChange(
-    event:
-      | ChangeEvent<HTMLInputElement>
-      | ChangeEvent<HTMLTextAreaElement>
-      | ChangeEvent<HTMLSelectElement>,
-  ) {
-    const formId = getFormIdFromElement(event.currentTarget);
-    const fieldName = event.currentTarget.name;
-    const fieldKey = `${formId}:${fieldName}`;
-    const fieldValue =
-      event.currentTarget instanceof HTMLInputElement &&
-      event.currentTarget.type === "checkbox"
-        ? event.currentTarget.checked
-          ? event.currentTarget.value
-          : ""
-        : event.currentTarget.value;
-
-    if (
-      fieldValue.trim().length > 0 &&
-      !trackedStartedFieldsRef.current.has(fieldKey)
-    ) {
-      trackedStartedFieldsRef.current.add(fieldKey);
-
-      trackEvent("form_field_started", {
-        formId,
-        fieldName,
-        landingVariant: LANDING_VARIANT,
-      });
-    }
-  }
-
-  function handleFieldBlur(
-    event:
-      | FocusEvent<HTMLInputElement>
-      | FocusEvent<HTMLTextAreaElement>
-      | FocusEvent<HTMLSelectElement>,
-  ) {
-    const formId = getFormIdFromElement(event.currentTarget);
-    const value =
-      event.currentTarget instanceof HTMLInputElement &&
-      event.currentTarget.type === "checkbox"
-        ? event.currentTarget.checked
-          ? event.currentTarget.value
-          : ""
-        : event.currentTarget.value;
-
-    trackEvent("form_field_blur", {
-      formId,
-      fieldName: event.currentTarget.name,
-      hasValue: value.trim().length > 0,
-      landingVariant: LANDING_VARIANT,
-    });
-  }
-
-  function triggerEbookDownload() {
-    const anchor = document.createElement("a");
-    anchor.href = EBOOK_URL;
-    anchor.download = "churn-antes-do-churn-ohrly.pdf";
-    anchor.rel = "noopener";
-    document.body.appendChild(anchor);
-    anchor.click();
-    anchor.remove();
-  }
-
-  async function handleSubmit(
-    event: FormEvent<HTMLFormElement>,
-  ) {
-    event.preventDefault();
-
-    const form = event.currentTarget;
-    const formId = form.dataset.formId ?? "unknown_form";
-    const isEbookForm = formId === EBOOK_FORM_ID;
-    const formspreeFormId =
-      process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID ??
-      "mkoygpnk";
-
-    if (!formspreeFormId) {
-      setFormStatus(formId, {
-        type: "error",
-        message:
-          "O formulário ainda não foi configurado. Defina NEXT_PUBLIC_FORMSPREE_FORM_ID.",
-      });
-      return;
-    }
-
-    trackEvent("form_submit_attempt", {
-      formId,
-      landingVariant: LANDING_VARIANT,
-    });
-
-    setSubmittingFormId(formId);
-    setFormStatus(formId, idleSubmitStatus);
-
-    try {
-      const response = await fetch(
-        `https://formspree.io/f/${formspreeFormId}`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-          },
-          body: new FormData(form),
-        },
-      );
-
-      const result = (await response.json().catch(() => null)) as
-        | {
-            errors?: Array<{
-              message?: string;
-            }>;
-          }
-        | null;
-
-      if (!response.ok) {
-        const formspreeMessage = result?.errors
-          ?.map((error) => error.message)
-          .filter(Boolean)
-          .join(" ");
-
-        throw new Error(
-          formspreeMessage ||
-            "Não foi possível enviar suas informações. Tente novamente em instantes.",
-        );
-      }
-
-      form.reset();
-      formStartedRef.current.delete(formId);
-
-      for (const fieldKey of Array.from(
-        trackedStartedFieldsRef.current,
-      )) {
-        if (fieldKey.startsWith(`${formId}:`)) {
-          trackedStartedFieldsRef.current.delete(fieldKey);
-        }
-      }
-
-      trackEvent("form_submit_success", {
-        formId,
-        landingVariant: LANDING_VARIANT,
-      });
-
-      trackMetaLead();
-
-      if (isEbookForm) {
-        trackEvent("ebook_download", {
-          ebookId: "churn_antes_do_churn",
-          source: "hero_form",
-          landingVariant: LANDING_VARIANT,
-        });
-
-        triggerEbookDownload();
-
-        setFormStatus(formId, {
-          type: "success",
-          message:
-            "Pronto. O download do ebook foi iniciado. Se ele não abrir automaticamente, use o link abaixo.",
-        });
-      } else {
-        setFormStatus(formId, {
-          type: "success",
-          message:
-            "Recebemos suas informações. Entraremos em contato para avaliar a aderência da operação ao piloto.",
-        });
-      }
-    } catch (error) {
-      trackEvent("form_submit_error", {
-        formId,
-        errorType: "formspree_request_failed",
-        landingVariant: LANDING_VARIANT,
-      });
-
-      setFormStatus(formId, {
-        type: "error",
-        message:
-          error instanceof Error
-            ? error.message
-            : "Ocorreu um erro inesperado durante o envio.",
-      });
-    } finally {
-      setSubmittingFormId(null);
-    }
-  }
-
-  const ebookSubmitStatus =
-    submitStatusByForm[EBOOK_FORM_ID] ?? idleSubmitStatus;
-  const pilotSubmitStatus =
-    submitStatusByForm[PILOT_FORM_ID] ?? idleSubmitStatus;
-  const ebookIsSubmitting = submittingFormId === EBOOK_FORM_ID;
-  const pilotIsSubmitting = submittingFormId === PILOT_FORM_ID;
-
-  return (
-    <main className="min-h-screen bg-[#fbfcfb] text-slate-950">
-      <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
+    <main className="min-h-screen bg-[#f7f6f2] text-[#0d2f31] antialiased">
+      <LandingAnalytics />
+      <header className="border-b border-[#dfe8e4]/90">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5 sm:px-8 lg:px-10">
           <a
-            href="#inicio"
-            className="text-2xl font-semibold tracking-tight"
+            href="#top"
+            className="font-serif text-[28px] tracking-[-0.035em] text-[#0b3537]"
+            aria-label="Ohrly"
           >
             Ohrly
           </a>
 
-          <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 lg:flex">
-            <a
-              className="transition hover:text-emerald-800"
-              href="#exemplo"
-            >
-              Exemplo
-            </a>
-            <a
-              className="transition hover:text-emerald-800"
-              href="#como-funciona"
-            >
-              Como funciona
-            </a>
-            <a
-              className="transition hover:text-emerald-800"
-              href="#piloto"
-            >
-              Piloto
-            </a>
-          </nav>
-
           <a
-            href="#ebook-form"
-            onClick={() =>
-              trackEvent("cta_click", {
-                location: "header",
-                ctaId: "download_ebook",
-                target: "ebook_form",
-                landingVariant: LANDING_VARIANT,
-              })
-            }
-            className="rounded-xl bg-emerald-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-800"
+            href="#piloto"
+            data-analytics-cta
+            data-analytics-location="header"
+            data-analytics-label="Conhecer o piloto"
+            className="hidden items-center gap-2 text-sm font-medium text-[#355657] transition hover:text-[#0b3537] sm:flex"
           >
-            Baixar ebook
+            Conhecer o piloto
+            <Arrow />
           </a>
         </div>
       </header>
 
       <section
-        id="inicio"
-        className="relative overflow-hidden border-b border-slate-200 bg-[#fbfcf9] px-5 py-14 sm:py-20 lg:px-8 lg:py-24"
+        id="top"
+        data-analytics-section="hero"
+        className="mx-auto grid max-w-7xl gap-14 px-5 pb-20 pt-14 sm:px-8 sm:pt-20 lg:grid-cols-[1.08fr_0.92fr] lg:gap-20 lg:px-10 lg:pb-28 lg:pt-24"
       >
-        <div className="pointer-events-none absolute -right-40 -top-40 h-[34rem] w-[34rem] rounded-full bg-emerald-50/70" />
-        <div className="pointer-events-none absolute right-[8%] top-24 hidden grid-cols-6 gap-3 opacity-50 lg:grid">
-          {Array.from({ length: 24 }).map((_, index) => (
-            <span
-              key={index}
-              className="h-1 w-1 rounded-full bg-emerald-800"
-            />
-          ))}
-        </div>
-
-        <div className="relative mx-auto grid max-w-7xl items-start gap-12 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16">
-          <div className="lg:pt-8">
-            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/80 px-3 py-1.5 text-xs font-semibold text-emerald-800 shadow-sm">
-              <BookOpen className="h-4 w-4" />
-              Ebook gratuito para SaaS B2B
-            </div>
-
-            <h1 className="mt-7 max-w-2xl text-4xl font-semibold leading-[1.04] tracking-[-0.04em] text-slate-950 sm:text-5xl lg:text-6xl">
-              O churn do seu SaaS B2B está acima da meta?
-            </h1>
-
-            <div className="mt-6 h-1.5 w-24 rounded-full bg-emerald-900" />
-
-            <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">
-              Descubra onde o comportamento do cliente começa a mudar antes
-              do cancelamento, e por que olhar apenas o estado atual pode
-              esconder parte da história.
-            </p>
-
-            <div className="mt-8 max-w-xl rounded-2xl border border-slate-200 bg-white/90 p-5 shadow-sm">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
-                Exemplo ilustrativo
-              </p>
-
-              <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-5">
-                <div>
-                  <p className="text-sm font-medium text-slate-600">
-                    Meta de churn
-                  </p>
-                  <p className="mt-1 text-5xl font-medium tracking-tight text-emerald-900">
-                    3%
-                  </p>
-                </div>
-
-                <div className="h-20 w-px bg-slate-200" />
-
-                <div>
-                  <p className="text-sm font-medium text-slate-600">Atual</p>
-                  <div className="mt-1 flex items-center gap-3">
-                    <p className="text-5xl font-semibold tracking-tight text-slate-950">
-                      5,1%
-                    </p>
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-rose-50 text-rose-700">
-                      <TrendingDown className="h-5 w-5 rotate-180" />
-                    </span>
-                  </div>
-                  <p className="mt-1 text-sm font-semibold text-rose-700">
-                    Acima da meta
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-7 grid max-w-xl gap-3 sm:grid-cols-3">
-              {[
-                {
-                  label: "snapshot ≠ trajetória",
-                  icon: TrendingDown,
-                },
-                {
-                  label: "melhorar ≠ recuperar",
-                  icon: RefreshCcw,
-                },
-                {
-                  label: "quando esperar deixa de ser neutro?",
-                  icon: Clock3,
-                },
-              ].map(({ label, icon: Icon }) => (
-                <div
-                  key={label}
-                  className="flex items-start gap-2.5 border-t border-slate-200 pt-3 text-sm leading-5 text-slate-600"
-                >
-                  <Icon className="mt-0.5 h-4 w-4 shrink-0 text-emerald-800" />
-                  <span>{label}</span>
-                </div>
-              ))}
-            </div>
+        <div className="max-w-3xl">
+          <div className="mb-8 inline-flex items-center rounded-full border border-[#cfded8] bg-white/50 px-3 py-1.5 text-xs font-medium tracking-[0.04em] text-[#54716f]">
+            PILOTO FUNDADOR · TRINKS
           </div>
 
-          <form
-            id="ebook-form"
-            ref={ebookFormRef}
-            data-form-id={EBOOK_FORM_ID}
-            onSubmit={handleSubmit}
-            onFocusCapture={handleFormFocus}
-            className="relative rounded-[28px] border border-slate-200 bg-white p-5 shadow-[0_24px_70px_rgba(15,23,42,0.11)] sm:p-7 lg:p-8"
-          >
-            <input
-              type="hidden"
-              name="source"
-              value="Ohrly landing page - ebook Churn antes do churn"
-            />
-            <input type="hidden" name="intent" value="ebook_download" />
-            <input
-              type="hidden"
-              name="ebook"
-              value="churn_antes_do_churn"
-            />
-            <input
-              type="hidden"
-              name="landing_variant"
-              value={LANDING_VARIANT}
-            />
-            <input type="hidden" name="utm_source" value={attribution.utmSource} />
-            <input type="hidden" name="utm_medium" value={attribution.utmMedium} />
-            <input type="hidden" name="utm_campaign" value={attribution.utmCampaign} />
-            <input type="hidden" name="utm_content" value={attribution.utmContent} />
-            <input type="hidden" name="utm_term" value={attribution.utmTerm} />
+          <h1 className="max-w-[850px] font-serif text-[46px] leading-[0.98] tracking-[-0.045em] text-[#0d2f31] ">
+            Você sabe quais clientes deveriam ter voltado, mas ainda não voltaram?
+          </h1>
 
-            <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800">
-              <BookOpen className="h-4 w-4" />
-              Ebook gratuito
-            </div>
-
-            <h2 className="mt-5 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
-              Baixe Churn antes do churn
-            </h2>
-
-            <p className="mt-3 max-w-xl text-sm leading-6 text-slate-600 sm:text-base sm:leading-7">
-              Uma leitura curta sobre trajetória, recuperação e o momento em
-              que esperar por mais certeza começa a consumir a janela de
-              decisão.
+          <div className="mt-8 max-w-2xl border-l-2 border-[#e7775f] pl-5">
+            <p className="text-lg leading-8 text-[#294849] sm:text-xl">
+              O problema não é apenas quem faltou hoje.
+              <span className="font-semibold text-[#0d2f31]">
+                {" "}
+                É a receita dos próximos meses ficando menos previsível.
+              </span>
             </p>
+          </div>
 
-            <div className="mt-6 space-y-4">
-              <label className="block text-sm font-medium text-slate-700">
-                Nome
-                <input
-                  name="name"
-                  type="text"
-                  placeholder="Seu nome"
-                  autoComplete="name"
-                  required
-                  onChange={handleFieldChange}
-                  onBlur={handleFieldBlur}
-                  className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
-                />
-              </label>
+          <p className="mt-8 max-w-2xl text-base leading-7 text-[#587171] sm:text-lg">
+            O Ohrly analisa o histórico da sua operação, aprende o ritmo normal
+            de retorno dos seus clientes e mostra onde essa recorrência começou
+            a mudar, por serviço, profissional e contexto.
+          </p>
 
-              <label className="block text-sm font-medium text-slate-700">
-                E-mail profissional
-                <input
-                  name="email"
-                  type="email"
-                  placeholder="voce@empresa.com"
-                  autoComplete="email"
-                  inputMode="email"
-                  required
-                  onChange={handleFieldChange}
-                  onBlur={handleFieldBlur}
-                  className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
-                />
-              </label>
-
-              <label className="block text-sm font-medium text-slate-700">
-                Empresa
-                <input
-                  name="company"
-                  type="text"
-                  placeholder="Nome da empresa"
-                  autoComplete="organization"
-                  required
-                  onChange={handleFieldChange}
-                  onBlur={handleFieldBlur}
-                  className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
-                />
-              </label>
+          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-[#3f5e5f]">
+            <div className="flex items-center gap-2">
+              <span className="text-[#0d7773]"><Check /></span>
+              Sem regra fixa de “60 dias”
             </div>
-
-            <button
-              type="submit"
-              disabled={ebookIsSubmitting}
-              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-900 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {ebookIsSubmitting ? "Preparando download..." : "Baixar ebook gratuito"}
-              {!ebookIsSubmitting && <Download className="h-4 w-4" />}
-            </button>
-
-            <div className="mt-3 flex items-center justify-center gap-2 text-xs leading-5 text-slate-500">
-              <LockKeyhole className="h-3.5 w-3.5" />
-              <span>Sem spam. Apenas o material.</span>
+            <div className="flex items-center gap-2">
+              <span className="text-[#0d7773]"><Check /></span>
+              Histórico da sua própria operação
             </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[#0d7773]"><Check /></span>
+              Leitura econômica, não lista de inativos
+            </div>
+          </div>
+        </div>
 
-            {ebookSubmitStatus.type !== "idle" && (
-              <div
-                role={ebookSubmitStatus.type === "error" ? "alert" : "status"}
-                aria-live="polite"
-                className={`mt-4 rounded-xl border px-4 py-3 text-sm leading-6 ${
-                  ebookSubmitStatus.type === "success"
-                    ? "border-emerald-200 bg-emerald-50 text-emerald-900"
-                    : "border-rose-200 bg-rose-50 text-rose-800"
-                }`}
-              >
-                <p>{ebookSubmitStatus.message}</p>
-                {ebookSubmitStatus.type === "success" && (
-                  <a
-                    href={EBOOK_URL}
-                    download="churn-antes-do-churn-ohrly.pdf"
-                    onClick={() =>
-                      trackEvent("ebook_download_fallback", {
-                        ebookId: "churn_antes_do_churn",
-                        landingVariant: LANDING_VARIANT,
-                      })
-                    }
-                    className="mt-2 inline-flex items-center gap-1.5 font-semibold underline underline-offset-4"
-                  >
-                    Baixar novamente
-                    <Download className="h-3.5 w-3.5" />
-                  </a>
-                )}
-              </div>
-            )}
-
-            <div className="mt-7 flex items-end justify-between gap-6 border-t border-slate-100 pt-5">
-              <div className="flex items-center gap-3 text-sm text-slate-600">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-50 text-emerald-800">
-                  <Clock3 className="h-4.5 w-4.5" />
-                </span>
-                <div>
-                  <p className="font-semibold text-slate-800">Leitura rápida</p>
-                  <p className="text-xs text-slate-500">5 páginas · SaaS B2B</p>
-                </div>
-              </div>
-
-              <div className="hidden h-36 w-24 rotate-2 rounded-sm border border-stone-200 bg-[#faf9f4] p-3 shadow-[8px_10px_24px_rgba(15,23,42,0.12)] sm:block">
-                <p className="text-[7px] font-semibold tracking-[0.22em] text-slate-800">
-                  OHRLY
+        <div id="piloto" className="lg:pt-2">
+          <div className="rounded-[28px] border border-[#d9e2de] bg-white p-6 shadow-[0_18px_60px_rgba(13,47,49,0.07)] sm:p-8">
+            <div className="mb-7 flex items-start justify-between gap-5">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#e16f58]">
+                  Piloto fundador
                 </p>
-                <p className="mt-5 text-lg font-semibold leading-5 tracking-tight text-slate-900">
-                  Churn
-                  <br />
-                  antes do
-                  <br />
-                  churn
-                </p>
-                <div className="mt-5 h-7 w-7 rounded-full bg-emerald-100" />
+                <h2 className="mt-2 font-serif text-3xl tracking-[-0.035em] text-[#0d2f31]">
+                  Descubra onde sua recorrência está perdendo previsibilidade.
+                </h2>
               </div>
             </div>
-          </form>
+
+            <PilotForm />
+
+          </div>
         </div>
       </section>
 
-      <section
-        id="ponte-churn"
-        className="border-b border-slate-200 bg-emerald-950 px-5 py-16 text-white lg:px-8 lg:py-20"
-      >
-        <div className="mx-auto max-w-4xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-300">
-            Antes do cancelamento
-          </p>
+      <Divider />
 
-          <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
-            O cancelamento é o fim da história. O Ohrly procura onde ela
-            começou.
-          </h2>
-
-          <p className="mx-auto mt-6 max-w-3xl text-base leading-8 text-emerald-50/80 sm:text-lg">
-            Antes de alguns churns, a conta passa por mudanças graduais de
-            uso, adoção, atendimento ou relacionamento. Nenhum sinal
-            isolado prova que haverá cancelamento. O que importa é saber se
-            a mudança persistiu e qual trajetória está em curso.
-          </p>
-
-          <div className="mx-auto mt-10 grid max-w-5xl gap-3 sm:grid-cols-5">
-            {[
-              "Comportamento habitual",
-              "Primeira mudança",
-              "Persistência",
-              "Não recuperação",
-              "Churn evidente",
-            ].map((item, index) => (
-              <div
-                key={item}
-                className="relative rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-sm font-medium text-white"
-              >
-                <span className="mb-2 block text-xs font-semibold text-emerald-300">
-                  0{index + 1}
-                </span>
-                {item}
-              </div>
-            ))}
-          </div>
-
-          <p className="mt-5 text-sm font-semibold text-emerald-300">
-            A janela de investigação acontece antes de o churn ficar
-            evidente.
-          </p>
-        </div>
-      </section>
-
-      <section
-        id="exemplo"
-        className="border-b border-slate-200 bg-white px-5 py-16 lg:px-8 lg:py-20"
-      >
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.82fr_1.18fr]">
+      <section data-analytics-section="problem" className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-10 lg:py-28">
+        <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-800">
-              Exemplo de análise
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#e16f58]">
+              O problema
             </p>
-
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
-              Como o Ohrly leria uma conta antes do cancelamento
+            <h2 className="mt-4 font-serif text-4xl leading-tight tracking-[-0.04em] sm:text-5xl">
+              Agenda cheia hoje não garante um próximo mês previsível.
             </h2>
-
-            <p className="mt-5 max-w-xl text-base leading-7 text-slate-600">
-              O objetivo não é afirmar que a conta vai churnar. É mostrar
-              quando uma mudança deixou de parecer apenas uma semana ruim.
-            </p>
-
-            <div className="mt-8 rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
-              <p className="text-sm font-semibold text-emerald-950">
-                O que o time poderia investigar
-              </p>
-              <p className="mt-2 text-sm leading-6 text-emerald-900">
-                Adoção interna, mudança de champion, fricção no produto ou
-                problema recorrente no suporte.
-              </p>
-            </div>
           </div>
 
-          <ol className="relative space-y-4 before:absolute before:bottom-6 before:left-[17px] before:top-6 before:w-px before:bg-emerald-200">
-            {timelineItems.map((item, index) => (
-              <li
-                key={item.week}
-                className="relative flex gap-4 rounded-2xl border border-slate-200 bg-slate-50/70 p-4"
-              >
-                <span className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-900 text-xs font-bold text-white ring-4 ring-white">
-                  {index + 1}
-                </span>
+          <div className="space-y-7 text-lg leading-8 text-[#456364]">
+            <p>
+              Uma cliente de manicure pode estar atrasada depois de 30 dias.
+              Uma cliente de coloração pode estar perfeitamente dentro do ritmo
+              esperado depois de 45.
+            </p>
 
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-emerald-700">
-                    {item.week}
-                  </p>
-                  <h3 className="mt-1 text-base font-semibold text-slate-900">
-                    {item.title}
-                  </h3>
-                  <p className="mt-1 text-sm leading-6 text-slate-600">
-                    {item.description}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ol>
+            <p>
+              Quando todos são tratados pela mesma régua, você mistura clientes
+              naturalmente lentos com clientes cuja recorrência realmente
+              começou a se deteriorar.
+            </p>
+
+            <p className="font-medium text-[#153d3e]">
+              O Ohrly procura a mudança antes que ela precise aparecer como uma
+              queda óbvia no faturamento.
+            </p>
+          </div>
         </div>
       </section>
 
-      <section
-        id="problema"
-        className="border-b border-slate-200 px-5 py-16 lg:px-8 lg:py-20"
-      >
-        <div className="mx-auto max-w-7xl">
-          <div className="mx-auto max-w-3xl text-center">
-            <h2 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
-              Por que o churn costuma parecer repentino?
-            </h2>
-
-            <p className="mt-5 text-base leading-7 text-slate-600">
-              O problema não é a ausência de dados. É transformar sinais
-              pequenos e dispersos em uma leitura que ajude o time a decidir.
+      <section data-analytics-section="pilot_details" className="border-y border-[#dfe8e4] bg-[#f1f5f2]">
+        <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-10 lg:py-24">
+          <div className="max-w-2xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#e16f58]">
+              O que você recebe
             </p>
+            <h2 className="mt-4 font-serif text-4xl tracking-[-0.04em] sm:text-5xl">
+              Uma leitura para decidir onde agir primeiro.
+            </h2>
           </div>
 
-          <div className="mt-12 grid gap-5 md:grid-cols-3">
-            {problemCards.map(({ title, description, icon: Icon }) => (
-              <article
-                key={title}
-                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
-              >
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 text-emerald-800">
-                  <Icon className="h-5 w-5" />
+          <div className="mt-12 grid gap-px overflow-hidden rounded-[28px] border border-[#d8e2dd] bg-[#d8e2dd] md:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                n: "01",
+                title: "Onde mudou",
+                body: "Serviços, profissionais ou contextos em que o ritmo de retorno começou a sair do histórico.",
+              },
+              {
+                n: "02",
+                title: "Quem está envolvido",
+                body: "Clientes que já ultrapassaram a região esperada para o próprio padrão de retorno.",
+              },
+              {
+                n: "03",
+                title: "Quanto está exposto",
+                body: "Uma estimativa da receita recorrente historicamente associada a esses retornos.",
+              },
+              {
+                n: "04",
+                title: "O que aconteceu depois",
+                body: "Acompanhamos a ação escolhida e verificamos se o comportamento começou a recuperar.",
+              },
+            ].map((item) => (
+              <article key={item.n} className="bg-[#fbfbf8] p-7 sm:p-8">
+                <span className="text-xs font-semibold tracking-[0.12em] text-[#91a4a1]">
+                  {item.n}
                 </span>
-
-                <h3 className="mt-5 text-lg font-semibold text-slate-900">
-                  {title}
+                <h3 className="mt-10 font-serif text-2xl tracking-[-0.025em]">
+                  {item.title}
                 </h3>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
-                  {description}
+                <p className="mt-4 text-sm leading-6 text-[#5b7474]">
+                  {item.body}
                 </p>
               </article>
             ))}
           </div>
-
-          <div className="mx-auto mt-10 max-w-3xl border-l-2 border-emerald-700 pl-5">
-            <p className="text-base leading-7 text-slate-700">
-              O Ohrly não tenta transformar toda oscilação em alerta.
-              <strong className="block text-emerald-800">
-                Ele mostra quando uma mudança persistente deixou de parecer
-                apenas variação.
-              </strong>
-            </p>
-          </div>
         </div>
       </section>
 
-      <section
-        id="como-funciona"
-        className="border-b border-slate-200 bg-white px-5 py-16 lg:px-8 lg:py-20"
-      >
-        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.82fr_1.18fr]">
+      <section data-analytics-section="how_it_works" className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-10 lg:py-28">
+        <div className="grid gap-12 lg:grid-cols-2 lg:gap-24">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-800">
-              Como o estudo começa
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#e16f58]">
+              Como funciona
             </p>
-
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
-              Começamos com um problema pequeno e verificável
+            <h2 className="mt-4 max-w-xl font-serif text-4xl tracking-[-0.04em] sm:text-5xl">
+              Do histórico a uma hipótese que pode ser acompanhada.
             </h2>
-
-            <p className="mt-5 max-w-xl text-base leading-7 text-slate-600">
-              O objetivo inicial não é prometer que todo churn pode ser
-              previsto. É descobrir se existem mudanças que o seu time
-              poderia ter percebido enquanto ainda havia algo a fazer.
-            </p>
           </div>
 
-          <ol className="grid gap-4 sm:grid-cols-2">
-            {pilotSteps.map((step, index) => (
+          <ol className="space-y-0">
+            {[
+              [
+                "1",
+                "Analisamos o histórico",
+                "Você exporta ou autoriza o acesso aos dados necessários da sua operação no Trinks.",
+              ],
+              [
+                "2",
+                "Encontramos até 3 situações prioritárias",
+                "Procuramos mudanças persistentes no ritmo de retorno e dimensionamos a recorrência associada.",
+              ],
+              [
+                "3",
+                "Escolhemos uma ação",
+                "Você valida se a leitura faz sentido e decide qual ação operacional vale testar.",
+              ],
+              [
+                "4",
+                "Acompanhamos por 30–45 dias",
+                "Observamos se a mudança recuperou, permanece não resolvida ou se a hipótese foi refutada.",
+              ],
+            ].map(([number, title, body], index) => (
               <li
-                key={step}
-                className="flex gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5"
+                key={number}
+                className={`grid grid-cols-[44px_1fr] gap-5 py-7 ${
+                  index !== 3 ? "border-b border-[#dfe8e4]" : ""
+                }`}
               >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-900 text-sm font-bold text-white">
-                  {index + 1}
-                </span>
-                <p className="text-sm font-medium leading-6 text-slate-700">
-                  {step}
-                </p>
+                <div className="flex h-9 w-9 items-center justify-center rounded-full border border-[#c7d6d1] text-sm font-medium text-[#557270]">
+                  {number}
+                </div>
+                <div>
+                  <h3 className="font-medium text-[#153d3e]">{title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-[#607978]">{body}</p>
+                </div>
               </li>
             ))}
           </ol>
         </div>
       </section>
 
-      <section
-        id="piloto"
-        className="border-b border-emerald-100 bg-emerald-50/45 px-5 py-16 lg:px-8 lg:py-20"
-      >
-        <div className="mx-auto max-w-7xl">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-800">
-              Programa piloto acompanhado
-            </p>
-
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
-              Vamos investigar se os seus churns anteriores deixaram sinais
-              antes do cancelamento
-            </h2>
-
-            <p className="mt-5 text-base leading-7 text-slate-600">
-              Selecionaremos uma operação para um ciclo de 6 a 8 semanas,
-              com escopo reduzido, revisão dos casos e aprendizado
-              compartilhado.
-            </p>
-          </div>
-
-          <div className="mt-12 grid gap-5 md:grid-cols-2">
-            <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h3 className="text-lg font-semibold text-slate-900">
-                O que entregamos
-              </h3>
-              <CheckList items={deliverables} />
-            </article>
-
-            <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h3 className="text-lg font-semibold text-slate-900">
-                O que não prometemos
-              </h3>
-              <CheckList items={nonPromises} tone="neutral" />
-            </article>
-          </div>
-
-          <div className="mt-8 text-center">
-            <a
-              href="#contato"
-              onClick={() =>
-                trackEvent("cta_click", {
-                  location: "pilot",
-                  ctaId: "evaluate_pilot_fit",
-                  target: "contact",
-                  landingVariant: LANDING_VARIANT,
-                })
-              }
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-900 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800"
-            >
-              Quero avaliar aderência ao piloto
-              <ArrowRight className="h-4 w-4" />
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="fundador"
-        className="border-b border-slate-200 bg-white px-5 py-16 lg:px-8 lg:py-20"
-      >
-        <div className="mx-auto grid max-w-5xl gap-6 rounded-[28px] border border-slate-200 bg-slate-50 p-6 shadow-sm sm:grid-cols-[96px_1fr] sm:items-center sm:p-8 lg:grid-cols-[112px_1fr_auto] lg:gap-8">
-          <div className="relative mx-auto h-24 w-24 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm sm:mx-0 lg:h-28 lg:w-28">
-            <Image
-              src="/images/thales_profile.png"
-              alt="Thales Araujo, fundador do Ohrly"
-              fill
-              sizes="(min-width: 1024px) 112px, 96px"
-              className="object-cover"
-            />
-          </div>
-
-          <div className="text-center sm:text-left">
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-800">
-              Acompanhamento direto
-            </p>
-
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">
-              O piloto será conduzido diretamente por Thales Araujo
-            </h2>
-
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600">
-              Engenheiro de software e fundador do Ohrly, com experiência em
-              sistemas conversacionais e operações digitais. As revisões dos casos
-              e a evolução do modelo serão realizadas em conjunto com a operação
-              parceira.
-            </p>
-
-            <div className="mt-4 flex flex-wrap justify-center gap-2 sm:justify-start">
-              <span className="rounded-full border border-emerald-200 bg-white px-3 py-1.5 text-xs font-medium text-emerald-800">
-                Revisões dos casos
-              </span>
-
-              <span className="rounded-full border border-emerald-200 bg-white px-3 py-1.5 text-xs font-medium text-emerald-800">
-                Escopo reduzido
-              </span>
-
-              <span className="rounded-full border border-emerald-200 bg-white px-3 py-1.5 text-xs font-medium text-emerald-800">
-                Evolução conjunta
-              </span>
-            </div>
-          </div>
-
-          <a
-            href="#contato"
-            onClick={() =>
-              trackEvent("cta_click", {
-                location: "founder",
-                ctaId: "talk_to_founder",
-                target: "contact",
-                landingVariant: LANDING_VARIANT,
-              })
-            }
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3.5 text-sm font-semibold text-slate-700 transition hover:border-emerald-700 hover:text-emerald-800 sm:col-start-2 sm:w-fit lg:col-start-auto"
-          >
-            Conversar com o fundador
-            <ArrowRight className="h-4 w-4" />
-          </a>
-        </div>
-      </section>
-
-      <section
-        id="contato"
-        className="px-5 py-16 lg:px-8 lg:py-20"
-      >
-        <div className="mx-auto grid max-w-6xl items-start gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
+      <section data-analytics-section="audience" className="bg-[#0d3435] text-[#f8f7f1]">
+        <div className="mx-auto grid max-w-7xl gap-12 px-5 py-20 sm:px-8 lg:grid-cols-2 lg:gap-24 lg:px-10 lg:py-24">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-800">
-              Primeiro contato
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#ef8b73]">
+              Para quem faz sentido
             </p>
-      
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
-              Vamos entender se o piloto faz sentido para sua operação
+            <h2 className="mt-4 font-serif text-4xl tracking-[-0.04em] sm:text-5xl">
+              Operações em que clientes voltar faz parte do modelo de receita.
             </h2>
-      
-            <p className="mt-5 max-w-xl text-base leading-7 text-slate-600">
-              Deixe seus dados de contato. Vou analisar pessoalmente o
-              contexto da empresa e retornar para uma conversa inicial,
-              sem compromisso.
-            </p>
-      
-            <div className="mt-8 space-y-4">
-              <div className="flex items-start gap-3">
-                <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-emerald-800" />
-      
-                <p className="text-sm leading-6 text-slate-600">
-                  Nenhuma contratação é feita nesta etapa.
-                </p>
-              </div>
-      
-              <div className="flex items-start gap-3">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-800" />
-      
-                <p className="text-sm leading-6 text-slate-600">
-                  O preenchimento leva menos de 30 segundos.
-                </p>
-              </div>
-      
-              <div className="flex items-start gap-3">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-800" />
-      
-                <p className="text-sm leading-6 text-slate-600">
-                  Volume de contas, fontes de dados e cenário de churn serão
-                  discutidos somente depois.
-                </p>
-              </div>
-            </div>
           </div>
-      
-          <form
-            ref={pilotFormRef}
-            data-form-id={PILOT_FORM_ID}
-            onSubmit={handleSubmit}
-            onFocusCapture={handleFormFocus}
-            className="rounded-[28px] border border-slate-200 bg-slate-50 p-5 shadow-sm sm:p-7"
-          >
-            <input
-              type="hidden"
-              name="source"
-              value="Ohrly landing page - pilot application"
-            />
-      
-            <input
-              type="hidden"
-              name="landing_variant"
-              value={LANDING_VARIANT}
-            />
-      
-            <input
-              type="hidden"
-              name="utm_source"
-              value={attribution.utmSource}
-            />
-      
-            <input
-              type="hidden"
-              name="utm_medium"
-              value={attribution.utmMedium}
-            />
-      
-            <input
-              type="hidden"
-              name="utm_campaign"
-              value={attribution.utmCampaign}
-            />
-      
-            <input
-              type="hidden"
-              name="utm_content"
-              value={attribution.utmContent}
-            />
-      
-            <input
-              type="hidden"
-              name="utm_term"
-              value={attribution.utmTerm}
-            />
-      
-            <div className="grid gap-4 sm:grid-cols-2">
-              <label className="space-y-2 text-sm font-medium text-slate-700">
-                Nome
-                <input
-                  name="name"
-                  type="text"
-                  placeholder="Seu nome"
-                  autoComplete="name"
-                  required
-                  onChange={handleFieldChange}
-                  onBlur={handleFieldBlur}
-                  className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
-                />
-              </label>
-      
-              <label className="space-y-2 text-sm font-medium text-slate-700">
-                Empresa
-                <input
-                  name="company"
-                  type="text"
-                  placeholder="Nome da empresa"
-                  autoComplete="organization"
-                  required
-                  onChange={handleFieldChange}
-                  onBlur={handleFieldBlur}
-                  className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
-                />
-              </label>
-            </div>
-      
-            <label className="mt-4 block space-y-2 text-sm font-medium text-slate-700">
-              E-mail corporativo
-              <input
-                name="email"
-                type="email"
-                placeholder="voce@empresa.com"
-                autoComplete="email"
-                inputMode="email"
-                required
-                onChange={handleFieldChange}
-                onBlur={handleFieldBlur}
-                className="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-700 focus:ring-4 focus:ring-emerald-100"
-              />
-            </label>
-      
-            <button
-              type="submit"
-              disabled={pilotIsSubmitting}
-              className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-900 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {pilotIsSubmitting
-                ? "Enviando..."
-                : "Quero conversar sobre o piloto"}
-      
-              {!pilotIsSubmitting && (
-                <ArrowRight className="h-4 w-4" />
-              )}
-            </button>
-      
-            <p className="mt-3 text-center text-xs leading-5 text-slate-500">
-              Sem compromisso e sem contratação automática. Você receberá
-              um retorno por e-mail para combinar a conversa inicial.
-            </p>
-      
-            {pilotSubmitStatus.type !== "idle" && (
-              <p
-                role={
-                  pilotSubmitStatus.type === "error"
-                    ? "alert"
-                    : "status"
-                }
-                aria-live="polite"
-                className={`mt-4 rounded-xl border px-4 py-3 text-sm leading-6 ${
-                  pilotSubmitStatus.type === "success"
-                    ? "border-emerald-200 bg-emerald-50 text-emerald-900"
-                    : "border-rose-200 bg-rose-50 text-rose-800"
-                }`}
+
+          <div className="grid gap-4 text-sm leading-6 text-[#c8d6d3]">
+            {[
+              "Usa Trinks e possui ao menos 6 meses de histórico.",
+              "Tem serviços com retorno recorrente: cabelo, unhas, estética, barbearia, spa, clínica ou similares.",
+              "Possui volume suficiente para observar padrões de retorno.",
+              "Consegue executar uma ação caso uma oportunidade relevante seja encontrada.",
+            ].map((text) => (
+              <div
+                key={text}
+                className="flex gap-3 rounded-2xl border border-white/10 bg-white/[0.035] px-4 py-4"
               >
-                {pilotSubmitStatus.message}
-              </p>
-            )}
-          </form>
+                <span className="mt-1 text-[#7cc1b7]"><Check /></span>
+                <span>{text}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      <footer className="border-t border-slate-200 bg-white px-5 py-8 lg:px-8">
-        <div className="mx-auto flex max-w-7xl flex-col gap-3 text-center text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:text-left">
-          <span>
-            © {new Date().getFullYear()} Ohrly. Todos os direitos
-            reservados.
-          </span>
-          <span>
-            Contexto comportamental para decisões de retenção.
-          </span>
+      <section data-analytics-section="bottom_offer" className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-10 lg:py-28">
+        <div className="grid gap-10 rounded-[32px] border border-[#d8e2dd] bg-white p-7 sm:p-10 lg:grid-cols-[1.08fr_0.92fr] lg:gap-20 lg:p-14">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#e16f58]">
+              Piloto fundador
+            </p>
+            <h2 className="mt-4 font-serif text-4xl tracking-[-0.04em] sm:text-5xl">
+              Menos “achismo” sobre o próximo mês.
+            </h2>
+            <p className="mt-5 max-w-xl text-base leading-7 text-[#587171]">
+              O piloto existe para descobrir se o seu histórico já contém sinais
+              capazes de tornar a recorrência mais previsível, e se essa leitura
+              muda uma decisão real da operação.
+            </p>
+
+            <div className="mt-8 flex items-end gap-3">
+              <span className="text-sm text-[#6f8684]">Piloto</span>
+              <span className="text-4xl font-semibold tracking-[-0.045em]">
+                R$ 297
+              </span>
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-center">
+            <a
+              href="#piloto"
+              data-analytics-cta
+              data-analytics-location="bottom_offer"
+              data-analytics-label="Ver se minha operação se qualifica"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#0d6867] px-6 py-4 text-center text-sm font-semibold text-white transition hover:bg-[#0a5c5b]"
+            >
+              Ver se minha operação se qualifica
+              <Arrow />
+            </a>
+            <p className="mt-4 text-center text-xs leading-5 text-[#718886]">
+              Se não houver dados suficientes para uma análise confiável,
+              devolvemos 100% do valor.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section data-analytics-section="faq" className="border-t border-[#dfe8e4]">
+        <div className="mx-auto max-w-4xl px-5 py-20 sm:px-8">
+          <p className="text-center text-xs font-semibold uppercase tracking-[0.14em] text-[#e16f58]">
+            Perguntas frequentes
+          </p>
+          <h2 className="mt-4 text-center font-serif text-4xl tracking-[-0.04em]">
+            Antes de participar
+          </h2>
+
+          <div className="mt-10 divide-y divide-[#dfe8e4] border-y border-[#dfe8e4]">
+            {[
+              {
+                q: "O Ohrly promete recuperar receita?",
+                a: "Não. O piloto identifica mudanças no comportamento de retorno, estima a recorrência historicamente associada e acompanha o que acontece depois de uma ação. Não tratamos exposição como receita garantida ou perdida.",
+              },
+              {
+                q: "Preciso trocar de sistema ou instalar alguma coisa?",
+                a: "Não para o piloto. O objetivo é começar com os dados que sua operação já possui no Trinks.",
+              },
+              {
+                q: "Isso é uma lista de clientes inativos?",
+                a: "Não. Uma regra fixa de inatividade trata clientes diferentes da mesma forma. O Ohrly tenta aprender o ritmo histórico de retorno e observar mudanças relativas a esse comportamento.",
+              },
+              {
+                q: "O que acontece se meu histórico não for suficiente?",
+                a: "Informamos que não há evidência suficiente para uma análise confiável e devolvemos 100% do valor do piloto.",
+              },
+            ].map((item) => (
+              <details key={item.q} className="group py-6">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-5 font-medium text-[#153d3e]">
+                  <span>{item.q}</span>
+                  <span className="text-xl font-light text-[#78908e] transition group-open:rotate-45">
+                    +
+                  </span>
+                </summary>
+                <p className="max-w-3xl pt-4 text-sm leading-6 text-[#607978]">
+                  {item.a}
+                </p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <footer className="border-t border-[#dfe8e4]">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-8 text-xs text-[#78908e] sm:flex-row sm:items-center sm:justify-between sm:px-8 lg:px-10">
+          <span className="font-serif text-lg text-[#294849]">Ohrly</span>
+          <span>Observabilidade da recorrência econômica.</span>
         </div>
       </footer>
     </main>
