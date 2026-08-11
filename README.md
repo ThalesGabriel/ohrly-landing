@@ -1,36 +1,129 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ohrly Campaign Kit V1
+Meta Ads → Landing Page → Supabase → OQP → Diagnostic → Sprint
 
-## Getting Started
+Kit para projeto **Next.js + TypeScript + Tailwind (App Router)**.
 
-First, run the development server:
+## Inclui
+- LP `/investigue`
+- captura de UTMs, `fbclid` e IDs de Meta quando presentes
+- `session_id` por sessão
+- eventos de comportamento no Supabase
+- consentimento separado para analytics e marketing
+- formulário real de Decision Sprint
+- Meta Pixel opcional
+- Meta Conversions API opcional no `Lead`
+- deduplicação browser/server por `event_id`
+- endpoint interno de estágio comercial
+- SQL de diagnóstico da LP e OQP
+- protocolo congelado V1
 
+## Dependência
+No projeto existente:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install @supabase/supabase-js
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Banco
+Execute:
+```text
+supabase/migrations/20260811_ohrly_campaign_v1.sql
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+As tabelas usam RLS e não ficam abertas ao browser. As escritas passam pelos Route Handlers do Next.js usando chave secreta do Supabase.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Ambiente
+Copie `.env.local.example` para `.env.local`.
 
-## Learn More
+Obrigatório:
+```env
+SUPABASE_URL=
+SUPABASE_SECRET_KEY=
+CAMPAIGN_INTERNAL_API_KEY=
+```
 
-To learn more about Next.js, take a look at the following resources:
+Meta opcional:
+```env
+NEXT_PUBLIC_META_PIXEL_ID=
+META_DATASET_ID=
+META_ACCESS_TOKEN=
+META_GRAPH_API_VERSION=
+META_TEST_EVENT_CODE=
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+`META_GRAPH_API_VERSION` fica sem valor fixo: use a versão atual configurada no seu app Meta.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## URL de anúncio
+Comece com UTMs explícitas por criativo:
+```text
+https://ohrly.com.br/investigue?utm_source=meta&utm_medium=paid_social&utm_campaign=ohrly_decision_v1&utm_content=decision_expensive_v1
+```
 
-## Deploy on Vercel
+Variações:
+```text
+utm_content=problem_before_solution_v1
+utm_content=case_digital_v1
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+O tracker também reconhece:
+```text
+campaign_id / meta_campaign_id
+adset_id / meta_adset_id
+ad_id / meta_ad_id
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Eventos
+```text
+lp_view
+engaged_10s
+scroll_25
+scroll_50
+scroll_75
+offer_view
+cta_click
+form_view
+form_start
+form_step
+form_error
+form_submit
+thank_you_view
+```
+
+## Teste local
+1. Abra `/investigue?utm_source=test&utm_campaign=local&utm_content=manual`
+2. aceite analytics
+3. role a página e clique em CTA
+4. envie um lead de teste
+5. confira no Supabase:
+   - `campaign_sessions`
+   - `campaign_events`
+   - `campaign_leads`
+   - `campaign_lead_stage_events`
+6. execute `analytics/diagnostic_queries.sql`
+7. se Meta estiver configurado, valide no Test Events
+
+## OQP
+Atualize o estágio pelo endpoint interno:
+```bash
+curl -X POST https://ohrly.com.br/api/campaign/lead-stage \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $CAMPAIGN_INTERNAL_API_KEY" \
+  -d '{"lead_id":"UUID","stage":"oqp","note":"Decisão + impacto + dados + dono."}'
+```
+
+Script pronto: `scripts/update-lead-stage.sh`.
+
+## Regra de debugging
+```text
+CTR ruim                         → anúncio
+LP view → engaged ruim           → hero/alinhamento
+engaged → scroll_50 ruim         → corpo/argumentação
+offer_view → CTA ruim            → oferta/prova
+CTA → form_start ruim            → transição para formulário
+form_start → submit ruim         → formulário
+submit → OQP ruim                → targeting/promessa
+OQP → diagnostic ruim            → follow-up
+diagnostic → proposal ruim       → scoping
+proposal → paid ruim             → preço/confiança/valor
+```
+
+Não altere múltiplas camadas ao mesmo tempo.
