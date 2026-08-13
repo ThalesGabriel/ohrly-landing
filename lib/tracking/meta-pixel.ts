@@ -1,9 +1,16 @@
 "use client";
 
+type MetaFbq = ((...args: unknown[]) => void) & {
+  callMethod?: (...args: unknown[]) => void;
+  queue: unknown[][];
+  loaded?: boolean;
+  version?: string;
+};
+
 declare global {
   interface Window {
-    fbq?: (...args: unknown[]) => void;
-    _fbq?: unknown;
+    fbq?: MetaFbq;
+    _fbq?: MetaFbq;
   }
 }
 
@@ -16,26 +23,20 @@ export function ensureMetaPixel() {
   if (!pixelId) return false;
 
   if (!window.fbq) {
-    const fbq = function (...args: unknown[]) {
-      const self = fbq as typeof fbq & {
-        callMethod?: (...innerArgs: unknown[]) => void;
-        queue: unknown[][];
-      };
+    const fbq = ((...args: unknown[]) => {
+      const current = window.fbq;
 
-      if (self.callMethod) {
-        self.callMethod(...args);
+      if (current?.callMethod) {
+        current.callMethod(...args);
       } else {
-        self.queue.push(args);
+        current?.queue.push(args);
       }
-    } as typeof window.fbq & {
-      queue: unknown[][];
-      loaded?: boolean;
-      version?: string;
-    };
+    }) as MetaFbq;
 
     fbq.queue = [];
     fbq.loaded = true;
     fbq.version = "2.0";
+
     window.fbq = fbq;
     window._fbq = fbq;
 
@@ -59,5 +60,8 @@ export function trackMetaLead(
   customData: Record<string, unknown> = {},
 ) {
   if (!ensureMetaPixel()) return;
-  window.fbq?.("track", "Lead", customData, { eventID: eventId });
+
+  window.fbq?.("track", "Lead", customData, {
+    eventID: eventId,
+  });
 }
