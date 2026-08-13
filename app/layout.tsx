@@ -1,38 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/next";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
-  title: "Ohrly",
-  description: "Mais contexto para agir.",
+  title: "Ohrly — Descubra quais problemas deixaram de ser casos isolados",
+  description:
+    "Analisamos seu histórico do Intercom para descobrir o que começou a se repetir, consolidamos o impacto e mostramos quais problemas merecem atenção primeiro.",
+  openGraph: {
+    title: "Ohrly — Problemas que deixaram de ser casos isolados",
+    description:
+      "Descubra o que está se repetindo no seu Intercom antes que a repetição vire custo normalizado.",
+    type: "website",
+  },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
-        {children}
-        <Analytics />
-      </body>
+    <html lang="pt-BR">
+      <body>{children}</body>
     </html>
   );
 }

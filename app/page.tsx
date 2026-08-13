@@ -1,296 +1,230 @@
-import type { Metadata } from "next";
-import type { ReactNode } from "react";
-import { CampaignTracker } from "@/components/campaign/CampaignTracker";
-import { CookieConsent } from "@/components/campaign/CookieConsent";
-import { DecisionForm } from "@/components/campaign/DecisionForm";
-import { MetaPixel } from "@/components/campaign/MetaPixel";
+import { BehaviorTracker } from "@/components/behavior-tracker";
+import { CookieConsent } from "@/components/cookie-consent";
+import { LeadForm } from "@/components/lead-form";
 
-export const metadata: Metadata = {
-  title: "Ohrly — Investigue antes de investir",
-  description:
-    "Investigação para decisões importantes do negócio. Antes de comprometer mais recursos, investigue o que seus dados já conseguem dizer.",
-};
-
-function Cta({
-  location,
-  children,
-  secondary = false,
-}: {
-  location: string;
-  children: ReactNode;
-  secondary?: boolean;
-}) {
-  return (
-    <a
-      href="#decision-sprint"
-      data-track-cta={location}
-      className={
-        secondary
-          ? "w-[100%] inline-flex items-center justify-center rounded-xl border border-slate-300 px-5 py-3.5 font-semibold text-slate-950 transition hover:border-slate-500"
-          : "w-[100%] inline-flex items-center justify-center rounded-xl bg-[#ff4b2f] px-5 py-3.5 font-semibold text-white shadow-lg shadow-[#ff4b2f]/20 transition hover:-translate-y-0.5 hover:bg-[#ef3f25]"
-      }
-    >
-      {children}
-    </a>
-  );
-}
-
-const decisionCards = [
-  ["Mais marketing?", "A falta de novos clientes é mesmo o principal gargalo ou existe outra etapa limitando o crescimento?"],
-  ["Mais pessoas?", "A operação está realmente sem capacidade ou existe retrabalho, fricção ou concentração de esforço?"],
-  ["Mais tecnologia?", "Existe um problema claro que a nova ferramenta precisa resolver — e como você saberá se resolveu?"],
-  ["Mais expansão?", "Você conhece suficientemente o comportamento atual para saber o que realmente faz sentido escalar?"],
+const metrics = [
+  ["O que mudou", "2 → 19", "ocorrências semanais"],
+  ["Persistência", "4 semanas", "sem retorno ao padrão anterior"],
+  ["Clientes afetados", "11 contas", "envolvidas no mesmo tipo de problema"],
+  ["Recorrência", "4 contas", "voltaram a encontrar o problema"],
+  ["Carga operacional", "2,3×", "mais tempo de resolução"],
+  ["Valor exposto", "R$ 84 mil", "de MRR associado às contas afetadas"],
 ];
 
-export default function InvestiguePage() {
+const steps = [
+  {
+    title: "Conectamos",
+    text: "Usamos o histórico que já existe no seu Intercom, sem exigir uma nova instrumentação.",
+  },
+  {
+    title: "Consolidamos",
+    text: "Agrupamos ocorrências semelhantes e identificamos o que deixou de parecer caso isolado.",
+  },
+  {
+    title: "Priorizamos",
+    text: "Mostramos quais problemas estão se repetindo, quem está sendo afetado e o que merece atenção primeiro.",
+  },
+];
+
+export default function Home() {
   return (
-    <main className="min-h-screen bg-[#fbf7f1] text-[#071a2b]">
-      <CampaignTracker />
-      <MetaPixel />
+    <>
+      <BehaviorTracker />
       <CookieConsent />
 
-      <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-6 lg:px-8">
-        <a href="#top" className="text-sm font-black uppercase tracking-[0.2em]">
-          Ohrly
+      <header className="mx-auto flex min-h-18 w-[min(calc(100%_-_2.5rem),1160px)] items-center justify-between gap-5">
+        <a href="#" className="relative text-2xl font-black tracking-[-0.06em] text-stone-950">
+          <span className="absolute -top-1 left-0 h-2 w-4 rounded-t-full border-t-4 border-[#ff6f1f]" />
+          ohrly
         </a>
+
         <a
-          href="#decision-sprint"
-          data-track-cta="nav"
-          className="hidden rounded-full border border-slate-300 bg-white/60 px-4 py-2.5 text-sm font-semibold backdrop-blur md:inline-flex"
+          href="#diagnostico"
+          data-analytics-cta="nav_analyze_intercom"
+          data-analytics-location="nav"
+          data-analytics-label="Analisar meu Intercom"
+          className="hidden rounded-full border border-[#ff6f1f] bg-[#fffdf9] px-4 py-2.5 text-xs font-black text-stone-950 shadow-[0_5px_0_#ff6f1f] sm:inline-flex"
         >
-          Quero investigar uma decisão
+          Analisar meu Intercom
         </a>
       </header>
 
-      <section id="top" className="mx-auto w-full max-w-7xl px-6 pb-20 pt-12 lg:px-8 lg:pb-28 lg:pt-20">
-        <div className="inline-flex items-center gap-3 rounded-full border border-[#ff4b2f] bg-white/40 px-4 py-2 text-xs font-black uppercase tracking-[0.16em]">
-          <span className="h-2.5 w-2.5 rounded-full bg-[#ff4b2f]" />
-          Para empresários e líderes
-        </div>
+      <main>
+        <section className="pb-16 pt-10 lg:pb-20 lg:pt-14" data-analytics-section="hero">
+          <div className="mx-auto grid w-[min(calc(100%_-_2.5rem),1160px)] gap-12 lg:grid-cols-[1.1fr_.9fr] lg:gap-14">
+            <div>
+              <div className="mb-5 inline-flex items-center gap-2.5 text-[11px] font-black uppercase tracking-[0.18em] text-[#ff6f1f]">
+                <span className="h-[3px] w-7 rounded-full bg-[#ff6f1f]" />
+                Diagnóstico para SaaS B2B
+              </div>
 
-        <div className="grid gap-10 lg:grid-cols-[1.25fr_1fr] lg:items-center">
-          <div>
-            <h1 className="max-w-5xl font-serif text-[55px] font-medium leading-[0.94] tracking-[-0.055em]">
-              Antes de investir na solução, investigue o{" "}
-              <span className="decoration-[#ff4b2f] decoration-[3px] underline underline-offset-[10px]">
-                problema.
-              </span>
-            </h1>
+              <h1 className="max-w-4xl text-[clamp(3rem,6vw,5.5rem)] font-black leading-[.98] tracking-[-0.065em] text-stone-950">
+                Descubra quais problemas do seu SaaS deixaram de ser{" "}
+                <span className="text-[#ff6f1f]">casos isolados.</span>
+              </h1>
 
-            <p className="mt-8 max-w-3xl text-xl leading-8 text-slate-700 md:text-2xl">
-              Está pensando em aumentar marketing, contratar, expandir ou implantar tecnologia?
-              Investigamos o que seus dados já conseguem dizer antes de você comprometer mais recursos.
-            </p>
+              <p className="mt-6 max-w-3xl text-[clamp(1.04rem,1.7vw,1.22rem)] leading-8 text-stone-800">
+                Analisamos seu histórico do <strong className="text-[#ff6f1f]">Intercom</strong> para descobrir o que começou a se repetir, consolidamos o impacto dessas ocorrências e mostramos quais problemas merecem atenção primeiro, antes que a repetição vire custo normalizado.
+              </p>
 
-            <div className="mt-10 flex items-start gap-4 rounded-2xl border border-[#eadfd4] bg-white/50 px-6 py-5">
-              <span className="text-4xl text-[#ff4b2f]">→</span>
-              <p className="text-lg font-bold tracking-tight">
-                Toda decisão ensina, mas algumas custam mais do que precisavam.
+              <a
+                href="#diagnostico"
+                data-analytics-cta="hero_analyze_intercom"
+                data-analytics-location="hero"
+                data-analytics-label="Analisar meu Intercom"
+                className="mt-7 inline-flex min-h-13 items-center justify-center rounded-full border border-[#ff6f1f] bg-[#fffdf9] px-6 text-sm font-black text-stone-950 shadow-[0_6px_0_#ff6f1f] transition hover:translate-y-0.5 hover:shadow-[0_4px_0_#ff6f1f]"
+              >
+                Analisar meu Intercom
+              </a>
+
+              <p className="mt-4 text-sm text-stone-500">
+                Sem novo tracking. Começamos com os dados que sua operação já possui.
               </p>
             </div>
-          </div>
 
-          <aside className="rounded-[28px] border border-[#e9ddd1] bg-white/75 p-7 shadow-xl shadow-slate-950/[0.05] backdrop-blur">
-            <h2 className="text-2xl font-bold leading-tight">
-              Você traz a decisão. Investigamos a hipótese por trás dela.
-            </h2>
-            <p className="mt-3 leading-7 text-slate-600">
-              Sem dashboard por dashboard. Sem promessa de resposta pronta. Sem exigir um time de dados.
-            </p>
-
-            <div className="my-6 space-y-3 border-y border-[#eadfd4] py-5 text-sm font-semibold">
-              <p>→ Investir mais em aquisição</p>
-              <p>→ Contratar ou reorganizar a operação</p>
-              <p>→ Expandir um canal ou unidade</p>
-              <p>→ Implantar uma nova tecnologia</p>
-            </div>
-
-            <div className="text-center">
-              <Cta location="hero">Quero investigar minha decisão</Cta>
-              <p className="mt-3 text-xs text-slate-500">
-                Projeto de consultoria pago, com escopo fechado.
+            <aside
+              id="diagnostico"
+              data-analytics-section="hero_form"
+              className="rounded-[22px] border border-stone-200 bg-[#fffdf9] p-6 shadow-[0_18px_50px_rgba(29,20,12,.08)] sm:p-7"
+            >
+              <h2 className="text-2xl font-black leading-tight tracking-[-0.04em] text-stone-950">
+                Quero entender o que está se repetindo
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-stone-500">
+                Conte o mínimo necessário para validarmos se sua operação se encaixa no primeiro modelo do Ohrly.
               </p>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      <section className="border-y border-[#eadfd4] bg-white/45 py-20">
-        <div className="mx-auto w-full max-w-7xl px-6 lg:px-8">
-          <p className="text-xs font-black uppercase tracking-[0.16em] text-[#ff4b2f]">
-            O momento certo de investigar
-          </p>
-          <h2 className="mt-3 max-w-5xl font-serif text-5xl font-medium leading-[1.04] tracking-[-0.04em] md:text-6xl">
-            Você talvez esteja prestes a executar a solução antes de entender o problema.
-          </h2>
-          <p className="mt-5 max-w-4xl text-lg leading-8 text-slate-600">
-            O Ohrly entra um passo antes da execução. Não para impedir a decisão, mas para testar o que a sustenta.
-          </p>
-
-          <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {decisionCards.map(([title, text], index) => (
-              <article key={title} className="rounded-2xl border border-[#eadfd4] bg-[#fffdf9] p-6">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#fff0ea] text-sm font-black text-[#ff4b2f]">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <h3 className="mt-5 text-xl font-bold">{title}</h3>
-                <p className="mt-2 leading-7 text-slate-600">{text}</p>
-              </article>
-            ))}
+              <LeadForm />
+            </aside>
           </div>
+        </section>
 
-          <div className="mt-8">
-            <Cta location="mid_page" secondary>Tenho uma decisão assim</Cta>
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto w-full max-w-7xl px-6 py-20 lg:px-8">
-        <p className="text-xs font-black uppercase tracking-[0.16em] text-[#ff4b2f]">
-          Como funciona
-        </p>
-        <h2 className="mt-3 max-w-5xl font-serif text-5xl font-medium leading-[1.04] tracking-[-0.04em] md:text-6xl">
-          Decisão, investigação, evidência,  próximo movimento.
-        </h2>
-
-        <div className="mt-12 grid gap-8 md:grid-cols-3">
-          {[
-            ["1", "Você traz a decisão", "Conte o que está tentando melhorar, o que acredita estar acontecendo e qual movimento está considerando."],
-            ["2", "Nós investigamos", "Mapeamos os dados disponíveis, reconstruímos o comportamento relevante e testamos as hipóteses por trás da decisão."],
-            ["3", "Você decide com mais evidência", "Mostramos o que os dados sustentam, o que contradizem, o que ainda não permitem afirmar e o que vale testar em seguida."],
-          ].map(([n, title, text]) => (
-            <article key={n} className="border-b-2 border-[#ff4b2f] pb-5">
-              <span className="font-serif text-4xl text-[#ff4b2f]">{n}</span>
-              <h3 className="mt-3 text-2xl font-bold">{title}</h3>
-              <p className="mt-2 leading-7 text-slate-600">{text}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="border-y border-[#eadfd4] bg-white/45 py-20">
-        <div className="mx-auto grid w-full max-w-7xl gap-8 px-6 lg:grid-cols-[1.15fr_.85fr] lg:px-8">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[0.16em] text-[#ff4b2f]">
+        <section className="py-16 lg:py-18" data-analytics-section="proof">
+          <div className="mx-auto w-[min(calc(100%_-_2.5rem),1160px)]">
+            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-[#ff6f1f]">
               O que você recebe
             </p>
-            <h2 className="mt-3 font-serif text-5xl font-medium leading-[1.04] tracking-[-0.04em]">
-              Uma leitura executiva da decisão. Não mais um dashboard.
+            <h2 className="mt-3 max-w-4xl text-[clamp(2.15rem,4.3vw,3.7rem)] font-black leading-[1.02] tracking-[-0.055em] text-stone-950">
+              Uma leitura objetiva do que começou a se repetir no seu suporte.
             </h2>
-            <p className="mt-5 text-lg leading-8 text-slate-600">
-              O objetivo é fazer a investigação terminar em clareza prática sobre o que vale, ou não vale, fazer agora.
-            </p>
-          </div>
 
-          <div className="rounded-[28px] bg-[#071a2b] p-8 text-white">
-            <h3 className="text-2xl font-bold">Decision Brief Ohrly</h3>
-            <div className="mt-6 grid gap-5">
-              {[
-                ["O que os dados sustentam", "Quais hipóteses ganharam evidência."],
-                ["O que os dados contradizem", "Quais suspeitas perderam força."],
-                ["O que mudou", "Onde encontramos comportamento relevante e desde quando."],
-                ["O que ainda não sabemos", "Quais lacunas impedem uma conclusão segura."],
-                ["O que isso muda", "Como a evidência afeta a decisão original."],
-                ["O próximo experimento", "O menor movimento capaz de reduzir a incerteza restante."],
-              ].map(([title, text]) => (
-                <div key={title} className="grid grid-cols-[24px_1fr] gap-2">
-                  <span className="text-emerald-400">✓</span>
-                  <div>
-                    <strong>{title}</strong>
-                    <p className="mt-1 text-sm leading-6 text-slate-300">{text}</p>
+            <div className="mt-8 overflow-hidden rounded-[22px] border border-stone-200 bg-[#fffdf9] shadow-[0_18px_50px_rgba(29,20,12,.08)]">
+              <div className="flex flex-col justify-between gap-4 border-b border-stone-200 p-6 sm:flex-row sm:items-start">
+                <div>
+                  <h3 className="text-xl font-black tracking-[-0.035em] text-stone-950 sm:text-2xl">
+                    Falhas recorrentes na exportação de relatórios
+                  </h3>
+                  <p className="mt-1 text-sm text-stone-500">
+                    Um problema que deixou de parecer um conjunto de ocorrências isoladas.
+                  </p>
+                </div>
+                <span className="w-fit rounded-full bg-orange-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-wide text-orange-700">
+                  Exemplo ilustrativo
+                </span>
+              </div>
+
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3">
+                {metrics.map(([label, value, note], index) => (
+                  <div
+                    key={label}
+                    className={`p-6 ${index < 3 ? "lg:border-b" : ""} ${
+                      index % 3 !== 2 ? "lg:border-r" : ""
+                    } border-stone-200 max-lg:border-b sm:[&:nth-child(odd)]:border-r lg:[&:nth-child(odd)]:border-r-0`}
+                  >
+                    <span className="block text-[10px] font-black uppercase tracking-[0.14em] text-stone-500">
+                      {label}
+                    </span>
+                    <strong className="mt-2 block text-2xl font-black tracking-[-0.04em] text-stone-950">
+                      {value}
+                    </strong>
+                    <small className="mt-1 block text-sm leading-5 text-stone-600">{note}</small>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        </div>
-      </section>
 
-      <section className="mx-auto w-full max-w-7xl px-6 py-20 lg:px-8">
-        <p className="text-xs font-black uppercase tracking-[0.16em] text-[#ff4b2f]">
-          Exemplo de investigação
-        </p>
-        <h2 className="mt-3 max-w-5xl font-serif text-5xl font-medium leading-[1.04] tracking-[-0.04em] md:text-6xl">
-          Querer expandir o digital pode revelar um problema anterior.
-        </h2>
-        <p className="mt-5 max-w-4xl text-lg leading-8 text-slate-600">
-          Um bom resultado não confirma automaticamente a solução que já estava na mesa.
-          Ele pode mudar a ordem das decisões.
-        </p>
-
-        <div className="mt-10 grid gap-x-8 gap-y-6 rounded-[28px] border border-[#eadfd4] bg-[#fffdf9] p-8 md:grid-cols-2">
-          {[
-            ["Objetivo inicial", "Expandir as vendas no digital."],
-            ["Pergunta aparente", "Como crescer o canal digital?"],
-            ["O que a investigação encontrou", "Uma parcela majoritária dos compradores não podia ser acompanhada de forma consistente ao longo do tempo."],
-            ["Por que isso importava", "Sem identificar adequadamente a base atual, a empresa tinha baixa capacidade de medir recorrência, comportamento e aprendizado por cliente."],
-            ["O que mudou", "A discussão deixou de ser apenas “como vender mais online?” e passou a incluir uma restrição anterior: construir capacidade de conhecer a base que já existe."],
-            ["Valor da investigação", "Encontrar um problema anterior à solução considerada — antes de comprometer mais recursos."],
-          ].map(([label, text], index) => (
-            <div key={label} className={`${![0, 1].includes(index) ? 'border-t' : ''} border-[#eadfd4] pt-4`}>
-              <p className="text-xs font-black uppercase tracking-[0.12em] text-[#ff4b2f]">{label}</p>
-              <p className="mt-2 leading-7 text-slate-700">{text}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-8">
-          <Cta location="case">Quero investigar antes de investir</Cta>
-        </div>
-      </section>
-
-      <section id="decision-sprint" data-track-offer className="border-t border-[#eadfd4] bg-white/45 py-20">
-        <div className="mx-auto grid w-full max-w-7xl gap-8 px-6 lg:grid-cols-[.85fr_1.15fr] lg:px-8">
-          <div>
-            <p className="text-xs font-black uppercase tracking-[0.16em] text-[#ff4b2f]">
-              Ohrly Decision Sprint
+            <p className="mt-3 text-xs leading-5 text-stone-500">
+              Valor exposto representa o valor associado às contas afetadas e não significa, necessariamente, receita perdida.
             </p>
-            <h2 className="mt-3 font-serif text-5xl font-medium leading-[1.04] tracking-[-0.04em]">
-              Uma investigação focada em uma decisão importante do seu negócio.
+          </div>
+        </section>
+
+        <section className="bg-stone-950 py-16 text-white lg:py-20" data-analytics-section="problem">
+          <div className="mx-auto w-[min(calc(100%_-_2.5rem),1160px)]">
+            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-orange-300">
+              O problema
+            </p>
+            <h2 className="mt-3 max-w-4xl text-[clamp(2.15rem,4.3vw,3.7rem)] font-black leading-[1.02] tracking-[-0.055em]">
+              Seu time resolve casos. O problema é perceber quando eles deixaram de ser casos.
             </h2>
-            <p className="mt-5 text-lg leading-8 text-slate-600">
-              Começamos pela decisão, entendemos o contexto, avaliamos o que seus sistemas já registram e conduzimos uma investigação com escopo fechado.
+            <p className="mt-5 max-w-3xl text-base leading-7 text-stone-300">
+              Um cliente reclama, o suporte resolve, outro cliente encontra algo parecido e o ciclo continua. Sem consolidar a repetição, o padrão só fica evidente quando já ganhou escala.
             </p>
 
-            <div className="mt-8 grid gap-3 sm:grid-cols-3">
-              {[
-                ["Prazo", "10–15 dias úteis"],
-                ["Escopo", "1 decisão principal"],
-                ["Entrega", "Decision Brief + reunião"],
-              ].map(([label, value]) => (
-                <div key={label} className="rounded-2xl bg-[#fff0ea] p-4">
-                  <p className="text-xs font-black uppercase tracking-wide text-slate-500">{label}</p>
-                  <p className="mt-1 font-bold">{value}</p>
+            <div className="mt-8 flex flex-wrap items-center gap-2.5">
+              {["Cliente reclama", "Suporte resolve", "Outro cliente reclama", "A repetição cresce", "O padrão fica óbvio tarde demais"].map((item, index, list) => (
+                <div key={item} className="contents">
+                  <span className="rounded-full border border-white/15 bg-white/[.04] px-4 py-2.5 text-xs font-bold">
+                    {item}
+                  </span>
+                  {index < list.length - 1 ? (
+                    <span className="hidden font-black text-orange-300 sm:inline">→</span>
+                  ) : null}
                 </div>
               ))}
             </div>
           </div>
+        </section>
 
-          <div data-track-form className="rounded-[28px] border border-[#eadfd4] bg-white p-7 shadow-xl shadow-slate-950/[0.05] md:p-9">
-            <h3 className="font-serif text-4xl font-medium leading-tight tracking-[-0.03em]">
-              Conte a decisão que você está considerando.
-            </h3>
-            <p className="mt-3 leading-7 text-slate-600">
-              Vamos avaliar se existe uma questão suficientemente clara e investigável para um Decision Sprint.
+        <section className="py-16 lg:py-20" data-analytics-section="how">
+          <div className="mx-auto w-[min(calc(100%_-_2.5rem),1160px)]">
+            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-[#ff6f1f]">
+              Como funciona
             </p>
-            <div className="mt-7">
-              <DecisionForm />
+            <h2 className="mt-3 text-[clamp(2.15rem,4.3vw,3.7rem)] font-black leading-[1.02] tracking-[-0.055em] text-stone-950">
+              Conectamos. Consolidamos. Priorizamos.
+            </h2>
+
+            <div className="mt-8 grid gap-4 lg:grid-cols-3">
+              {steps.map((step, index) => (
+                <article key={step.title} className="rounded-2xl border border-stone-200 bg-[#fffdf9] p-6">
+                  <div className="grid h-10 w-10 place-items-center rounded-full bg-[#ff6f1f] text-sm font-black text-white">
+                    {index + 1}
+                  </div>
+                  <h3 className="mt-5 text-xl font-black tracking-[-0.035em] text-stone-950">
+                    {step.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-stone-500">{step.text}</p>
+                </article>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <footer className="border-t border-[#eadfd4] px-6 py-10">
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 text-sm text-slate-500 md:flex-row md:items-center md:justify-between">
-          <p>© 2026 Ohrly — Investigue antes de investir.</p>
-          <div className="flex gap-5">
-            <a href="/privacidade" className="underline">Privacidade</a>
-            <a href="#decision-sprint" data-track-cta="footer" className="font-semibold text-slate-800">
-              Investigar uma decisão →
+        <section className="bg-[#ff6f1f] py-16 lg:py-20" data-analytics-section="final_cta">
+          <div className="mx-auto max-w-4xl px-5 text-center">
+            <h2 className="text-[clamp(2.4rem,5vw,4.35rem)] font-black leading-none tracking-[-0.06em] text-stone-950">
+              Descubra o que está se repetindo no seu Intercom.
+            </h2>
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-stone-900">
+              Encontre problemas que já deixaram de ser casos isolados antes que a repetição precise virar incidente para receber atenção.
+            </p>
+            <a
+              href="#diagnostico"
+              data-analytics-cta="final_analyze_intercom"
+              data-analytics-location="final_cta"
+              data-analytics-label="Analisar meu Intercom"
+              className="mt-7 inline-flex min-h-13 items-center justify-center rounded-full border border-stone-950 bg-white px-6 text-sm font-black text-stone-950 shadow-[0_6px_0_#0b0b0b] transition hover:translate-y-0.5 hover:shadow-[0_4px_0_#0b0b0b]"
+            >
+              Analisar meu Intercom
             </a>
           </div>
-        </div>
+        </section>
+      </main>
+
+      <footer className="mx-auto flex w-[min(calc(100%_-_2.5rem),1160px)] flex-wrap justify-between gap-4 py-7 text-xs text-stone-500">
+        <span>© 2026 Ohrly</span>
+        <span>Problemas dispersos. Impacto consolidado. Decisão priorizada.</span>
       </footer>
-    </main>
+    </>
   );
 }

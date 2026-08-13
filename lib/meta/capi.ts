@@ -1,86 +1,81 @@
-import { createHash } from "node:crypto";
-
-type Input = {
-  eventName: string;
-  eventId: string;
-  eventSourceUrl?: string;
-  email?: string;
-  phone?: string;
-  clientIpAddress?: string;
-  clientUserAgent?: string;
-  fbp?: string;
-  fbc?: string;
-  customData?: Record<string, unknown>;
-};
+import crypto from "node:crypto";
 
 function sha256(value: string) {
-  return createHash("sha256").update(value).digest("hex");
+  return crypto.createHash("sha256").update(value.trim().toLowerCase()).digest("hex");
 }
 
-function normalizePhone(value?: string) {
-  const digits = value?.replace(/\D/g, "");
-  return digits || undefined;
-}
+export type MetaLeadInput = {
+  eventId: string;
+  email: string;
+  visitorId?: string | null;
+  pageUrl: string;
+  ipAddress?: string | null;
+  userAgent?: string | null;
+  fbp?: string | null;
+  fbc?: string | null;
+  landingVariant: string;
+  usesIntercom: string;
+  customerCount: string;
+};
 
-export async function sendMetaServerEvent(input: Input) {
+export async function sendMetaLead(input: MetaLeadInput) {
   const datasetId = process.env.META_DATASET_ID;
   const accessToken = process.env.META_ACCESS_TOKEN;
-  const version = process.env.META_GRAPH_API_VERSION;
+  const apiVersion = process.env.META_GRAPH_API_VERSION;
 
-  if (!datasetId || !accessToken || !version) {
-    return { skipped: true } as const;
+  if (!datasetId || !accessToken || !apiVersion) {
+    return { ok: false, skipped: true, reason: "meta_not_configured" } as const;
   }
 
-  const email = input.email?.trim().toLowerCase();
-  const phone = normalizePhone(input.phone);
+  const userData: Record<string, unknown> = {
+    em: [sha256(input.email)],
+  };
 
-  const user_data = Object.fromEntries(
-    Object.entries({
-      em: email ? [sha256(email)] : undefined,
-      ph: phone ? [sha256(phone)] : undefined,
-      client_ip_address: input.clientIpAddress,
-      client_user_agent: input.clientUserAgent,
-      fbp: input.fbp,
-      fbc: input.fbc,
-    }).filter(([, value]) => value !== undefined && value !== "")
-  );
+  if (input.visitorId) userData.external_id = [sha256(input.visitorId)];
+  if (input.ipAddress) userData.client_ip_address = input.ipAddress;
+  if (input.userAgent) userData.client_user_agent = input.userAgent;
+  if (input.fbp) userData.fbp = input.fbp;
+  if (input.fbc) userData.fbc = input.fbc;
 
-  const body: Record<string, unknown> = {
+  const payload: Record<string, unknown> = {
     data: [
       {
-        event_name: input.eventName,
+        event_name: "Lead",
         event_time: Math.floor(Date.now() / 1000),
+        event_source_url: input.pageUrl,
         event_id: input.eventId,
         action_source: "website",
-        event_source_url: input.eventSourceUrl,
-        user_data,
-        custom_data: input.customData || {},
+        user_data: userData,
+        custom_data: {
+          landing_variant: input.landingVariant,
+          uses_intercom: input.usesIntercom,
+          customer_count: input.customerCount,
+          source: "ohrly_intercom_lp",
+        },
       },
     ],
   };
 
   if (process.env.META_TEST_EVENT_CODE) {
-    body.test_event_code = process.env.META_TEST_EVENT_CODE;
+    payload.test_event_code = process.env.META_TEST_EVENT_CODE;
   }
 
-  const endpoint =
-    `https://graph.facebook.com/${encodeURIComponent(version)}/` +
-    `${encodeURIComponent(datasetId)}/events?access_token=` +
-    encodeURIComponent(accessToken);
+  const response = await fetch(
+    `https://graph.facebook.com/${apiVersion}/${datasetId}/events?access_token=${encodeURIComponent(accessToken)}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      cache: "no-store",
+    },
+  );
 
-  const response = await fetch(endpoint, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-    cache: "no-store",
-  });
+  const body = await response.json().catch(() => null);
 
-  const text = await response.text();
-
-  if (!response.ok) {
-    console.error("Meta CAPI error:", response.status, text);
-    return { skipped: false, ok: false, status: response.status } as const;
-  }
-
-  return { skipped: false, ok: true, status: response.status } as const;
+  return {
+    ok: response.ok,
+    skipped: false,
+    status: response.status,
+    body,
+  } as const;
 }
