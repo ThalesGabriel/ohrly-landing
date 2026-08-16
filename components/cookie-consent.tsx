@@ -2,41 +2,133 @@
 
 import { useEffect, useState } from "react";
 import { getConsent, setConsent } from "@/lib/tracking/consent";
+import { trackBehavior } from "@/lib/tracking/client";
 
 export function CookieConsent() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    setVisible(!getConsent());
+    const shouldShow = !getConsent();
+
+    setVisible(shouldShow);
+
+    if (shouldShow) {
+      void trackBehavior("cookie_banner_view");
+    }
   }, []);
 
   if (!visible) return null;
 
-  function save(analytics: boolean, marketing: boolean) {
+  function save(
+    analytics: boolean,
+    marketing: boolean,
+    choice: "all" | "analytics" | "essential",
+  ) {
+    void trackBehavior("cookie_choice", {
+      choice,
+      analytics,
+      marketing,
+    });
+
     setConsent({ analytics, marketing });
     setVisible(false);
   }
 
   return (
-    <div className="fixed inset-x-3 bottom-3 z-50 mx-auto max-w-3xl rounded-2xl border border-stone-200 bg-white p-4 shadow-2xl shadow-black/10 sm:p-5">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <p className="text-sm font-black text-stone-950">Medição e privacidade</p>
-          <p className="mt-1 max-w-xl text-xs leading-5 text-stone-600">
-            Usamos medição própria para entender a navegação. A medição da Meta só é ativada quando você aceita marketing.
-          </p>
-        </div>
+    <>
+      {/* MOBILE */}
+      <div className="fixed inset-0 z-[100] flex items-end bg-black/25 p-3 backdrop-blur-[1px] sm:hidden">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="cookie-title-mobile"
+          className="w-full rounded-[24px] border border-stone-200 bg-white p-5 shadow-2xl"
+        >
+          <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-stone-200" />
 
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <button
-            type="button"
-            onClick={() => save(true, true)}
-            className="cursor-pointer rounded-full bg-[#ff6f1f] px-4 py-2 text-xs font-black text-white transition hover:bg-[#e95f10]"
+          <p
+            id="cookie-title-mobile"
+            className="text-base font-black tracking-[-0.025em] text-stone-950"
           >
-            Aceitar todos
-          </button>
+            Medição e privacidade
+          </p>
+
+          <p className="mt-2 text-xs leading-5 text-stone-500">
+            Usamos telemetria própria para entender o uso básico da página.
+            Com sua autorização, podemos fazer análises mais detalhadas. A Meta
+            só é ativada quando você aceita marketing.
+          </p>
+
+          <div className="mt-5 grid gap-2">
+            <button
+              type="button"
+              onClick={() => save(true, true, "all")}
+              className="min-h-12 rounded-full bg-[#ff6f1f] px-4 text-xs font-black text-white transition active:bg-[#e95f10]"
+            >
+              Aceitar todos
+            </button>
+
+            <button
+              type="button"
+              onClick={() => save(true, false, "analytics")}
+              className="min-h-12 rounded-full border border-stone-300 bg-white px-4 text-xs font-black text-stone-900"
+            >
+              Aceitar medição
+            </button>
+
+            <button
+              type="button"
+              onClick={() => save(false, false, "essential")}
+              className="min-h-11 rounded-full px-4 text-xs font-bold text-stone-500"
+            >
+              Somente essencial
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* DESKTOP */}
+      <div className="fixed inset-x-3 bottom-3 z-50 mx-auto hidden max-w-7xl rounded-2xl border border-stone-200 bg-white p-5 shadow-2xl shadow-black/10 sm:block">
+        <div className="flex items-center justify-between gap-6">
+          <div>
+            <p className="text-sm font-black text-stone-950">
+              Medição e privacidade
+            </p>
+
+            <p className="mt-1 max-w-5xl text-xs leading-5 text-stone-600">
+              Usamos telemetria própria para entender o uso básico da página.
+              Com sua autorização, podemos fazer análises mais detalhadas. A
+              Meta só é ativada quando você aceita marketing.
+            </p>
+          </div>
+
+          <div className="flex min-w-[180px] flex-col gap-2">
+            <button
+              type="button"
+              onClick={() => save(true, true, "all")}
+              className="rounded-full bg-[#ff6f1f] px-4 py-2.5 text-xs font-black text-white transition hover:bg-[#e95f10]"
+            >
+              Aceitar todos
+            </button>
+
+            <button
+              type="button"
+              onClick={() => save(true, false, "analytics")}
+              className="rounded-full border border-stone-300 bg-white px-4 py-2.5 text-xs font-black text-stone-900 transition hover:bg-stone-50"
+            >
+              Aceitar medição
+            </button>
+
+            <button
+              type="button"
+              onClick={() => save(false, false, "essential")}
+              className="rounded-full px-4 py-2.5 text-xs font-bold text-stone-500 transition hover:bg-stone-50 hover:text-stone-900"
+            >
+              Somente essencial
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

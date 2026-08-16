@@ -65,3 +65,48 @@ export function trackMetaLead(
     eventID: eventId,
   });
 }
+
+export function trackMetaDemoStart(
+  eventId: string,
+  customData: Record<string, unknown> = {},
+) {
+  if (!ensureMetaPixel()) return;
+
+  window.fbq?.("trackCustom", "DemoStart", customData, {
+    eventID: eventId,
+  });
+}
+
+export function trackMetaEngaged10s(
+  eventId: string,
+  customData: Record<string, unknown> = {},
+) {
+  if (!ensureMetaPixel()) return;
+
+  window.fbq?.(
+    "trackCustom",
+    "Engaged10s",
+    customData,
+    {
+      eventID: eventId,
+    },
+  );
+}
+
+
+export function trackMetaQualifiedVisit(
+  eventId: string,
+  customData: Record<string, unknown> = {},
+  eventName =
+    process.env.NEXT_PUBLIC_META_QUALIFIED_VISIT_EVENT_NAME ||
+    "QualifiedVisit",
+) {
+  if (!ensureMetaPixel()) return;
+
+  window.fbq?.(
+    "trackCustom",
+    eventName,
+    customData,
+    { eventID: eventId },
+  );
+}

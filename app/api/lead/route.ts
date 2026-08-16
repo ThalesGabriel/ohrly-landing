@@ -3,6 +3,10 @@ import { insertAnalyticsEvent } from "@/lib/analytics/server";
 import { sendFormspreeLead } from "@/lib/formspree";
 import { sendMetaLead } from "@/lib/meta/capi";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
+import type {
+  Attribution,
+  ClientTrackingContext,
+} from "@/lib/tracking/types";
 
 export const runtime = "nodejs";
 
@@ -17,6 +21,7 @@ type LeadBody = {
   tracking?: {
     visitorId?: string;
     sessionId?: string;
+    trackingMode?: "essential" | "consented";
     landingVariant?: string;
     pageUrl?: string;
     pagePath?: string;
@@ -104,12 +109,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: false, error: "invalid_form" }, { status: 400 });
     }
 
-    const tracking = body.tracking || {};
-    const attribution = tracking.attribution || {};
+    const tracking = (body.tracking || {}) as Partial<ClientTrackingContext>;
+    const attribution: Partial<Attribution> = tracking.attribution ?? {};
+    const utmPlacement = clean(attribution.utm_placement, 200) || null;
+    
     const landingVariant = clean(
       tracking.landingVariant || process.env.NEXT_PUBLIC_OHRLY_LANDING_VARIANT || "decision_lp_v1",
       120,
     );
+    
     const pageUrl = clean(tracking.pageUrl, 1200) || request.headers.get("referer") || "";
     const pagePath = clean(tracking.pagePath, 1200) || "/";
     const incomingSessionId = clean(tracking.sessionId, 64);
@@ -142,8 +150,16 @@ export async function POST(request: Request) {
       source_url: pageUrl || null,
       attribution: {
         ...attribution,
-        device_type: tracking.deviceType || null,
-        visitor_id: analyticsConsent ? visitorId : null,
+      
+        utm_placement: utmPlacement,
+      
+        device_type:
+          tracking.deviceType || null,
+      
+        visitor_id:
+          analyticsConsent
+            ? visitorId
+            : null,
       },
       analytics_consent: analyticsConsent,
       marketing_consent: marketingConsent,
@@ -152,10 +168,16 @@ export async function POST(request: Request) {
       meta_fbp: marketingConsent ? tracking.fbp || null : null,
       meta_fbc: marketingConsent ? tracking.fbc || null : null,
       metadata: {
-        source: "Ohrly landing page - Intercom behavioral analysis",
+        source:
+          "Ohrly landing page - Intercom behavioral analysis",
+      
         uses_intercom: usesIntercom,
+      
         customer_count: customerCount,
+      
         client_event_id: clientEventId,
+      
+        utm_placement: utmPlacement,
       },
     });
 
@@ -164,27 +186,51 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: false, error: "lead_persist_failed" }, { status: 500 });
     }
 
-    if (analyticsConsent) {
-      const { error: eventError } = await insertAnalyticsEvent({
-        eventName: "form_submit",
-        visitorId,
-        sessionId,
-        pagePath,
-        landingVariant,
-        attribution,
-        properties: {
-          client_event_id: clientEventId,
-          form_id: "intercom_lead_form",
-          uses_intercom: usesIntercom,
-          customer_count: customerCount,
-          device_type: tracking.deviceType || null,
-        },
-      });
+    
+    const { error: eventError } = await insertAnalyticsEvent({
+      eventName: "form_submit",
+    
+      visitorId,
+      sessionId,
+    
+      pagePath,
+      landingVariant,
+    
+      attribution: {
+        utm_source: attribution.utm_source,
+        utm_medium: attribution.utm_medium,
+        utm_campaign: attribution.utm_campaign,
+        utm_content: attribution.utm_content,
+        utm_term: attribution.utm_term,
+        referrer_host:
+          attribution.referrer_host,
+      },
+    
+      properties: {
+        client_event_id: clientEventId,
+    
+        form_id: "intercom_lead_form",
+    
+        uses_intercom: usesIntercom,
+    
+        customer_count: customerCount,
+    
+        device_type:
+          tracking.deviceType || null,
 
-      if (eventError) {
-        console.error("analytics form_submit failed", eventError);
-      }
+        utm_placement: utmPlacement,
+    
+        tracking_mode:
+          tracking.trackingMode === "consented"
+            ? "consented"
+            : "essential",
+      },
+    });
+
+    if (eventError) {
+      console.error("analytics form_submit failed", eventError);
     }
+    
 
     const ipAddress = getIp(request);
     const userAgent = request.headers.get("user-agent");
@@ -220,6 +266,7 @@ export async function POST(request: Request) {
         utm_campaign: attribution.utm_campaign,
         utm_content: attribution.utm_content,
         utm_term: attribution.utm_term,
+        utm_placement: utmPlacement,
       },
     });
 

@@ -10,6 +10,7 @@ export type Attribution = {
   utm_campaign: string | null;
   utm_content: string | null;
   utm_term: string | null;
+  utm_placement: string | null;
   fbclid: string | null;
   meta_campaign_id: string | null;
   meta_adset_id: string | null;
@@ -18,15 +19,22 @@ export type Attribution = {
   referrer_host: string | null;
 };
 
+export type TrackingMode = "essential" | "consented";
+
 export type ClientTrackingContext = {
   visitorId: string;
   sessionId: string;
+  trackingMode: TrackingMode;
+
   landingVariant: string;
   pageUrl: string;
   pagePath: string;
+
   deviceType: "mobile" | "tablet" | "desktop";
+
   attribution: Attribution;
   consent: ConsentState | null;
+
   fbp: string | null;
   fbc: string | null;
 };
