@@ -25,8 +25,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           src="https://www.app.ohrly.com.br/ohrly.js"
           strategy="afterInteractive"
           data-project-key="pk_af23ee02a84cbb59a2e92d2a987358f88ddb"
-          data-storage="memory"
-          data-debug="true"
+          data-storage="session"
         />
       </body>
     </html>
