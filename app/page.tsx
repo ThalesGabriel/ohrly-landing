@@ -58,6 +58,7 @@ export default function Home() {
 
             <AttributedLink
               href="/demo"
+              data-ohrly-cta="hero_demo"
               data-analytics-cta="hero_mobile_view_demo"
               data-analytics-location="hero_mobile"
               data-analytics-label="Ver análise de exemplo"
@@ -68,6 +69,7 @@ export default function Home() {
 
             <a
               href="#diagnostico"
+              data-ohrly-cta="hero_diagnostic"
               data-analytics-cta="hero_mobile_analyze_intercom"
               data-analytics-location="hero_mobile"
               data-analytics-label="Analisar meu Intercom"
@@ -129,6 +131,7 @@ export default function Home() {
 
               <AttributedLink
                 href="/demo"
+                data-ohrly-cta="hero_demo"
                 data-analytics-cta="hero_mobile_preview_demo"
                 data-analytics-location="hero_mobile_preview"
                 data-analytics-label="Entender esta análise"
@@ -171,6 +174,7 @@ export default function Home() {
               <div className="mt-8 flex items-center gap-4">
                 <AttributedLink
                   href="/demo"
+                  data-ohrly-cta="hero_demo"
                   data-analytics-cta="hero_desktop_view_demo"
                   data-analytics-location="hero_desktop"
                   data-analytics-label="Ver uma análise de exemplo"
@@ -181,6 +185,7 @@ export default function Home() {
 
                 <a
                   href="#diagnostico"
+                  data-ohrly-cta="hero_diagnostic"
                   data-analytics-cta="hero_desktop_analyze_intercom"
                   data-analytics-location="hero_desktop"
                   data-analytics-label="Analisar meu Intercom"
@@ -269,6 +274,7 @@ export default function Home() {
 
               <AttributedLink
                 href="/demo"
+                data-ohrly-cta="hero_demo"
                 data-analytics-cta="proof_view_demo"
                 data-analytics-location="proof"
                 data-analytics-label="Ver análise completa"
@@ -445,6 +451,7 @@ export default function Home() {
             <div className="mt-7 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <a
                 href="#diagnostico"
+                data-ohrly-cta="hero_diagnostic"
                 data-analytics-cta="final_analyze_intercom"
                 data-analytics-location="final_cta"
                 data-analytics-label="Analisar meu Intercom"
@@ -455,6 +462,7 @@ export default function Home() {
 
               <AttributedLink
                 href="/demo"
+                data-ohrly-cta="hero_demo"
                 data-analytics-cta="final_view_demo"
                 data-analytics-location="final_cta"
                 data-analytics-label="Ver análise de exemplo"

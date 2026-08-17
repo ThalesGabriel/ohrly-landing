@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script"
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
@@ -20,6 +21,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         {children}
         <Analytics />
+        <Script
+          src="https://app.ohrly.com.br/ohrly.js"
+          strategy="afterInteractive"
+          data-project-key="pk_af23ee02a84cbb59a2e92d2a987358f88ddb"
+          data-storage="memory"
+        />
       </body>
     </html>
   );
