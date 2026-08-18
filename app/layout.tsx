@@ -4,13 +4,13 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Ohrly — Descubra quais problemas deixaram de ser casos isolados",
+  title: "Ohrly — Muita gente chega. Pouca vira cliente.",
   description:
-    "Analisamos seu histórico do Intercom para descobrir o que começou a se repetir, consolidamos o impacto e mostramos quais problemas merecem atenção primeiro.",
+    "Descubra onde seu público deixa de avançar e quais sinais revelam oportunidades de otimização antes da próxima conversão.",
   openGraph: {
-    title: "Ohrly — Problemas que deixaram de ser casos isolados",
+    title: "Ohrly — Muita gente chega. Pouca vira cliente.",
     description:
-      "Descubra o que está se repetindo no seu Intercom antes que a repetição vire custo normalizado.",
+      "Use sinais do comportamento para descobrir onde existe oportunidade e o que vale testar primeiro.",
     type: "website",
   },
 };

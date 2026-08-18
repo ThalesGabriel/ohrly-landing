@@ -48,12 +48,12 @@ export function CookieConsent() {
 
           <p
             id="cookie-title-mobile"
-            className="text-base font-black tracking-[-0.025em] text-stone-950"
+            className="text-sm font-black tracking-[-0.025em] text-stone-950"
           >
             Medição e privacidade
           </p>
 
-          <p className="mt-2 text-xs leading-5 text-stone-500">
+          <p className="mt-2 text-sm leading-5 text-stone-500">
             Usamos telemetria própria para entender o uso básico da página.
             Com sua autorização, podemos fazer análises mais detalhadas. A Meta
             só é ativada quando você aceita marketing.
@@ -63,7 +63,7 @@ export function CookieConsent() {
             <button
               type="button"
               onClick={() => save(true, true, "all")}
-              className="min-h-12 rounded-full bg-[#ff6f1f] px-4 text-xs font-black text-white transition active:bg-[#e95f10]"
+              className="min-h-12 rounded-full bg-[#213f2d] px-4 text-xs font-black text-white transition active:bg-[#e95f10]"
             >
               Aceitar todos
             </button>
@@ -89,7 +89,6 @@ export function CookieConsent() {
 
       {/* DESKTOP */}
       <div className="fixed inset-x-3 bottom-3 z-50 mx-auto hidden max-w-7xl rounded-2xl border border-stone-200 bg-white p-5 shadow-2xl shadow-black/10 sm:block">
-        <div className="flex items-center justify-between gap-6">
           <div>
             <p className="text-sm font-black text-stone-950">
               Medição e privacidade
@@ -102,13 +101,14 @@ export function CookieConsent() {
             </p>
           </div>
 
-          <div className="flex min-w-[180px] flex-col gap-2">
+          <div className="flex min-w-[180px] justify-between gap-2 mt-5">
+
             <button
               type="button"
-              onClick={() => save(true, true, "all")}
-              className="rounded-full bg-[#ff6f1f] px-4 py-2.5 text-xs font-black text-white transition hover:bg-[#e95f10]"
+              onClick={() => save(false, false, "essential")}
+              className="rounded-full px-4 py-2.5 text-xs font-bold text-stone-500 transition hover:bg-stone-50 hover:text-stone-900"
             >
-              Aceitar todos
+              Somente essencial
             </button>
 
             <button
@@ -118,16 +118,16 @@ export function CookieConsent() {
             >
               Aceitar medição
             </button>
-
+            
             <button
               type="button"
-              onClick={() => save(false, false, "essential")}
-              className="rounded-full px-4 py-2.5 text-xs font-bold text-stone-500 transition hover:bg-stone-50 hover:text-stone-900"
+              onClick={() => save(true, true, "all")}
+              className="rounded-full bg-[#213f2d] px-4 py-2.5 text-xs font-black text-white transition hover:bg-[#e95f10]"
             >
-              Somente essencial
+              Aceitar todos
             </button>
+            
           </div>
-        </div>
       </div>
     </>
   );

@@ -169,7 +169,7 @@ export function getClientTrackingContext(): ClientTrackingContext {
 
     landingVariant:
       process.env.NEXT_PUBLIC_OHRLY_LANDING_VARIANT ||
-      "intercom_behavior_lp_v1",
+      "behavioral_signal_trial_lp_v1",
 
     pageUrl: window.location.href,
 

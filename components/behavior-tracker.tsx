@@ -129,7 +129,10 @@ export function BehaviorTracker() {
             { section },
           );
 
-          if (section === "diagnostic_form_card") {
+          if (
+            section === "trial_form_card" ||
+            section === "diagnostic_form_card"
+          ) {
             void trackBehavior(
               "form_view",
               { section },
