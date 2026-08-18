@@ -21,15 +21,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         {children}
         <Analytics />
-        <script
-          async
-          src="https://app.ohrly.com.br/ohrly.js"
+        <Script
+          src="https://www.app.ohrly.com.br/ohrly.js"
+          strategy="afterInteractive"
           data-project-key="pk_af23ee02a84cbb59a2e92d2a987358f88ddb"
           data-storage="session"
-          data-collection-mode="anonymous_aggregate"
-          data-observe-consent-events="true"
-          data-activation-requires-marketing-consent="true"
-        ></script>
+        />
       </body>
     </html>
   );
