@@ -134,156 +134,40 @@ export default function Home() {
         </section>
 
         <section
-          className="pb-16 sm:pb-20"
-          data-analytics-section="behavior_flow"
-        >
-          <div className="mx-auto w-[min(calc(100%_-_2rem),1120px)]">
-            <BehaviorFlow />
-          </div>
-        </section>
-
-        <section
-          className="border-y border-[#e1e6df] bg-white py-16 sm:py-20"
-          data-analytics-section="signals"
-        >
-          <div className="mx-auto w-[min(calc(100%_-_2rem),1120px)]">
-            <div className="mx-auto max-w-3xl text-center">
-              <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#213f2d] sm:text-[11px]">
-                O que os sinais revelam
-              </p>
-
-              <h2 className="mt-3 text-[clamp(2.35rem,5vw,4.4rem)] font-extrabold leading-[.98] tracking-[-0.055em] text-[#121512]">
-                Você não precisa esperar a próxima compra para começar a
-                aprender.
-              </h2>
-
-              <p className="mx-auto mt-5 max-w-2xl text-sm leading-6 text-[#667068] sm:text-base sm:leading-7">
-                Antes de um lead, uma compra ou uma assinatura acontecer, seu
-                público já deixou sinais pelo caminho. Ohrly aprende quais
-                deles realmente se relacionam com o resultado que importa para
-                você.
-              </p>
-            </div>
-
-            <div className="mt-10 grid gap-3 lg:grid-cols-3">
-              {signals.map((signal, index) => (
-                <article
-                  key={signal.title}
-                  className="rounded-[20px] border border-[#e1e6df] bg-[#fbfcfb] p-5 sm:p-6"
-                >
-                  <span className="grid h-8 w-8 place-items-center rounded-[9px] bg-[#e8efe9] text-[10px] font-extrabold text-[#213f2d]">
-                    0{index + 1}
-                  </span>
-
-                  <h3 className="mt-5 text-xl font-extrabold tracking-[-0.035em] text-[#121512]">
-                    {signal.title}
-                  </h3>
-
-                  <p className="mt-2 text-sm leading-6 text-[#687168]">
-                    {signal.text}
-                  </p>
-                </article>
-              ))}
-            </div>
-
-            <div className="mt-4 grid gap-3 rounded-[20px] bg-[#213f2d] px-5 py-5 text-white sm:grid-cols-[.7fr_1.3fr] sm:items-center sm:px-6">
-              <span className="text-xs text-[#bdc9bf]">
-                O objetivo não é gerar mais dados.
-              </span>
-
-              <strong className="text-lg leading-7 tracking-[-0.025em] sm:text-xl">
-                É encontrar mais oportunidades de transformar o tráfego que
-                você já tem em resultado.
-              </strong>
-            </div>
-          </div>
-        </section>
-
-        <section
-          className="py-16 sm:py-20"
-          data-analytics-section="optimization_diagnosis"
-        >
-          <div className="mx-auto w-[min(calc(100%_-_2rem),1120px)]">
-            <div className="mx-auto max-w-3xl text-center">
-              <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#213f2d] sm:text-[11px]">
-                Quando a venda não vem
-              </p>
-
-              <h2 className="mt-3 text-[clamp(2.35rem,5vw,4.4rem)] font-extrabold leading-[.98] tracking-[-0.055em] text-[#121512]">
-                É o público, o criativo, a oferta ou o funil?
-              </h2>
-
-              <p className="mx-auto mt-5 max-w-2xl text-sm leading-6 text-[#667068] sm:text-base sm:leading-7">
-                Ohrly procura onde o comportamento começa a perder força para
-                mostrar qual hipótese vale investigar primeiro.
-              </p>
-            </div>
-
-            <div className="mt-9 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {causes.map((cause) => (
-                <article
-                  key={cause.title}
-                  className="rounded-[20px] border border-[#e1e6df] bg-white p-5"
-                >
-                  <span className="grid h-9 w-9 place-items-center rounded-[10px] bg-[#e8efe9] text-xs font-extrabold text-[#213f2d]">
-                    {cause.key}
-                  </span>
-
-                  <h3 className="mt-5 text-lg font-extrabold tracking-[-0.03em] text-[#121512]">
-                    {cause.title}
-                  </h3>
-
-                  <p className="mt-2 text-sm leading-6 text-[#687168]">
-                    {cause.text}
-                  </p>
-                </article>
-              ))}
-            </div>
-
-            <div className="mt-4 rounded-2xl bg-[#edf3ee] px-5 py-4 text-sm leading-6 text-[#435247]">
-              <strong>Pare de mexer em tudo ao mesmo tempo.</strong> Ohrly
-              separa onde a perda aparece da hipótese que parece mais plausível
-              — e usa o próximo teste para aprender se ela realmente fazia
-              sentido.
-            </div>
-          </div>
-        </section>
-
-        <section
           className="bg-[#172119] py-16 text-white sm:py-20"
           data-analytics-section="product_value"
         >
           <div className="mx-auto w-[min(calc(100%_-_2rem),1120px)]">
             <div className="mx-auto max-w-3xl text-center">
               <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#9aaf9f] sm:text-[11px]">
-                O que você recebe
-              </p>
+  Dos visitantes ao sinal
+</p>
 
-              <h2 className="mt-3 text-[clamp(2.35rem,5vw,4.4rem)] font-extrabold leading-[.98] tracking-[-0.055em]">
-                Menos dashboard. Mais clareza sobre o próximo movimento.
-              </h2>
+<h2 className="mt-3 text-[clamp(2.35rem,5vw,4.4rem)] font-extrabold leading-[.98] tracking-[-0.055em]">
+  Descubra quais visitantes vale a pena trazer mais vezes.
+</h2>
 
-              <p className="mx-auto mt-5 max-w-2xl text-sm leading-6 text-[#aeb8b0] sm:text-base sm:leading-7">
-                Você não precisa entender modelos, regiões ou estatística para
-                usar o Ohrly. Precisa apenas dizer qual resultado importa.
-              </p>
-            </div>
+<p className="mx-auto mt-5 max-w-2xl text-sm leading-6 text-[#aeb8b0] sm:text-base sm:leading-7">
+  Ohrly observa como as pessoas que chegam ao seu site avançam
+  e transforma os comportamentos mais úteis em um sinal para aquisição.
+</p>
+            </div>  
 
             <div className="mt-10 grid gap-3 lg:grid-cols-3">
               {[
-                [
-                  "Veja quem realmente está avançando.",
-                  "Ohrly procura o que as pessoas que chegam mais perto do resultado fazem de diferente.",
-                ],
-                [
-                  "Encontre onde existe oportunidade.",
-                  "Descubra em qual parte da jornada há espaço para favorecer caminhos mais promissores.",
-                ],
-                [
-                  "Escolha o que vale testar.",
-                  "Ohrly apresenta caminhos possíveis. Você escolhe a direção e ele aprende com a resposta.",
-                ],
-              ].map(([title, text], index) => (
+  [
+    "Veja até onde seus visitantes chegam.",
+    "Entenda quais comportamentos aparecem ao longo da jornada e onde a população deixa de avançar.",
+  ],
+  [
+    "Encontre uma região de qualidade.",
+    "Descubra quais comportamentos concentram visitantes mais próximos do resultado sem deixar o sinal raro demais.",
+  ],
+  [
+    "Transforme isso em QualifiedVisit.",
+    "Escolha o comportamento que representa uma boa visita e envie esse sinal aos sistemas que trazem novos visitantes.",
+  ],
+].map(([title, text], index) => (
                 <article
                   key={title}
                   className="rounded-[22px] border border-white/[.08] bg-[#1d2a20] p-6"
@@ -357,134 +241,6 @@ export default function Home() {
 
               <LeadForm />
             </aside>
-          </div>
-        </section>
-
-        <section
-          className="py-16 sm:py-20"
-          data-analytics-section="proof"
-        >
-          <div className="mx-auto w-[min(calc(100%_-_2rem),1120px)]">
-            <div className="grid gap-8 rounded-[26px] border border-[#e1e6df] bg-white p-6 shadow-[0_18px_50px_rgba(20,30,22,.06)] sm:p-8 lg:grid-cols-[1fr_.85fr] lg:items-center">
-              <div>
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#213f2d] sm:text-[11px]">
-                  Ohrly usando Ohrly
-                </p>
-
-                <h2 className="mt-3 text-[clamp(2.1rem,4.3vw,3.7rem)] font-extrabold leading-[1.01] tracking-[-0.052em] text-[#121512]">
-                  Estamos fazendo isso primeiro com o nosso próprio tráfego.
-                </h2>
-
-                <p className="mt-5 text-sm leading-6 text-[#667068] sm:text-base sm:leading-7">
-                  Em nosso histórico, um comportamento presente em
-                  aproximadamente{" "}
-                  <strong className="text-[#121512]">21,8% das sessões</strong>{" "}
-                  capturou cerca de{" "}
-                  <strong className="text-[#121512]">
-                    97,3% dos inícios de formulário
-                  </strong>
-                  . Agora estamos verificando se essa relação continua
-                  aparecendo em tráfego novo.
-                </p>
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
-                <div className="rounded-[20px] bg-[#f1f5f1] p-6 text-center">
-                  <strong className="block text-4xl font-extrabold tracking-[-0.055em] text-[#213f2d]">
-                    21,8%
-                  </strong>
-                  <span className="mt-2 block text-xs leading-5 text-[#687168]">
-                    das sessões tinham o comportamento relevante
-                  </span>
-                </div>
-
-                <span className="text-center text-xl text-[#9aa39c]">→</span>
-
-                <div className="rounded-[20px] bg-[#f1f5f1] p-6 text-center">
-                  <strong className="block text-4xl font-extrabold tracking-[-0.055em] text-[#213f2d]">
-                    97,3%
-                  </strong>
-                  <span className="mt-2 block text-xs leading-5 text-[#687168]">
-                    dos FormStarts estavam dentro desse grupo
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section
-          className="border-y border-[#e1e6df] bg-white py-16 sm:py-20"
-          data-analytics-section="fit"
-        >
-          <div className="mx-auto grid w-[min(calc(100%_-_2rem),1120px)] gap-9 lg:grid-cols-2 lg:items-center">
-            <div className="grid gap-2.5">
-              {fitItems.map(([title, text]) => (
-                <div
-                  key={title}
-                  className="flex gap-3 rounded-2xl border border-[#e1e6df] bg-[#fbfcfb] px-4 py-3.5"
-                >
-                  <span className="grid h-6 w-6 shrink-0 place-items-center rounded-lg bg-[#e8efe9] text-xs font-extrabold text-[#213f2d]">
-                    ✓
-                  </span>
-
-                  <div>
-                    <strong className="block text-sm text-[#303630]">
-                      {title}
-                    </strong>
-                    <span className="mt-1 block text-xs leading-5 text-[#687168]">
-                      {text}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div>
-              <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#213f2d] sm:text-[11px]">
-                Para quem faz sentido
-              </p>
-
-              <h2 className="mt-3 text-[clamp(2.2rem,4.5vw,3.8rem)] font-extrabold leading-[1] tracking-[-0.052em] text-[#121512]">
-                Grande demais para continuar decidindo só por feeling. Pequeno
-                demais para montar uma stack enterprise.
-              </h2>
-
-              <p className="mt-5 text-sm leading-6 text-[#667068] sm:text-base sm:leading-7">
-                É nesse espaço que o Ohrly começa: negócios digitais com
-                movimento suficiente para aprender, mas ainda com poucos
-                resultados para explicar tudo sozinho.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section
-          className="py-16 text-center sm:py-24"
-          data-analytics-section="final_cta"
-        >
-          <div className="mx-auto w-[min(calc(100%_-_2rem),1120px)] rounded-[30px] bg-[#213f2d] px-6 py-12 text-white sm:px-10 sm:py-16">
-            <h2 className="mx-auto max-w-4xl text-[clamp(2.6rem,5.4vw,4.7rem)] font-extrabold leading-[.98] tracking-[-0.058em]">
-              Antes de gastar mais para trazer novas pessoas, entenda o que
-              acontece com as que já chegaram.
-            </h2>
-
-            <p className="mx-auto mt-5 max-w-2xl text-sm leading-6 text-[#c6d1c8] sm:text-base sm:leading-7">
-              Use os próximos 45 dias para descobrir quais sinais importam,
-              onde existe oportunidade e o que merece seu próximo teste.
-            </p>
-
-            <div className="mt-7 flex justify-center">
-              <a
-                href="#trial"
-                data-analytics-cta="final_start_trial"
-                data-analytics-location="final_cta"
-                data-analytics-label="Testar o Ohrly grátis por 45 dias"
-                className="inline-flex min-h-13 items-center justify-center rounded-full bg-white px-6 text-sm font-extrabold text-[#213f2d]"
-              >
-                Testar o Ohrly grátis por 45 dias
-              </a>
-            </div>
           </div>
         </section>
       </main>
