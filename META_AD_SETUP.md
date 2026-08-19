@@ -49,3 +49,4 @@ Não congele esses nomes antes de confirmar no Events Manager/CRM a estratégia 
 - definir Graph API version atual
 - usar `META_TEST_EVENT_CODE` apenas no teste
 - verificar deduplicação do `Lead`
+
