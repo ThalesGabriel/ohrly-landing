@@ -94,6 +94,7 @@ export default function Home() {
         <section
           className="pb-12 pt-16 text-center sm:pb-16 sm:pt-24"
           data-analytics-section="hero"
+          data-ohrly-section="hero"
         >
           <div className="mx-auto w-[min(calc(100%_-_2rem),1120px)]">
             <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#213f2d] sm:text-[11px]">
@@ -136,38 +137,39 @@ export default function Home() {
         <section
           className="bg-[#172119] py-16 text-white sm:py-20"
           data-analytics-section="product_value"
+          data-ohrly-section="product_value"
         >
           <div className="mx-auto w-[min(calc(100%_-_2rem),1120px)]">
             <div className="mx-auto max-w-3xl text-center">
               <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#9aaf9f] sm:text-[11px]">
-  Dos visitantes ao sinal
-</p>
+                Dos visitantes ao sinal
+              </p>
 
-<h2 className="mt-3 text-[clamp(2.35rem,5vw,4.4rem)] font-extrabold leading-[.98] tracking-[-0.055em]">
-  Descubra quais visitantes vale a pena trazer mais vezes.
-</h2>
+              <h2 className="mt-3 text-[clamp(2.35rem,5vw,4.4rem)] font-extrabold leading-[.98] tracking-[-0.055em]">
+                Descubra quais visitantes vale a pena trazer mais vezes.
+              </h2>
 
-<p className="mx-auto mt-5 max-w-2xl text-sm leading-6 text-[#aeb8b0] sm:text-base sm:leading-7">
-  Ohrly observa como as pessoas que chegam ao seu site avançam
-  e transforma os comportamentos mais úteis em um sinal para aquisição.
-</p>
-            </div>  
+              <p className="mx-auto mt-5 max-w-2xl text-sm leading-6 text-[#aeb8b0] sm:text-base sm:leading-7">
+                Ohrly observa como as pessoas que chegam ao seu site avançam
+                e transforma os comportamentos mais úteis em um sinal para aquisição.
+              </p>
+            </div>
 
             <div className="mt-10 grid gap-3 lg:grid-cols-3">
               {[
-  [
-    "Veja até onde seus visitantes chegam.",
-    "Entenda quais comportamentos aparecem ao longo da jornada e onde a população deixa de avançar.",
-  ],
-  [
-    "Encontre uma região de qualidade.",
-    "Descubra quais comportamentos concentram visitantes mais próximos do resultado sem deixar o sinal raro demais.",
-  ],
-  [
-    "Transforme isso em QualifiedVisit.",
-    "Escolha o comportamento que representa uma boa visita e envie esse sinal aos sistemas que trazem novos visitantes.",
-  ],
-].map(([title, text], index) => (
+                [
+                  "Veja até onde seus visitantes chegam.",
+                  "Entenda quais comportamentos aparecem ao longo da jornada e onde a população deixa de avançar.",
+                ],
+                [
+                  "Encontre uma região de qualidade.",
+                  "Descubra quais comportamentos concentram visitantes mais próximos do resultado sem deixar o sinal raro demais.",
+                ],
+                [
+                  "Transforme isso em QualifiedVisit.",
+                  "Escolha o comportamento que representa uma boa visita e envie esse sinal aos sistemas que trazem novos visitantes.",
+                ],
+              ].map(([title, text], index) => (
                 <article
                   key={title}
                   className="rounded-[22px] border border-white/[.08] bg-[#1d2a20] p-6"
@@ -193,6 +195,7 @@ export default function Home() {
           id="trial"
           className="border-b border-[#e1e6df] bg-white py-16 sm:py-20"
           data-analytics-section="trial"
+          data-ohrly-section="trial"
         >
           <div className="mx-auto grid w-[min(calc(100%_-_2rem),1120px)] gap-8 lg:grid-cols-[.9fr_1.1fr] lg:items-start lg:gap-14">
             <div className="lg:sticky lg:top-24">

@@ -109,6 +109,7 @@ export function LeadForm() {
     <form
       onSubmit={onSubmit}
       data-analytics-form="trial_lead_form"
+      data-ohrly-section="trial_lead_form"
       className="mt-6 grid gap-3"
     >
       {/* Nome */}
