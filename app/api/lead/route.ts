@@ -114,7 +114,7 @@ export async function POST(request: Request) {
     const utmPlacement = clean(attribution.utm_placement, 200) || null;
     
     const landingVariant = clean(
-      tracking.landingVariant || process.env.NEXT_PUBLIC_OHRLY_LANDING_VARIANT || "decision_lp_v1",
+      tracking.landingVariant || process.env.NEXT_PUBLIC_OHRLY_LANDING_VARIANT || "account_attention_lp_v1",
       120,
     );
     
@@ -138,11 +138,11 @@ export async function POST(request: Request) {
       company: companySite,
       email,
       whatsapp: null,
-      decision: "Identificar quais problemas do SaaS deixaram de ser casos isolados",
+      decision: "Identificar quais contas da carteira merecem atenção e reduzir a investigação manual do CSM",
       context: `Intercom: ${intercomLabel}. Volume aproximado de clientes: ${customerLabel}.`,
       question:
-        "Quais problemas começaram a se repetir, qual o impacto consolidado e o que merece atenção primeiro?",
-      decision_type: "intercom_behavioral_diagnostic",
+        "Quais contas mudaram de forma persistente, o que está acontecendo nelas e o que o CSM deveria investigar primeiro?",
+      decision_type: "b2b_account_attention_diagnostic",
       systems: intercomLabel === "Sim" ? "Intercom" : null,
       urgency: null,
       stage: "new",
@@ -169,7 +169,7 @@ export async function POST(request: Request) {
       meta_fbc: marketingConsent ? tracking.fbc || null : null,
       metadata: {
         source:
-          "Ohrly landing page - Intercom behavioral analysis",
+          "Ohrly landing page - B2B account attention",
       
         uses_intercom: usesIntercom,
       
@@ -257,7 +257,7 @@ export async function POST(request: Request) {
       companySite,
       usesIntercom: intercomLabel,
       customerCount: customerLabel,
-      source: "Ohrly landing page - Intercom behavioral analysis",
+      source: "Ohrly landing page - B2B account attention",
       pageUrl,
       landingVariant,
       utm: {

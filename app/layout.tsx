@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import Script from "next/script"
+import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Ohrly — Muita gente chega. Pouca vira cliente.",
+  title: "Ohrly — Menos contas para investigar. Mais contexto para agir.",
   description:
-    "Descubra onde seu público deixa de avançar e quais sinais revelam oportunidades de otimização antes da próxima conversão.",
+    "Ohrly encontra as contas que mudaram no seu histórico de suporte e prepara a primeira investigação para o CSM.",
   openGraph: {
-    title: "Ohrly — Muita gente chega. Pouca vira cliente.",
+    title: "Ohrly — Seu CSM não deveria investigar toda a carteira",
     description:
-      "Use sinais do comportamento para descobrir onde existe oportunidade e o que vale testar primeiro.",
+      "Conecte seu Intercom. O Ohrly encontra as contas que mudaram e prepara a primeira investigação para o CSM.",
     type: "website",
   },
 };

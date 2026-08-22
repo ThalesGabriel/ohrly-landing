@@ -63,7 +63,7 @@ export function CookieConsent() {
             <button
               type="button"
               onClick={() => save(true, true, "all")}
-              className="min-h-12 rounded-full bg-[#213f2d] px-4 text-xs font-black text-white transition active:bg-[#e95f10]"
+              className="min-h-12 rounded-full bg-[#1457ff] px-4 text-xs font-black text-white transition active:bg-[#e95f10]"
             >
               Aceitar todos
             </button>
@@ -122,7 +122,7 @@ export function CookieConsent() {
             <button
               type="button"
               onClick={() => save(true, true, "all")}
-              className="rounded-full bg-[#213f2d] px-4 py-2.5 text-xs font-black text-white transition hover:bg-[#e95f10]"
+              className="rounded-full bg-[#1457ff] px-4 py-2.5 text-xs font-black text-white transition hover:bg-[#0f49dc]"
             >
               Aceitar todos
             </button>

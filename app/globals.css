@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f8f5;
-  --foreground: #121512;
-  --accent: #213f2d;
+  --background: #f7f9fd;
+  --foreground: #101b35;
+  --ohrly-blue: #1457ff;
+  --ohrly-red: #f43b35;
 }
 
 * {
@@ -30,10 +31,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-.display-serif {
-  font-family: Georgia, "Times New Roman", Times, serif;
-}
-
 button,
 input,
 select {
@@ -41,7 +38,7 @@ select {
 }
 
 ::selection {
-  background: #213f2d;
+  background: var(--ohrly-blue);
   color: #fff;
 }
 

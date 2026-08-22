@@ -111,7 +111,7 @@ export async function sendMetaLead(input: MetaLeadInput) {
       landing_variant: input.landingVariant,
       uses_intercom: input.usesIntercom,
       customer_count: input.customerCount,
-      source: "ohrly_intercom_lp",
+      source: "ohrly_account_attention_lp",
     },
   });
 }
