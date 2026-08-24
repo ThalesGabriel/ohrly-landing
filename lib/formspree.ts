@@ -2,7 +2,7 @@ export type FormspreeLeadInput = {
   name: string;
   email: string;
   companySite: string;
-  usesIntercom: string;
+  attentionMethod: string;
   customerCount: string;
   source: string;
   pageUrl: string;
@@ -10,11 +10,17 @@ export type FormspreeLeadInput = {
   utm: Record<string, string | null | undefined>;
 };
 
-export async function sendFormspreeLead(input: FormspreeLeadInput) {
+export async function sendFormspreeLead(
+  input: FormspreeLeadInput,
+) {
   const formId = process.env.FORMSPREE_FORM_ID;
 
   if (!formId) {
-    return { ok: false, skipped: true, reason: "formspree_not_configured" } as const;
+    return {
+      ok: false,
+      skipped: true,
+      reason: "formspree_not_configured",
+    } as const;
   }
 
   const response = await fetch(`https://formspree.io/f/${formId}`, {
@@ -28,13 +34,17 @@ export async function sendFormspreeLead(input: FormspreeLeadInput) {
       name: input.name,
       email: input.email,
       company: input.companySite,
-      uses_intercom: input.usesIntercom,
+
+      attention_method: input.attentionMethod,
       customer_count: input.customerCount,
+
       source: input.source,
       landing_variant: input.landingVariant,
       page_url: input.pageUrl,
+
       ...input.utm,
-      _subject: "Novo lead — Ohrly Intercom",
+
+      _subject: "Novo lead — Ohrly Account Attention",
     }),
     cache: "no-store",
   });

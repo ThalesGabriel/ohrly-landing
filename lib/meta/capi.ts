@@ -35,12 +35,29 @@ async function sendMetaWebsiteEvent(input: MetaWebsiteEventInput) {
 
   const userData: Record<string, unknown> = {};
 
-  if (input.email) userData.em = [sha256(input.email)];
-  if (input.visitorId) userData.external_id = [sha256(input.visitorId)];
-  if (input.ipAddress) userData.client_ip_address = input.ipAddress;
-  if (input.userAgent) userData.client_user_agent = input.userAgent;
-  if (input.fbp) userData.fbp = input.fbp;
-  if (input.fbc) userData.fbc = input.fbc;
+  if (input.email) {
+    userData.em = [sha256(input.email)];
+  }
+
+  if (input.visitorId) {
+    userData.external_id = [sha256(input.visitorId)];
+  }
+
+  if (input.ipAddress) {
+    userData.client_ip_address = input.ipAddress;
+  }
+
+  if (input.userAgent) {
+    userData.client_user_agent = input.userAgent;
+  }
+
+  if (input.fbp) {
+    userData.fbp = input.fbp;
+  }
+
+  if (input.fbc) {
+    userData.fbc = input.fbc;
+  }
 
   const payload: Record<string, unknown> = {
     data: [
@@ -66,7 +83,9 @@ async function sendMetaWebsiteEvent(input: MetaWebsiteEventInput) {
     )}`,
     {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(payload),
       cache: "no-store",
     },
@@ -92,13 +111,21 @@ export type MetaLeadInput = {
   fbp?: string | null;
   fbc?: string | null;
   landingVariant: string;
-  usesIntercom: string;
+  attentionMethod: string;
   customerCount: string;
 };
 
 export async function sendMetaLead(input: MetaLeadInput) {
   return sendMetaWebsiteEvent({
-    eventName: "QualifiedVisit",
+    /*
+     * IMPORTANTE:
+     * o evento server-side precisa usar o mesmo event_name e event_id
+     * do Pixel no browser para a deduplicação funcionar.
+     *
+     * Se trackMetaLead() no client dispara fbq("track", "Lead", ...),
+     * este evento também deve ser "Lead".
+     */
+    eventName: "Lead",
     eventId: input.eventId,
     email: input.email,
     visitorId: input.visitorId,
@@ -109,7 +136,7 @@ export async function sendMetaLead(input: MetaLeadInput) {
     fbc: input.fbc,
     customData: {
       landing_variant: input.landingVariant,
-      uses_intercom: input.usesIntercom,
+      attention_method: input.attentionMethod,
       customer_count: input.customerCount,
       source: "ohrly_account_attention_lp",
     },
