@@ -199,7 +199,7 @@ export default function Page() {
               <div>
                 <Eyebrow>Para SaaS B2B</Eyebrow>
 
-                <h1 className="mt-5 max-w-[720px] text-[44px] font-black leading-[.98] tracking-[-0.062em] text-[#0d1831] sm:text-[58px] lg:text-[70px]">
+                <h1 className="mt-5 max-w-[720px] text-[44px] font-black leading-[.98] tracking-[-0.062em] text-[#0d1831]">
                   Você{" "}
                   <span className="text-[#1457ff]">não precisa investigar toda a carteira {" "}</span>
                   para descobrir quem precisa da sua atenção.
