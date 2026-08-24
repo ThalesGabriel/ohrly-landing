@@ -200,13 +200,14 @@ export default function Page() {
                 <Eyebrow>Para SaaS B2B</Eyebrow>
 
                 <h1 className="mt-5 max-w-[720px] text-[44px] font-black leading-[.98] tracking-[-0.062em] text-[#0d1831] sm:text-[58px] lg:text-[70px]">
-                  100 contas em risco de churn.{" "}
-                  <span className="text-[#1457ff]">Por qual delas você começa?</span>
+                  Você{" "}
+                  <span className="text-[#1457ff]">não precisa investigar toda a carteira {" "}</span>
+                  para descobrir quem precisa da sua atenção.
                 </h1>
 
                 <p className="mt-6 max-w-[640px] text-base leading-7 text-[#68758f] sm:text-[18px] sm:leading-8">
                   O Ohrly analisa os sinais que você já tem e identifica quais
-                  relações realmente mudaram — para seu time saber{" "}
+                  relações realmente mudaram, para seu time saber{" "}
                   <strong className="font-black text-[#101b35]">
                     quais contas investigar primeiro.
                   </strong>
