@@ -98,7 +98,7 @@ export type MetaLeadInput = {
 
 export async function sendMetaLead(input: MetaLeadInput) {
   return sendMetaWebsiteEvent({
-    eventName: "Lead",
+    eventName: "QualifiedVisit",
     eventId: input.eventId,
     email: input.email,
     visitorId: input.visitorId,
