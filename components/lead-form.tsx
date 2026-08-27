@@ -1,6 +1,11 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import {
+  FormEvent,
+  InvalidEvent,
+  MouseEvent,
+  useState,
+} from "react";
 
 import {
   getClientTrackingContext,
@@ -14,19 +19,48 @@ export function LeadForm() {
   const [status, setStatus] = useState<SubmitStatus>("idle");
   const [message, setMessage] = useState("");
 
-  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+  function onSubmitClick(
+    event: MouseEvent<HTMLButtonElement>,
+  ) {
+    if (status === "sending") return;
+
+    void trackBehavior("form_submit_click", {
+      elementId: "attention_lead_form",
+    });
+  }
+
+  function onInvalid(
+    event: InvalidEvent<HTMLFormElement>,
+  ) {
+    const field = event.target as
+      | HTMLInputElement
+      | HTMLSelectElement;
+
+    if (!field?.name) return;
+
+    void trackBehavior("form_validation_error", {
+      elementId: "attention_lead_form",
+      field: field.name,
+      validity: {
+        valueMissing: field.validity.valueMissing,
+        typeMismatch: field.validity.typeMismatch,
+        patternMismatch: field.validity.patternMismatch,
+      },
+    });
+  }
+
+  async function onSubmit(
+    event: FormEvent<HTMLFormElement>,
+  ) {
     event.preventDefault();
 
     if (status === "sending") return;
 
     const form = event.currentTarget;
     const data = new FormData(form);
+
     const clientEventId = crypto.randomUUID();
     const tracking = getClientTrackingContext();
-
-    const attentionMethod = String(
-      data.get("attentionMethod") || "",
-    ).trim();
 
     const customerCount = String(
       data.get("customerCount") || "",
@@ -37,7 +71,6 @@ export function LeadForm() {
 
     void trackBehavior("form_submit_attempt", {
       elementId: "attention_lead_form",
-      attentionMethod,
       customerCount,
     });
 
@@ -48,10 +81,8 @@ export function LeadForm() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: data.get("name"),
           email: data.get("email"),
           companySite: data.get("companySite"),
-          attentionMethod,
           customerCount,
           website: data.get("website"),
           clientEventId,
@@ -59,7 +90,9 @@ export function LeadForm() {
         }),
       });
 
-      const result = (await response.json().catch(() => null)) as
+      const result = (await response.json().catch(
+        () => null,
+      )) as
         | {
             ok?: boolean;
             error?: string;
@@ -67,20 +100,22 @@ export function LeadForm() {
         | null;
 
       if (!response.ok || !result?.ok) {
-        throw new Error(result?.error || "submit_failed");
+        throw new Error(
+          result?.error || "submit_failed",
+        );
       }
 
       if (tracking.consent?.marketing) {
         trackMetaLead(clientEventId, {
           landing_variant: tracking.landingVariant,
-          attention_method: attentionMethod,
           customer_count: customerCount,
         });
       }
 
       setStatus("success");
+
       setMessage(
-        "Recebemos seus dados. Vamos avaliar se o piloto faz sentido para a sua operação.",
+        "Recebemos seus dados. Vamos avaliar se o Ohrly faz sentido para a sua operação.",
       );
 
       form.reset();
@@ -88,13 +123,13 @@ export function LeadForm() {
       console.error(error);
 
       setStatus("error");
+
       setMessage(
         "Não foi possível enviar agora. Tente novamente em alguns instantes.",
       );
 
       void trackBehavior("form_submit_error", {
         elementId: "attention_lead_form",
-        attentionMethod,
         customerCount,
       });
     }
@@ -109,29 +144,16 @@ export function LeadForm() {
   return (
     <form
       onSubmit={onSubmit}
+      onInvalidCapture={onInvalid}
       data-analytics-form="attention_lead_form"
       data-ohrly-section="attention_lead_form"
       className="mt-6 grid gap-3"
     >
       <div>
-        <label htmlFor="name" className={labelClass}>
-          Seu nome
-        </label>
-
-        <input
-          id="name"
-          name="name"
-          type="text"
-          autoComplete="name"
-          required
-          maxLength={120}
-          placeholder="Seu nome"
-          className={inputClass}
-        />
-      </div>
-
-      <div>
-        <label htmlFor="email" className={labelClass}>
+        <label
+          htmlFor="email"
+          className={labelClass}
+        >
           E-mail de trabalho
         </label>
 
@@ -148,7 +170,10 @@ export function LeadForm() {
       </div>
 
       <div>
-        <label htmlFor="companySite" className={labelClass}>
+        <label
+          htmlFor="companySite"
+          className={labelClass}
+        >
           Site da empresa
         </label>
 
@@ -165,33 +190,10 @@ export function LeadForm() {
       </div>
 
       <div>
-        <label htmlFor="attentionMethod" className={labelClass}>
-          Como vocês decidem hoje quais contas precisam de atenção?
-        </label>
-
-        <select
-          id="attentionMethod"
-          name="attentionMethod"
-          required
-          defaultValue=""
-          className={inputClass}
+        <label
+          htmlFor="customerCount"
+          className={labelClass}
         >
-          <option value="" disabled>
-            Selecione
-          </option>
-          <option value="health_score">Health Score</option>
-          <option value="churn_model">Modelo de churn</option>
-          <option value="rules_alerts">Regras / alertas</option>
-          <option value="manual_csm">CSMs decidem manualmente</option>
-          <option value="no_clear_process">
-            Não temos um processo claro
-          </option>
-          <option value="other">Outro</option>
-        </select>
-      </div>
-
-      <div>
-        <label htmlFor="customerCount" className={labelClass}>
           Quantas contas/clientes o time acompanha?
         </label>
 
@@ -205,18 +207,33 @@ export function LeadForm() {
           <option value="" disabled>
             Selecione
           </option>
-          <option value="under_100">Até 100</option>
-          <option value="100_500">100–500</option>
-          <option value="500_2000">500–2.000</option>
-          <option value="2000_plus">2.000+</option>
+
+          <option value="under_100">
+            Até 100
+          </option>
+
+          <option value="100_500">
+            100–500
+          </option>
+
+          <option value="500_2000">
+            500–2.000
+          </option>
+
+          <option value="2000_plus">
+            2.000+
+          </option>
         </select>
       </div>
 
+      {/* Honeypot */}
       <div
         className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden"
         aria-hidden="true"
       >
-        <label htmlFor="website">Website</label>
+        <label htmlFor="website">
+          Website
+        </label>
 
         <input
           id="website"
@@ -230,18 +247,20 @@ export function LeadForm() {
       <button
         type="submit"
         disabled={status === "sending"}
+        onClick={onSubmitClick}
         data-analytics-cta="lead_form_submit"
         data-analytics-location="lead_form"
-        data-analytics-label="Quero testar com minha carteira"
+        data-analytics-label="Ver se faz sentido para minha carteira"
         className="mt-2 min-h-13 rounded-xl border border-[#1457ff] bg-[#1457ff] px-6 text-sm font-black text-white shadow-[0_12px_26px_rgba(20,87,255,.18)] transition hover:bg-[#0f49dc] disabled:cursor-wait disabled:opacity-60"
       >
         {status === "sending"
           ? "Enviando..."
-          : "Quero testar com minha carteira"}
+          : "Ver se faz sentido para minha carteira"}
       </button>
 
       <p className="text-center text-[11px] leading-4 text-[#8995a8]">
-        Sem migração de ferramenta e sem compromisso de contratar.
+        Sem migração de ferramenta e sem compromisso
+        de contratar.
       </p>
 
       {message ? (
