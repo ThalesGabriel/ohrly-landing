@@ -76,15 +76,24 @@ function isUuid(value: string) {
 }
 
 function validHttpUrl(value: string) {
-  try {
-    const url = new URL(value);
+  const raw = value.trim();
 
-    return (
-      url.protocol === "http:" ||
-      url.protocol === "https:"
-    );
+  if (!raw) return null;
+
+  const candidate = /^https?:\/\//i.test(raw)
+    ? raw
+    : `https://${raw}`;
+
+  try {
+    const url = new URL(candidate);
+
+    if (!url.hostname || !url.hostname.includes(".")) {
+      return null;
+    }
+
+    return url.toString().replace(/\/$/, "");
   } catch {
-    return false;
+    return null;
   }
 }
 
@@ -153,7 +162,7 @@ export async function POST(
 
     if (
       !validEmail(email) ||
-      !validHttpUrl(companySite) ||
+      validHttpUrl(companySite) == null ||
       !ALLOWED_CUSTOMER_COUNTS.has(
         customerCount,
       ) ||

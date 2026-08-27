@@ -148,6 +148,7 @@ export function LeadForm() {
       data-analytics-form="attention_lead_form"
       data-ohrly-section="attention_lead_form"
       className="mt-6 grid gap-3"
+      noValidate
     >
       <div>
         <label
@@ -184,7 +185,7 @@ export function LeadForm() {
           autoComplete="url"
           required
           maxLength={300}
-          placeholder="https://suaempresa.com.br"
+          placeholder="suaempresa.com.br"
           className={inputClass}
         />
       </div>
