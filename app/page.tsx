@@ -11,7 +11,10 @@ import {
 
 import { BehaviorTracker } from "@/components/behavior-tracker";
 import { CookieConsent } from "@/components/cookie-consent";
-import { LeadForm } from "@/components/lead-form";
+import {
+  LeadModalProvider,
+  LeadModalTrigger,
+} from "@/components/lead-form-modal";
 
 export const metadata: Metadata = {
   title: "Ohrly — Saiba quais contas investigar primeiro",
@@ -135,7 +138,8 @@ export default function Page() {
       <CookieConsent />
       <BehaviorTracker />
 
-      <div className="min-h-screen bg-[#f8fafc] text-[#101828]">
+      <LeadModalProvider>
+        <div className="min-h-screen bg-[#f8fafc] text-[#101828]">
         <nav className="sticky top-0 z-40 border-b border-[#e5eaf4]/90 bg-[#f8fafc]/88 backdrop-blur-xl">
           <div className="mx-auto flex h-[72px] w-[min(calc(100%_-_2rem),1120px)] items-center justify-between gap-5 sm:w-[min(calc(100%_-_2.5rem),1120px)]">
             <a
@@ -172,16 +176,15 @@ export default function Page() {
               >
                 Exemplo
               </a>
-              <a
-                href="#piloto"
+              <LeadModalTrigger
+                ctaId="nav_pilot"
+                location="navigation"
+                label="Quero testar"
                 className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-[#1457ff] bg-[#1457ff] px-4 text-sm font-black text-white shadow-[0_10px_24px_rgba(20,87,255,.18)] transition hover:-translate-y-px hover:bg-[#0f49dc]"
-                data-analytics-cta="nav_pilot"
-                data-analytics-location="navigation"
-                data-analytics-label="Quero testar"
               >
                 Quero testar
                 <ArrowRight size={15} />
-              </a>
+              </LeadModalTrigger>
             </div>
           </div>
         </nav>
@@ -199,31 +202,29 @@ export default function Page() {
               <div>
                 <Eyebrow>Para SaaS B2B</Eyebrow>
 
-                <h1 className="mt-5 max-w-[720px] text-[44px] font-black leading-[.98] tracking-[-0.062em] text-[#0d1831]">
-                  Você{" "}
-                  <span className="text-[#1457ff]">não precisa investigar toda a carteira {" "}</span>
-                  para descobrir quem precisa da sua atenção.
+                <h1 className="mt-5 max-w-[720px] text-[44px] font-black leading-[.98] tracking-[-0.062em] text-[#0d1831] sm:text-[58px] lg:text-[70px]">
+                  100 contas em risco de churn.{" "}
+                  <span className="text-[#1457ff]">Por qual delas você começa?</span>
                 </h1>
 
                 <p className="mt-6 max-w-[640px] text-base leading-7 text-[#68758f] sm:text-[18px] sm:leading-8">
                   O Ohrly analisa os sinais que você já tem e identifica quais
-                  relações realmente mudaram, para seu time saber{" "}
+                  relações realmente mudaram — para seu time saber{" "}
                   <strong className="font-black text-[#101b35]">
                     quais contas investigar primeiro.
                   </strong>
                 </p>
 
                 <div className="mt-7 flex flex-wrap gap-2.5">
-                  <a
-                    href="#piloto"
+                  <LeadModalTrigger
+                    ctaId="hero_pilot"
+                    location="hero"
+                    label="Descobrir quais contas investigar primeiro"
                     className="inline-flex min-h-13 items-center gap-2 rounded-xl border border-[#1457ff] bg-[#1457ff] px-5 text-[15px] font-black text-white shadow-[0_14px_30px_rgba(20,87,255,.20)] transition hover:-translate-y-px hover:bg-[#0f49dc]"
-                    data-analytics-cta="hero_pilot"
-                    data-analytics-location="hero"
-                    data-analytics-label="Descobrir quais contas investigar primeiro"
                   >
                     Descobrir quais contas investigar primeiro
                     <ArrowRight size={16} />
-                  </a>
+                  </LeadModalTrigger>
 
                   <a
                     href="#como-funciona"
@@ -576,7 +577,7 @@ export default function Page() {
           <section
             id="piloto"
             className="px-4 py-20 sm:px-6 sm:py-24 lg:py-28"
-            data-analytics-section="diagnostic_form_card"
+            data-analytics-section="pilot"
           >
             <div className="mx-auto grid max-w-[1120px] items-start gap-10 lg:grid-cols-[1fr_.82fr] lg:gap-16">
               <div>
@@ -624,17 +625,31 @@ export default function Page() {
 
               <div className="rounded-[26px] border border-[#dfe5f0] bg-white p-5 shadow-[0_22px_60px_rgba(24,45,92,.09)] sm:p-6">
                 <div className="text-[10px] font-black uppercase tracking-[.13em] text-[#8995a8]">
-                  Quero testar com minhas contas
+                  Quero avaliar minha carteira
                 </div>
+
                 <h3 className="mt-2 text-2xl font-black tracking-[-0.04em] text-[#101b35]">
-                  Conte um pouco sobre a operação.
+                  Veja se o Ohrly faz sentido para a sua operação.
                 </h3>
+
                 <p className="mt-2 text-sm leading-6 text-[#7a869a]">
-                  Usaremos suas respostas para entender se o piloto faz sentido.
+                  Precisamos apenas do seu e-mail, site da empresa e tamanho
+                  aproximado da carteira para começar.
                 </p>
 
-                {/* Mantém o mesmo componente para preservar os eventos de formulário já implementados nele. */}
-                <LeadForm />
+                <LeadModalTrigger
+                  ctaId="pilot_section_cta"
+                  location="pilot_section"
+                  label="Ver se faz sentido para minha carteira"
+                  className="mt-6 inline-flex min-h-13 w-full items-center justify-center gap-2 rounded-xl border border-[#1457ff] bg-[#1457ff] px-5 text-sm font-black text-white shadow-[0_12px_26px_rgba(20,87,255,.18)] transition hover:-translate-y-px hover:bg-[#0f49dc]"
+                >
+                  Ver se faz sentido para minha carteira
+                  <ArrowRight size={16} />
+                </LeadModalTrigger>
+
+                <p className="mt-3 text-center text-[11px] leading-5 text-[#8995a8]">
+                  Sem migração de ferramenta e sem compromisso de contratar.
+                </p>
               </div>
             </div>
           </section>
@@ -710,7 +725,8 @@ export default function Page() {
             </div>
           </div>
         </footer>
-      </div>
+        </div>
+      </LeadModalProvider>
     </>
   );
 }
