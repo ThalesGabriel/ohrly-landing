@@ -54,21 +54,22 @@ async function loadPolicy() {
 }
 
 function sendBrowserQualifiedVisitIfAllowed(context: ClientTrackingContext) {
-  if (!emittedQualification) return;
-  if (emittedQualification.metaBrowserSent) return;
-  if (!context.consent?.marketing) return;
+  return;
+  // if (!emittedQualification) return;
+  // if (emittedQualification.metaBrowserSent) return;
+  // if (!context.consent?.marketing) return;
 
-  trackMetaQualifiedVisit(
-    emittedQualification.eventId,
-    {
-      policy_version: emittedQualification.policyVersion,
-      quality_score: emittedQualification.score,
-      target_event: emittedQualification.targetEvent,
-    },
-    emittedQualification.eventName,
-  );
+  // trackMetaQualifiedVisit(
+  //   emittedQualification.eventId,
+  //   {
+  //     policy_version: emittedQualification.policyVersion,
+  //     quality_score: emittedQualification.score,
+  //     target_event: emittedQualification.targetEvent,
+  //   },
+  //   emittedQualification.eventName,
+  // );
 
-  emittedQualification.metaBrowserSent = true;
+  // emittedQualification.metaBrowserSent = true;
 }
 
 export async function flushQualifiedVisitToMeta(
