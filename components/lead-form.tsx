@@ -49,91 +49,229 @@ export function LeadForm() {
     });
   }
 
-  async function onSubmit(
-    event: FormEvent<HTMLFormElement>,
-  ) {
-    event.preventDefault();
+  function normalizeCompanySite(value: string) {
+  const raw = value.trim();
 
-    if (status === "sending") return;
+  if (!raw) return null;
 
-    const form = event.currentTarget;
-    const data = new FormData(form);
+  const candidate = /^https?:\/\//i.test(raw)
+    ? raw
+    : `https://${raw}`;
 
-    const clientEventId = crypto.randomUUID();
-    const tracking = getClientTrackingContext();
+  try {
+    const url = new URL(candidate);
 
-    const customerCount = String(
-      data.get("customerCount") || "",
-    ).trim();
+    if (!url.hostname || !url.hostname.includes(".")) {
+      return null;
+    }
 
-    setStatus("sending");
-    setMessage("");
+    return url.toString().replace(/\/$/, "");
+  } catch {
+    return null;
+  }
+}
 
-    void trackBehavior("form_submit_attempt", {
-      elementId: "attention_lead_form",
-      customerCount,
+function isValidEmail(value: string) {
+  const email = value.trim();
+
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+async function onSubmit(
+  event: FormEvent<HTMLFormElement>,
+) {
+  event.preventDefault();
+
+  if (status === "sending") return;
+
+  const form = event.currentTarget;
+  const data = new FormData(form);
+
+  const email = String(
+    data.get("email") || "",
+  ).trim();
+
+  const rawCompanySite = String(
+    data.get("companySite") || "",
+  ).trim();
+
+  const companySite =
+    normalizeCompanySite(rawCompanySite);
+
+  const customerCount = String(
+    data.get("customerCount") || "",
+  ).trim();
+
+  const website = String(
+    data.get("website") || "",
+  ).trim();
+
+  /*
+   * 1. VALIDAÇÃO
+   *
+   * form_submit_attempt ainda NÃO aconteceu.
+   */
+
+  const errors: Array<{
+    field: string;
+    message: string;
+  }> = [];
+
+  if (!isValidEmail(email)) {
+    errors.push({
+      field: "email",
+      message: "Digite um e-mail válido.",
     });
+  }
 
-    try {
-      const response = await fetch("/api/lead", {
+  if (!companySite) {
+    errors.push({
+      field: "companySite",
+      message:
+        "Digite um site válido, como empresa.com.br.",
+    });
+  }
+
+  if (!customerCount) {
+    errors.push({
+      field: "customerCount",
+      message:
+        "Selecione quantas contas o time acompanha.",
+    });
+  }
+
+  if (errors.length > 0) {
+    setMessage(errors[0].message);
+
+    for (const error of errors) {
+      void trackBehavior(
+        "form_validation_error",
+        {
+          elementId: "attention_lead_form",
+          field: error.field,
+          reason: "invalid_value",
+        },
+      );
+    }
+
+    const firstInvalid =
+      form.elements.namedItem(
+        errors[0].field,
+      );
+
+    if (
+      firstInvalid instanceof
+        HTMLElement
+    ) {
+      firstInvalid.focus();
+    }
+
+    return;
+  }
+
+  /*
+   * 2. A partir daqui temos um formulário
+   * realmente válido.
+   */
+
+  const clientEventId =
+    crypto.randomUUID();
+
+  const tracking =
+    getClientTrackingContext();
+
+  setStatus("sending");
+  setMessage("");
+
+  void trackBehavior(
+    "form_submit_attempt",
+    {
+      elementId:
+        "attention_lead_form",
+      customerCount,
+    },
+  );
+
+  try {
+    const response = await fetch(
+      "/api/lead",
+      {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type":
+            "application/json",
         },
         body: JSON.stringify({
-          email: data.get("email"),
-          companySite: data.get("companySite"),
+          email,
+          companySite,
           customerCount,
-          website: data.get("website"),
+          website,
           clientEventId,
           tracking,
         }),
-      });
+      },
+    );
 
-      const result = (await response.json().catch(
-        () => null,
-      )) as
+    const result =
+      (await response
+        .json()
+        .catch(() => null)) as
         | {
             ok?: boolean;
             error?: string;
           }
         | null;
 
-      if (!response.ok || !result?.ok) {
-        throw new Error(
-          result?.error || "submit_failed",
-        );
-      }
-
-      if (tracking.consent?.marketing) {
-        trackMetaLead(clientEventId, {
-          landing_variant: tracking.landingVariant,
-          customer_count: customerCount,
-        });
-      }
-
-      setStatus("success");
-
-      setMessage(
-        "Recebemos seus dados. Vamos avaliar se o Ohrly faz sentido para a sua operação.",
+    if (
+      !response.ok ||
+      !result?.ok
+    ) {
+      throw new Error(
+        result?.error ||
+          "submit_failed",
       );
-
-      form.reset();
-    } catch (error) {
-      console.error(error);
-
-      setStatus("error");
-
-      setMessage(
-        "Não foi possível enviar agora. Tente novamente em alguns instantes.",
-      );
-
-      void trackBehavior("form_submit_error", {
-        elementId: "attention_lead_form",
-        customerCount,
-      });
     }
+
+    if (
+      tracking.consent?.marketing
+    ) {
+      trackMetaLead(
+        clientEventId,
+        {
+          landing_variant:
+            tracking.landingVariant,
+          customer_count:
+            customerCount,
+        },
+      );
+    }
+
+    setStatus("success");
+
+    setMessage(
+      "Recebemos seus dados. Vamos avaliar se o Ohrly faz sentido para a sua operação.",
+    );
+
+    form.reset();
+  } catch (error) {
+    console.error(error);
+
+    setStatus("error");
+
+    setMessage(
+      "Não foi possível enviar agora. Tente novamente em alguns instantes.",
+    );
+
+    void trackBehavior(
+      "form_submit_error",
+      {
+        elementId:
+          "attention_lead_form",
+        customerCount,
+      },
+    );
   }
+}
 
   const inputClass =
     "h-12 w-full rounded-xl border border-[#dce3ef] bg-[#fbfcff] px-3.5 text-sm text-[#101b35] outline-none transition placeholder:text-[#9ca7b8] focus:border-[#8aa9ff] focus:bg-white focus:ring-4 focus:ring-[#edf3ff]";
