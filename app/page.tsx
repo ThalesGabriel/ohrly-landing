@@ -209,7 +209,7 @@ export default function Page() {
 
                 <p className="mt-6 max-w-[640px] text-base leading-7 text-[#68758f] sm:text-[18px] sm:leading-8">
                   O Ohrly analisa os sinais que você já tem e identifica quais
-                  relações realmente mudaram — para seu time saber{" "}
+                  relações realmente mudaram, para seu time saber{" "}
                   <strong className="font-black text-[#101b35]">
                     quais contas investigar primeiro.
                   </strong>
@@ -237,6 +237,11 @@ export default function Page() {
                     Ver como funciona
                   </a>
                 </div>
+
+                <p className="mt-3 max-w-[620px] text-[12px] font-semibold leading-5 text-[#8a95a8]">
+                  Comece com um diagnóstico da sua carteira. Sem substituir seu
+                  health score e sem migrar sua operação.
+                </p>
               </div>
 
               <div
@@ -349,6 +354,73 @@ export default function Page() {
                     </span>
                   </div>
                 ))}
+              </div>
+            </div>
+          </section>
+
+          {/* MICRO-DEMO — RISCO ≠ PRIORIDADE */}
+          <section
+            className="bg-[#f3f6fb] px-4 py-16 sm:px-6 sm:py-20 lg:py-24"
+            data-analytics-section="risk_priority_video"
+          >
+            <div className="mx-auto grid max-w-[1120px] items-center gap-10 lg:grid-cols-[.78fr_1.22fr] lg:gap-14">
+              <div>
+                <Eyebrow>Risco ≠ prioridade</Eyebrow>
+
+                <h2 className="mt-4 text-[36px] font-black leading-[1.04] tracking-[-0.052em] text-[#101b35] sm:text-[48px]">
+                  Duas contas em risco não precisam da mesma atenção.
+                </h2>
+
+                <p className="mt-5 max-w-[540px] text-base leading-7 text-[#68758f] sm:text-[17px]">
+                  Uma conta pode estar com score baixo há meses e continuar
+                  estável. Outra pode nem ser a pior da fila, mas alguma coisa
+                  acabou de mudar na relação.
+                </p>
+
+                <div className="mt-6 rounded-2xl border border-[#d9e3f6] bg-white p-4 text-sm leading-6 text-[#4f5d76] shadow-[0_12px_34px_rgba(25,45,90,.05)]">
+                  <strong className="font-black text-[#101b35]">
+                    É essa segunda triagem que o Ohrly adiciona:
+                  </strong>{" "}
+                  o radar continua mostrando risco; o Ohrly ajuda a encontrar
+                  onde houve mudança e por onde começar.
+                </div>
+              </div>
+
+              <div className="overflow-hidden rounded-[28px] border border-[#d8e0ed] bg-[#0b1020] p-2 shadow-[0_28px_70px_rgba(15,23,42,.16)] sm:p-3">
+                <div className="overflow-hidden rounded-[20px] bg-[#0b1020]">
+                  {/*
+                    Coloque o vídeo final em:
+                    /public/ohrly-risco-prioridade.mp4
+
+                    Mantemos controls e preload=metadata para a LP não carregar
+                    o arquivo inteiro antes de a pessoa decidir assistir.
+                  */}
+                  <video
+                    className="aspect-video w-full bg-[#0b1020] object-cover"
+                    controls
+                    playsInline
+                    preload="metadata"
+                    aria-label="Demonstração: Risco não é prioridade"
+                  >
+                    <source
+                      src="https://rpkcbfbaegqsqpbmqfmm.supabase.co/storage/v1/object/public/ohrly_v1/lv_0_20260828151621.mp4"
+                      type="video/mp4"
+                    />
+                    Seu navegador não suporta reprodução de vídeo.
+                  </video>
+                </div>
+
+                <div className="flex flex-col gap-1 px-3 pb-3 pt-4 text-white sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                  <div>
+                    <div className="text-sm font-black">Risco não é prioridade.</div>
+                    <div className="mt-0.5 text-[11px] leading-5 text-white/55">
+                      Uma micro-demo do problema que o Ohrly busca resolver.
+                    </div>
+                  </div>
+                  <span className="mt-2 shrink-0 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] font-black text-[#b9cbff] sm:mt-0">
+                    ~45 SEGUNDOS
+                  </span>
+                </div>
               </div>
             </div>
           </section>
@@ -584,20 +656,20 @@ export default function Page() {
                 <Eyebrow>Piloto assistido</Eyebrow>
 
                 <h2 className="mt-4 max-w-[720px] text-[38px] font-black leading-[1.03] tracking-[-0.052em] text-[#101b35] sm:text-[50px]">
-                  Vamos testar isso na sua fila de churn.
+                  Veja quanto da sua fila realmente precisaria ser investigada.
                 </h2>
 
                 <p className="mt-5 max-w-[650px] text-base leading-7 text-[#68758f] sm:text-[18px]">
-                  Pegamos dados históricos, comparamos o processo atual com a
-                  priorização do Ohrly e medimos se seu time teria precisado
-                  investigar menos contas.
+                  Podemos começar com dados históricos, comparar sua fila atual
+                  com a priorização do Ohrly e medir quantas contas seu time teria
+                  precisado investigar para encontrar os mesmos casos relevantes.
                 </p>
 
                 <div className="mt-7 space-y-3">
                   {[
                     "Use seu health score ou processo atual como referência.",
-                    "Conecte os sinais que já existem.",
-                    "Compare o que o Ohrly teria priorizado.",
+                    "Comece com dados históricos, sem trocar sua operação.",
+                    "Compare quantas contas realmente precisariam ser investigadas.",
                   ].map((item) => (
                     <div
                       key={item}
@@ -629,12 +701,13 @@ export default function Page() {
                 </div>
 
                 <h3 className="mt-2 text-2xl font-black tracking-[-0.04em] text-[#101b35]">
-                  Veja se o Ohrly faz sentido para a sua operação.
+                  Comece pelo diagnóstico da sua carteira.
                 </h3>
 
                 <p className="mt-2 text-sm leading-6 text-[#7a869a]">
-                  Precisamos apenas do seu e-mail, site da empresa e tamanho
-                  aproximado da carteira para começar.
+                  Conte o tamanho aproximado da sua carteira. Na primeira conversa,
+                  entendemos sua fila atual e avaliamos se existe um teste que faça
+                  sentido para a sua operação.
                 </p>
 
                 <LeadModalTrigger
