@@ -11,7 +11,11 @@ import {
 import { X } from "lucide-react";
 
 import { LeadForm } from "@/components/lead-form";
-import { trackBehavior } from "@/lib/tracking/client";
+import {
+  getClientTrackingContext,
+  trackBehavior,
+} from "@/lib/tracking/client";
+import { trackMetaLeadFormOpen } from "@/lib/tracking/meta-pixel";
 
 type LeadModalSource = {
   ctaId: string;
@@ -36,6 +40,7 @@ export function LeadModalProvider({
     useState<LeadModalSource | null>(null);
 
   const dialogRef = useRef<HTMLDivElement | null>(null);
+  const metaLeadFormOpenSentRef = useRef(false);
 
   function openLeadModal(nextSource: LeadModalSource) {
     setSource(nextSource);
@@ -47,6 +52,29 @@ export function LeadModalProvider({
       sourceLocation: nextSource.location,
       sourceLabel: nextSource.label,
     });
+
+    const tracking = getClientTrackingContext();
+
+    if (
+      tracking.consent?.marketing &&
+      !metaLeadFormOpenSentRef.current
+    ) {
+      metaLeadFormOpenSentRef.current = true;
+
+      const clientEventId = crypto.randomUUID();
+
+      trackMetaLeadFormOpen(clientEventId, {
+        landing_variant: tracking.landingVariant ?? null,
+        source_cta_id: nextSource.ctaId,
+        source_location: nextSource.location,
+      });
+
+      void trackBehavior("meta_optimization_signal_sent", {
+        signal: "LeadFormOpen",
+        sourceCtaId: nextSource.ctaId,
+        sourceLocation: nextSource.location,
+      });
+    }
   }
 
   function closeLeadModal(

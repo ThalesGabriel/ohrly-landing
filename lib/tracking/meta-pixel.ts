@@ -66,6 +66,22 @@ export function trackMetaLead(
   });
 }
 
+export function trackMetaLeadFormOpen(
+  eventId: string,
+  customData: Record<string, unknown> = {},
+) {
+  if (!ensureMetaPixel()) return;
+
+  window.fbq?.(
+    "trackCustom",
+    "LeadFormOpen",
+    customData,
+    {
+      eventID: eventId,
+    },
+  );
+}
+
 export function trackMetaDemoStart(
   eventId: string,
   customData: Record<string, unknown> = {},
