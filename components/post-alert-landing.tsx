@@ -14,10 +14,11 @@ import { BehaviorTracker } from "@/components/behavior-tracker";
 
 import { CookieConsent } from "@/components/cookie-consent";
 
+import { LeadModalProvider } from "@/components/lead-form-modal";
 import {
-  LeadModalProvider,
-  LeadModalTrigger,
-} from "@/components/lead-form-modal";
+  CommercialDemoProvider,
+  CommercialDemoTrigger,
+} from "@/components/commercial-demo-modal";
 
 function Brand() {
   return (
@@ -104,6 +105,7 @@ export function PostAlertLanding() {
       <BehaviorTracker />
 
       <LeadModalProvider>
+        <CommercialDemoProvider>
         <div className="min-h-screen bg-[#f8fafc] text-[#101828]">
           <nav className="sticky top-0 z-40 border-b border-[#e5eaf4]/90 bg-[#f8fafc]/88 backdrop-blur-xl">
             <div className="mx-auto flex h-[72px] w-[min(calc(100%_-_2rem),1120px)] items-center justify-between gap-5 sm:w-[min(calc(100%_-_2.5rem),1120px)]">
@@ -144,7 +146,7 @@ export function PostAlertLanding() {
                   Exemplo
                 </a>
 
-                <LeadModalTrigger
+                <CommercialDemoTrigger
                   ctaId="nav_pilot"
                   location="navigation"
                   label="Quero avaliar"
@@ -152,7 +154,7 @@ export function PostAlertLanding() {
                 >
                   Quero avaliar
                   <ArrowRight size={15} />
-                </LeadModalTrigger>
+                </CommercialDemoTrigger>
               </div>
             </div>
           </nav>
@@ -185,7 +187,7 @@ export function PostAlertLanding() {
                   </p>
 
                   <div className="mt-7 flex flex-wrap gap-2.5">
-                    <LeadModalTrigger
+                    <CommercialDemoTrigger
                       ctaId="hero_pilot"
                       location="hero"
                       label="Avaliar minha operação"
@@ -193,7 +195,7 @@ export function PostAlertLanding() {
                     >
                       Avaliar minha operação
                       <ArrowRight size={16} />
-                    </LeadModalTrigger>
+                    </CommercialDemoTrigger>
 
                     <a
                       href="#como-funciona"
@@ -208,8 +210,7 @@ export function PostAlertLanding() {
                   </div>
 
                   <p className="mt-3 max-w-[620px] text-[12px] font-semibold leading-5 text-[#8a95a8]">
-                    Comece com seu processo atual. Sem substituir seu health
-                    score e sem migrar sua operação.
+                    Comece com seu processo atual. Sem substituir seu health score e sem migrar sua operação.
                   </p>
                 </div>
 
@@ -265,7 +266,7 @@ export function PostAlertLanding() {
                         Depois do alerta
                       </div>
 
-                      <p className="mt-1 text-[11px] leading-5 text-[#7b879b]">
+                      <p className="mt-1 text-[14px] leading-5 text-gray">
                         Contexto sobre a trajetória que levou a conta até aqui.
                       </p>
 
@@ -512,8 +513,7 @@ export function PostAlertLanding() {
 
                   <p className="mt-5 text-base leading-7 text-white/65 sm:text-[17px]">
                     Ele continua sendo seu radar de risco. O Ohrly começa depois
-                    do alerta, organizando a trajetória da relação para ajudar
-                    seu time a entender o caso e decidir como agir.
+                    do alerta, organizando a trajetória da relação para ajudar seu time a entender o caso e decidir como agir.
                   </p>
                 </div>
 
@@ -760,7 +760,7 @@ export function PostAlertLanding() {
                     se existe um teste que faça sentido para a sua operação.
                   </p>
 
-                  <LeadModalTrigger
+                  <CommercialDemoTrigger
                     ctaId="pilot_section_cta"
                     location="pilot_section"
                     label="Ver se faz sentido para minha operação"
@@ -768,7 +768,7 @@ export function PostAlertLanding() {
                   >
                     Ver se faz sentido para minha operação
                     <ArrowRight size={16} />
-                  </LeadModalTrigger>
+                  </CommercialDemoTrigger>
 
                   <p className="mt-3 text-center text-[11px] leading-5 text-[#8995a8]">
                     Sem migração de ferramenta e sem compromisso de contratar.
@@ -861,6 +861,7 @@ export function PostAlertLanding() {
             </div>
           </footer>
         </div>
+        </CommercialDemoProvider>
       </LeadModalProvider>
     </>
   );

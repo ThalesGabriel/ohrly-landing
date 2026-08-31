@@ -16,10 +16,11 @@ import { BehaviorTracker } from "@/components/behavior-tracker";
 
 import { CookieConsent } from "@/components/cookie-consent";
 
+import { LeadModalProvider } from "@/components/lead-form-modal";
 import {
-  LeadModalProvider,
-  LeadModalTrigger,
-} from "@/components/lead-form-modal";
+  CommercialDemoProvider,
+  CommercialDemoTrigger,
+} from "@/components/commercial-demo-modal";
 
 export const metadata: Metadata = {
   title: "Ohrly — Seu health score encontrou o risco. E agora?",
@@ -118,6 +119,7 @@ export default function Page() {
       <BehaviorTracker />
 
       <LeadModalProvider>
+        <CommercialDemoProvider>
         <div className="min-h-screen bg-[#f8fafc] text-[#101828]">
           <nav className="sticky top-0 z-40 border-b border-[#e5eaf4]/90 bg-[#f8fafc]/88 backdrop-blur-xl">
             <div className="mx-auto flex h-[72px] w-[min(calc(100%_-_2rem),1120px)] items-center justify-between gap-5 sm:w-[min(calc(100%_-_2.5rem),1120px)]">
@@ -158,7 +160,7 @@ export default function Page() {
                   Exemplo
                 </a>
 
-                <LeadModalTrigger
+                <CommercialDemoTrigger
                   ctaId="nav_pilot"
                   location="navigation"
                   label="Quero avaliar"
@@ -166,7 +168,7 @@ export default function Page() {
                 >
                   Quero avaliar
                   <ArrowRight size={15} />
-                </LeadModalTrigger>
+                </CommercialDemoTrigger>
               </div>
             </div>
           </nav>
@@ -198,7 +200,7 @@ export default function Page() {
                   </p>
 
                   <div className="mt-7 flex flex-wrap gap-2.5">
-                    <LeadModalTrigger
+                    <CommercialDemoTrigger
                       ctaId="hero_pilot"
                       location="hero"
                       label="Avaliar minha operação"
@@ -206,7 +208,7 @@ export default function Page() {
                     >
                       Avaliar minha operação
                       <ArrowRight size={16} />
-                    </LeadModalTrigger>
+                    </CommercialDemoTrigger>
 
                     <a
                       href="#como-funciona"
@@ -768,7 +770,7 @@ export default function Page() {
                     se existe um teste que faça sentido para a sua operação.
                   </p>
 
-                  <LeadModalTrigger
+                  <CommercialDemoTrigger
                     ctaId="pilot_section_cta"
                     location="pilot_section"
                     label="Ver se faz sentido para minha operação"
@@ -776,7 +778,7 @@ export default function Page() {
                   >
                     Ver se faz sentido para minha operação
                     <ArrowRight size={16} />
-                  </LeadModalTrigger>
+                  </CommercialDemoTrigger>
 
                   <p className="mt-3 text-center text-[11px] leading-5 text-[#8995a8]">
                     Sem migração de ferramenta e sem compromisso de contratar.
@@ -869,6 +871,7 @@ export default function Page() {
             </div>
           </footer>
         </div>
+        </CommercialDemoProvider>
       </LeadModalProvider>
     </>
   );
