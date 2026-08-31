@@ -17,11 +17,14 @@ import {
 } from "@/lib/tracking/client";
 import { trackMetaLeadFormOpen } from "@/lib/tracking/meta-pixel";
 
+export type LeadJourneyStage = "direct_intent" | "post_demo";
+
 export type LeadModalSource = {
   ctaId: string;
   location: string;
   label: string;
-  demoId: string;
+  journeyStage: LeadJourneyStage;
+  demoId?: string | null;
   demoRunId?: string | null;
   entrySourceCtaId?: string | null;
   entrySourceLocation?: string | null;
@@ -35,6 +38,16 @@ type LeadModalContextValue = {
 
 const LeadModalContext = createContext<LeadModalContextValue | null>(null);
 
+export function useLeadModal() {
+  const context = useContext(LeadModalContext);
+
+  if (!context) {
+    throw new Error("useLeadModal must be used inside LeadModalProvider");
+  }
+
+  return context;
+}
+
 export function LeadModalProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [source, setSource] = useState<LeadModalSource | null>(null);
@@ -46,11 +59,11 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
     setSource(nextSource);
     setIsOpen(true);
 
-    // A partir deste fluxo, lead_form_open significa intenção comercial
-    // APÓS a pessoa completar a demonstração do produto.
+    // lead_form_open agora representa intenção comercial explícita,
+    // tanto no caminho direto quanto depois da demo.
     void trackBehavior("lead_form_open", {
       formId: "attention_lead_form",
-      journeyStage: "post_demo",
+      journeyStage: nextSource.journeyStage,
       demoId: nextSource.demoId,
       demoRunId: nextSource.demoRunId ?? null,
       sourceCtaId: nextSource.ctaId,
@@ -71,8 +84,8 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
 
       trackMetaLeadFormOpen(clientEventId, {
         landing_variant: tracking.landingVariant ?? null,
-        journey_stage: "post_demo",
-        demo_id: nextSource.demoId,
+        journey_stage: nextSource.journeyStage,
+        demo_id: nextSource.demoId ?? null,
         demo_run_id: nextSource.demoRunId ?? null,
         source_cta_id: nextSource.ctaId,
         source_location: nextSource.location,
@@ -84,8 +97,8 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
 
       void trackBehavior("meta_optimization_signal_sent", {
         signal: "LeadFormOpen",
-        journeyStage: "post_demo",
-        demoId: nextSource.demoId,
+        journeyStage: nextSource.journeyStage,
+        demoId: nextSource.demoId ?? null,
         demoRunId: nextSource.demoRunId ?? null,
         sourceCtaId: nextSource.ctaId,
         sourceLocation: nextSource.location,
@@ -100,7 +113,7 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
 
     void trackBehavior("lead_form_close", {
       formId: "attention_lead_form",
-      journeyStage: "post_demo",
+      journeyStage: source?.journeyStage ?? null,
       demoId: source?.demoId ?? null,
       demoRunId: source?.demoRunId ?? null,
       sourceCtaId: source?.ctaId ?? null,
@@ -143,6 +156,20 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
     };
   }, [isOpen]);
 
+  const isDirectIntent = source?.journeyStage === "direct_intent";
+
+  const modalCopy = isDirectIntent
+    ? {
+        eyebrow: "Avalie sua operação",
+        title: "Veja se o Ohrly faz sentido para sua carteira.",
+        body: "Conte rapidamente como seu time acompanha contas em risco hoje. Começamos pelo processo e pelos dados que vocês já possuem.",
+      }
+    : {
+        eyebrow: "Teste na sua operação",
+        title: "Veja o que o Ohrly encontraria nas suas contas.",
+        body: "Agora que você viu a proposta, precisamos apenas de algumas informações para entender se existe um bom caso para testar com dados reais da sua operação.",
+      };
+
   return (
     <LeadModalContext.Provider value={{ openLeadModal }}>
       {children}
@@ -164,18 +191,18 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
             <div className="flex items-start justify-between gap-5">
               <div>
                 <div className="text-[10px] font-black uppercase tracking-[.13em] text-[#1457ff]">
-                  Teste na sua operação
+                  {modalCopy.eyebrow}
                 </div>
 
                 <h2
                   id="lead-modal-title"
                   className="mt-2 text-[27px] font-black leading-[1.08] tracking-[-0.045em] text-[#101b35]"
                 >
-                  Veja o que o Ohrly encontraria nas suas contas.
+                  {modalCopy.title}
                 </h2>
 
                 <p className="mt-2 max-w-[410px] text-sm leading-6 text-[#748097]">
-                  Agora que você viu a proposta, precisamos apenas de algumas informações para entender se existe um bom caso para testar com dados reais da sua operação.
+                  {modalCopy.body}
                 </p>
               </div>
 
@@ -191,7 +218,7 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
 
             <LeadForm
               analyticsContext={{
-                journeyStage: "post_demo",
+                journeyStage: source?.journeyStage ?? "post_demo",
                 demoId: source?.demoId ?? null,
                 demoRunId: source?.demoRunId ?? null,
                 entrySourceCtaId: source?.entrySourceCtaId ?? null,
@@ -213,7 +240,7 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
   );
 }
 
-type LeadFormIntentTriggerProps = LeadModalSource & {
+type LeadFormIntentTriggerProps = Omit<LeadModalSource, "journeyStage"> & {
   className?: string;
   onBeforeOpen?: () => void;
   children: ReactNode;
@@ -238,13 +265,7 @@ export function LeadFormIntentTrigger({
   onBeforeOpen,
   children,
 }: LeadFormIntentTriggerProps) {
-  const context = useContext(LeadModalContext);
-
-  if (!context) {
-    throw new Error(
-      "LeadFormIntentTrigger must be used inside LeadModalProvider",
-    );
-  }
+  const context = useLeadModal();
 
   return (
     <button
@@ -256,6 +277,7 @@ export function LeadFormIntentTrigger({
           ctaId,
           location,
           label,
+          journeyStage: "post_demo",
           demoId,
           demoRunId,
           entrySourceCtaId,

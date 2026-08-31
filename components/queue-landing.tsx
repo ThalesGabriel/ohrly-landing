@@ -21,10 +21,11 @@ import { BehaviorTracker } from "@/components/behavior-tracker";
 import { CookieConsent } from "@/components/cookie-consent";
 
 import { LeadModalProvider } from "@/components/lead-form-modal";
+import { CommercialDemoProvider } from "@/components/commercial-demo-modal";
 import {
-  CommercialDemoProvider,
-  CommercialDemoTrigger,
-} from "@/components/commercial-demo-modal";
+  CommercialIntentProvider,
+  CommercialIntentTrigger,
+} from "@/components/commercial-intent-modal";
 
 
 function Brand() {
@@ -228,7 +229,8 @@ export function QueueLanding() {
       <LeadModalProvider>
 
         <CommercialDemoProvider>
-          +          <div className="min-h-screen bg-[#f8fafc] text-[#101828]">
+          <CommercialIntentProvider>
+          <div className="min-h-screen bg-[#f8fafc] text-[#101828]">
 
             <nav className="sticky top-0 z-40 border-b border-[#e5eaf4]/90 bg-[#f8fafc]/88 backdrop-blur-xl">
 
@@ -300,7 +302,7 @@ export function QueueLanding() {
 
                   </a>
 
-                  <CommercialDemoTrigger
+                  <CommercialIntentTrigger
                     ctaId="nav_pilot"
                     location="navigation"
                     label="Quero testar"
@@ -308,7 +310,7 @@ export function QueueLanding() {
                   >
                     Quero testar
                     <ArrowRight size={15} />
-                  </CommercialDemoTrigger>
+                  </CommercialIntentTrigger>
 
                 </div>
 
@@ -362,7 +364,7 @@ export function QueueLanding() {
 
                     <div className="mt-7 flex flex-wrap gap-2.5">
 
-                      <CommercialDemoTrigger
+                      <CommercialIntentTrigger
                         ctaId="hero_pilot"
                         location="hero"
                         label="Descobrir quais contas investigar primeiro"
@@ -370,7 +372,7 @@ export function QueueLanding() {
                       >
                         Descobrir quais contas investigar primeiro
                         <ArrowRight size={16} />
-                      </CommercialDemoTrigger>
+                      </CommercialIntentTrigger>
 
                       <a
 
@@ -1236,7 +1238,7 @@ export function QueueLanding() {
 
                     </p>
 
-                    <CommercialDemoTrigger
+                    <CommercialIntentTrigger
                       ctaId="pilot_section_cta"
                       location="pilot_section"
                       label="Ver se faz sentido para minha carteira"
@@ -1244,7 +1246,7 @@ export function QueueLanding() {
                     >
                       Ver se faz sentido para minha carteira
                       <ArrowRight size={16} />
-                    </CommercialDemoTrigger>
+                    </CommercialIntentTrigger>
 
                     <p className="mt-3 text-center text-[11px] leading-5 text-[#8995a8]">
 
@@ -1391,6 +1393,7 @@ export function QueueLanding() {
             </footer>
 
           </div>
+        </CommercialIntentProvider>
         </CommercialDemoProvider>
 
       </LeadModalProvider>

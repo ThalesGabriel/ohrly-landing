@@ -15,10 +15,11 @@ import { BehaviorTracker } from "@/components/behavior-tracker";
 import { CookieConsent } from "@/components/cookie-consent";
 
 import { LeadModalProvider } from "@/components/lead-form-modal";
+import { CommercialDemoProvider } from "@/components/commercial-demo-modal";
 import {
-  CommercialDemoProvider,
-  CommercialDemoTrigger,
-} from "@/components/commercial-demo-modal";
+  CommercialIntentProvider,
+  CommercialIntentTrigger,
+} from "@/components/commercial-intent-modal";
 
 function Brand() {
   return (
@@ -106,6 +107,7 @@ export function PostAlertLanding() {
 
       <LeadModalProvider>
         <CommercialDemoProvider>
+        <CommercialIntentProvider>
         <div className="min-h-screen bg-[#f8fafc] text-[#101828]">
           <nav className="sticky top-0 z-40 border-b border-[#e5eaf4]/90 bg-[#f8fafc]/88 backdrop-blur-xl">
             <div className="mx-auto flex h-[72px] w-[min(calc(100%_-_2rem),1120px)] items-center justify-between gap-5 sm:w-[min(calc(100%_-_2.5rem),1120px)]">
@@ -146,7 +148,7 @@ export function PostAlertLanding() {
                   Exemplo
                 </a>
 
-                <CommercialDemoTrigger
+                <CommercialIntentTrigger
                   ctaId="nav_pilot"
                   location="navigation"
                   label="Quero avaliar"
@@ -154,7 +156,7 @@ export function PostAlertLanding() {
                 >
                   Quero avaliar
                   <ArrowRight size={15} />
-                </CommercialDemoTrigger>
+                </CommercialIntentTrigger>
               </div>
             </div>
           </nav>
@@ -187,7 +189,7 @@ export function PostAlertLanding() {
                   </p>
 
                   <div className="mt-7 flex flex-wrap gap-2.5">
-                    <CommercialDemoTrigger
+                    <CommercialIntentTrigger
                       ctaId="hero_pilot"
                       location="hero"
                       label="Avaliar minha operação"
@@ -195,7 +197,7 @@ export function PostAlertLanding() {
                     >
                       Avaliar minha operação
                       <ArrowRight size={16} />
-                    </CommercialDemoTrigger>
+                    </CommercialIntentTrigger>
 
                     <a
                       href="#como-funciona"
@@ -760,7 +762,7 @@ export function PostAlertLanding() {
                     se existe um teste que faça sentido para a sua operação.
                   </p>
 
-                  <CommercialDemoTrigger
+                  <CommercialIntentTrigger
                     ctaId="pilot_section_cta"
                     location="pilot_section"
                     label="Ver se faz sentido para minha operação"
@@ -768,7 +770,7 @@ export function PostAlertLanding() {
                   >
                     Ver se faz sentido para minha operação
                     <ArrowRight size={16} />
-                  </CommercialDemoTrigger>
+                  </CommercialIntentTrigger>
 
                   <p className="mt-3 text-center text-[11px] leading-5 text-[#8995a8]">
                     Sem migração de ferramenta e sem compromisso de contratar.
@@ -861,6 +863,7 @@ export function PostAlertLanding() {
             </div>
           </footer>
         </div>
+        </CommercialIntentProvider>
         </CommercialDemoProvider>
       </LeadModalProvider>
     </>

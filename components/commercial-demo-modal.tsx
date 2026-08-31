@@ -14,7 +14,7 @@ import { ArrowRight, Check, X } from "lucide-react";
 import { LeadFormIntentTrigger } from "@/components/lead-form-modal";
 import { trackBehavior } from "@/lib/tracking/client";
 
-type DemoSource = {
+export type DemoSource = {
   ctaId: string;
   location: string;
   label: string;
@@ -35,6 +35,16 @@ type TimelineItem = {
 };
 
 const DemoContext = createContext<DemoContextValue | null>(null);
+
+export function useCommercialDemo() {
+  const context = useContext(DemoContext);
+
+  if (!context) {
+    throw new Error("useCommercialDemo must be used inside CommercialDemoProvider");
+  }
+
+  return context;
+}
 
 const accountCopy: Record<
   AccountKey,
@@ -910,11 +920,7 @@ export function CommercialDemoTrigger({
   className,
   children,
 }: CommercialDemoTriggerProps) {
-  const context = useContext(DemoContext);
-
-  if (!context) {
-    throw new Error("CommercialDemoTrigger must be used inside CommercialDemoProvider");
-  }
+  const context = useCommercialDemo();
 
   return (
     <button
