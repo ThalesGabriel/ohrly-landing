@@ -15,9 +15,33 @@ import { trackMetaLead } from "@/lib/tracking/meta-pixel";
 
 type SubmitStatus = "idle" | "sending" | "success" | "error";
 
-export function LeadForm() {
+export type LeadFormAnalyticsContext = {
+  journeyStage?: string | null;
+  demoId?: string | null;
+  demoRunId?: string | null;
+  entrySourceCtaId?: string | null;
+  entrySourceLocation?: string | null;
+  selectedAccount?: string | null;
+  selectedAction?: string | null;
+};
+
+export function LeadForm({
+  analyticsContext = {},
+}: {
+  analyticsContext?: LeadFormAnalyticsContext;
+}) {
   const [status, setStatus] = useState<SubmitStatus>("idle");
   const [message, setMessage] = useState("");
+
+  const eventContext = {
+    journeyStage: analyticsContext.journeyStage ?? "post_demo",
+    demoId: analyticsContext.demoId ?? null,
+    demoRunId: analyticsContext.demoRunId ?? null,
+    entrySourceCtaId: analyticsContext.entrySourceCtaId ?? null,
+    entrySourceLocation: analyticsContext.entrySourceLocation ?? null,
+    selectedAccount: analyticsContext.selectedAccount ?? null,
+    selectedAction: analyticsContext.selectedAction ?? null,
+  };
 
   function onSubmitClick(
     event: MouseEvent<HTMLButtonElement>,
@@ -26,6 +50,7 @@ export function LeadForm() {
 
     void trackBehavior("form_submit_click", {
       elementId: "attention_lead_form",
+      ...eventContext,
     });
   }
 
@@ -40,6 +65,7 @@ export function LeadForm() {
 
     void trackBehavior("form_validation_error", {
       elementId: "attention_lead_form",
+      ...eventContext,
       field: field.name,
       validity: {
         valueMissing: field.validity.valueMissing,
@@ -148,6 +174,7 @@ async function onSubmit(
         "form_validation_error",
         {
           elementId: "attention_lead_form",
+          ...eventContext,
           field: error.field,
           reason: "invalid_value",
         },
@@ -188,6 +215,7 @@ async function onSubmit(
     {
       elementId:
         "attention_lead_form",
+      ...eventContext,
       customerCount,
     },
   );
@@ -208,6 +236,7 @@ async function onSubmit(
           website,
           clientEventId,
           tracking,
+          journey: eventContext,
         }),
       },
     );
@@ -242,6 +271,11 @@ async function onSubmit(
             tracking.landingVariant,
           customer_count:
             customerCount,
+          journey_stage: eventContext.journeyStage,
+          demo_id: eventContext.demoId,
+          demo_run_id: eventContext.demoRunId,
+          selected_account: eventContext.selectedAccount,
+          selected_action: eventContext.selectedAction,
         },
       );
     }
@@ -267,6 +301,7 @@ async function onSubmit(
       {
         elementId:
           "attention_lead_form",
+        ...eventContext,
         customerCount,
       },
     );
@@ -285,6 +320,13 @@ async function onSubmit(
       onInvalidCapture={onInvalid}
       data-analytics-form="attention_lead_form"
       data-ohrly-section="attention_lead_form"
+      data-journey-stage={eventContext.journeyStage ?? undefined}
+      data-demo-id={eventContext.demoId ?? undefined}
+      data-demo-run-id={eventContext.demoRunId ?? undefined}
+      data-entry-source-cta-id={eventContext.entrySourceCtaId ?? undefined}
+      data-entry-source-location={eventContext.entrySourceLocation ?? undefined}
+      data-selected-account={eventContext.selectedAccount ?? undefined}
+      data-selected-action={eventContext.selectedAction ?? undefined}
       className="mt-6 grid gap-3"
       noValidate
     >

@@ -45,6 +45,16 @@ type LeadBody = {
     fbp?: string | null;
     fbc?: string | null;
   };
+
+  journey?: {
+    journeyStage?: string | null;
+    demoId?: string | null;
+    demoRunId?: string | null;
+    entrySourceCtaId?: string | null;
+    entrySourceLocation?: string | null;
+    selectedAccount?: string | null;
+    selectedAction?: string | null;
+  };
 };
 
 const ALLOWED_CUSTOMER_COUNTS = new Set([
@@ -185,6 +195,16 @@ export async function POST(
 
     const attribution: Partial<Attribution> =
       tracking.attribution ?? {};
+
+    const journey = body.journey || {};
+    const journeyStage = clean(journey.journeyStage, 80) || null;
+    const demoId = clean(journey.demoId, 120) || null;
+    const demoRunIdRaw = clean(journey.demoRunId, 64);
+    const demoRunId = isUuid(demoRunIdRaw) ? demoRunIdRaw : null;
+    const entrySourceCtaId = clean(journey.entrySourceCtaId, 120) || null;
+    const entrySourceLocation = clean(journey.entrySourceLocation, 120) || null;
+    const selectedAccount = clean(journey.selectedAccount, 80) || null;
+    const selectedAction = clean(journey.selectedAction, 80) || null;
 
     const utmPlacement =
       clean(
@@ -344,6 +364,27 @@ export async function POST(
 
             utm_placement:
               utmPlacement,
+
+            journey_stage:
+              journeyStage,
+
+            demo_id:
+              demoId,
+
+            demo_run_id:
+              demoRunId,
+
+            entry_source_cta_id:
+              entrySourceCtaId,
+
+            entry_source_location:
+              entrySourceLocation,
+
+            selected_account:
+              selectedAccount,
+
+            selected_action:
+              selectedAction,
           },
         });
 
@@ -417,6 +458,20 @@ export async function POST(
 
           utm_placement:
             utmPlacement,
+
+          journeyStage,
+
+          demoId,
+
+          demoRunId,
+
+          entrySourceCtaId,
+
+          entrySourceLocation,
+
+          selectedAccount,
+
+          selectedAction,
 
           tracking_mode:
             tracking.trackingMode ===

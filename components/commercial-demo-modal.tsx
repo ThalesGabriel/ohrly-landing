@@ -347,7 +347,10 @@ export function CommercialDemoProvider({ children }: { children: ReactNode }) {
   const [selectedAccount, setSelectedAccount] = useState<AccountKey | null>(null);
   const [selectedAction, setSelectedAction] = useState<ActionKey | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
+  const responseSummaryRef = useRef<HTMLDivElement | null>(null);
+  const demoRunIdRef = useRef<string | null>(null);
   const seenStepRef = useRef<Set<string>>(new Set());
+  const seenResponseRef = useRef<Set<string>>(new Set());
 
   const activeAccount = selectedAccount ? accountCopy[selectedAccount] : null;
   const activeAction = useMemo(() => {
@@ -356,15 +359,22 @@ export function CommercialDemoProvider({ children }: { children: ReactNode }) {
   }, [selectedAccount, selectedAction]);
 
   function openDemo(nextSource: DemoSource) {
+    const demoRunId = crypto.randomUUID();
+
+    demoRunIdRef.current = demoRunId;
     setSource(nextSource);
     setStep(0);
     setSelectedAccount(null);
     setSelectedAction(null);
     seenStepRef.current.clear();
+    seenResponseRef.current.clear();
     setIsOpen(true);
 
     void trackBehavior("commercial_demo_open", {
       demoId: "two_accounts_cycle_demo_v1",
+      demoRunId,
+      step: 0,
+      stepName: "account_selection",
       sourceCtaId: nextSource.ctaId,
       sourceLocation: nextSource.location,
       sourceLabel: nextSource.label,
@@ -376,10 +386,12 @@ export function CommercialDemoProvider({ children }: { children: ReactNode }) {
 
     void trackBehavior("commercial_demo_close", {
       demoId: "two_accounts_cycle_demo_v1",
+      demoRunId: demoRunIdRef.current,
       sourceCtaId: source?.ctaId || null,
       sourceLocation: source?.location || null,
       reason,
       step,
+      stepName: ["account_selection", "comparison", "intervention", "offer"][step],
       selectedAccount,
       selectedAction,
     });
@@ -396,6 +408,9 @@ export function CommercialDemoProvider({ children }: { children: ReactNode }) {
 
     void trackBehavior("commercial_demo_account_selected", {
       demoId: "two_accounts_cycle_demo_v1",
+      demoRunId: demoRunIdRef.current,
+      step: 0,
+      stepName: "account_selection",
       account,
       sourceCtaId: source?.ctaId || null,
       sourceLocation: source?.location || null,
@@ -411,27 +426,34 @@ export function CommercialDemoProvider({ children }: { children: ReactNode }) {
 
     void trackBehavior("commercial_demo_intervention_selected", {
       demoId: "two_accounts_cycle_demo_v1",
-      account: selectedAccount,
-      action,
-    });
-
-    void trackBehavior("commercial_demo_response_view", {
-      demoId: "two_accounts_cycle_demo_v1",
+      demoRunId: demoRunIdRef.current,
+      step: 2,
+      stepName: "intervention",
       account: selectedAccount,
       action,
     });
   }
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || !demoRunIdRef.current) return;
 
-    const key = `${source?.ctaId || "unknown"}:${step}`;
+    const stepNames = [
+      "account_selection",
+      "comparison",
+      "intervention",
+      "offer",
+    ] as const;
+    const demoRunId = demoRunIdRef.current;
+    const key = `${demoRunId}:${step}`;
+
     if (seenStepRef.current.has(key)) return;
     seenStepRef.current.add(key);
 
     void trackBehavior("commercial_demo_step_view", {
       demoId: "two_accounts_cycle_demo_v1",
+      demoRunId,
       step,
+      stepName: stepNames[step],
       selectedAccount,
       selectedAction,
       sourceCtaId: source?.ctaId || null,
@@ -441,6 +463,9 @@ export function CommercialDemoProvider({ children }: { children: ReactNode }) {
     if (step === 1) {
       void trackBehavior("commercial_demo_comparison_view", {
         demoId: "two_accounts_cycle_demo_v1",
+        demoRunId,
+        step: 1,
+        stepName: "comparison",
         selectedAccount,
       });
     }
@@ -448,11 +473,55 @@ export function CommercialDemoProvider({ children }: { children: ReactNode }) {
     if (step === 3) {
       void trackBehavior("commercial_demo_complete", {
         demoId: "two_accounts_cycle_demo_v1",
+        demoRunId,
+        step: 3,
+        stepName: "offer",
         selectedAccount,
         selectedAction,
       });
     }
   }, [isOpen, selectedAccount, selectedAction, source, step]);
+
+  useEffect(() => {
+    if (
+      !isOpen ||
+      step !== 2 ||
+      !selectedAccount ||
+      !selectedAction ||
+      !demoRunIdRef.current ||
+      !responseSummaryRef.current
+    ) {
+      return;
+    }
+
+    const demoRunId = demoRunIdRef.current;
+    const responseKey = `${demoRunId}:${selectedAccount}:${selectedAction}`;
+    if (seenResponseRef.current.has(responseKey)) return;
+
+    const target = responseSummaryRef.current;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry?.isIntersecting || entry.intersectionRatio < 0.6) return;
+
+        seenResponseRef.current.add(responseKey);
+        void trackBehavior("commercial_demo_response_view", {
+          demoId: "two_accounts_cycle_demo_v1",
+          demoRunId,
+          step: 2,
+          stepName: "intervention",
+          account: selectedAccount,
+          action: selectedAction,
+          visibilityRatio: Number(entry.intersectionRatio.toFixed(2)),
+        });
+        observer.disconnect();
+      },
+      { threshold: [0.6] },
+    );
+
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [isOpen, selectedAccount, selectedAction, step]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -735,7 +804,7 @@ export function CommercialDemoProvider({ children }: { children: ReactNode }) {
                         ))}
                       </div>
 
-                      <div className="rounded-2xl bg-[#10182f] p-4 text-white">
+                      <div ref={responseSummaryRef} className="rounded-2xl bg-[#10182f] p-4 text-white">
                         <strong className="block text-sm font-black">{activeAction.headline}</strong>
                         <span className="mt-1 block text-xs leading-5 text-white/65">{activeAction.response}</span>
                       </div>
@@ -774,6 +843,7 @@ export function CommercialDemoProvider({ children }: { children: ReactNode }) {
                     location="commercial_demo_complete"
                     label="Quero ver isso na minha carteira"
                     demoId="two_accounts_cycle_demo_v1"
+                    demoRunId={demoRunIdRef.current}
                     entrySourceCtaId={source?.ctaId ?? null}
                     entrySourceLocation={source?.location ?? null}
                     selectedAccount={selectedAccount}
@@ -781,15 +851,17 @@ export function CommercialDemoProvider({ children }: { children: ReactNode }) {
                     onBeforeOpen={() => {
                       void trackBehavior("commercial_demo_lead_intent", {
                         demoId: "two_accounts_cycle_demo_v1",
+                        demoRunId: demoRunIdRef.current,
+                        step: 3,
+                        stepName: "offer",
                         selectedAccount,
                         selectedAction,
                         sourceCtaId: source?.ctaId || null,
                         sourceLocation: source?.location || null,
                       });
-
                       closeDemo("lead_intent");
                     }}
-                    className="..."
+                    className="mt-6 inline-flex min-h-13 items-center gap-2 rounded-xl border border-[#1457ff] bg-[#1457ff] px-5 text-[15px] font-black text-white shadow-[0_14px_30px_rgba(20,87,255,.20)] transition hover:-translate-y-px hover:bg-[#0f49dc]"
                   >
                     Quero ver isso na minha carteira
                     <ArrowRight size={16} />

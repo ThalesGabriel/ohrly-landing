@@ -22,6 +22,7 @@ export type LeadModalSource = {
   location: string;
   label: string;
   demoId: string;
+  demoRunId?: string | null;
   entrySourceCtaId?: string | null;
   entrySourceLocation?: string | null;
   selectedAccount?: string | null;
@@ -51,6 +52,7 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
       formId: "attention_lead_form",
       journeyStage: "post_demo",
       demoId: nextSource.demoId,
+      demoRunId: nextSource.demoRunId ?? null,
       sourceCtaId: nextSource.ctaId,
       sourceLocation: nextSource.location,
       sourceLabel: nextSource.label,
@@ -71,6 +73,7 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
         landing_variant: tracking.landingVariant ?? null,
         journey_stage: "post_demo",
         demo_id: nextSource.demoId,
+        demo_run_id: nextSource.demoRunId ?? null,
         source_cta_id: nextSource.ctaId,
         source_location: nextSource.location,
         entry_source_cta_id: nextSource.entrySourceCtaId ?? null,
@@ -83,6 +86,7 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
         signal: "LeadFormOpen",
         journeyStage: "post_demo",
         demoId: nextSource.demoId,
+        demoRunId: nextSource.demoRunId ?? null,
         sourceCtaId: nextSource.ctaId,
         sourceLocation: nextSource.location,
         entrySourceCtaId: nextSource.entrySourceCtaId ?? null,
@@ -98,6 +102,7 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
       formId: "attention_lead_form",
       journeyStage: "post_demo",
       demoId: source?.demoId ?? null,
+      demoRunId: source?.demoRunId ?? null,
       sourceCtaId: source?.ctaId ?? null,
       sourceLocation: source?.location ?? null,
       entrySourceCtaId: source?.entrySourceCtaId ?? null,
@@ -184,7 +189,17 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
               </button>
             </div>
 
-            <LeadForm />
+            <LeadForm
+              analyticsContext={{
+                journeyStage: "post_demo",
+                demoId: source?.demoId ?? null,
+                demoRunId: source?.demoRunId ?? null,
+                entrySourceCtaId: source?.entrySourceCtaId ?? null,
+                entrySourceLocation: source?.entrySourceLocation ?? null,
+                selectedAccount: source?.selectedAccount ?? null,
+                selectedAction: source?.selectedAction ?? null,
+              }}
+            />
 
             <div className="mt-4 border-t border-[#edf0f5] pt-4">
               <p className="text-center text-[11px] leading-5 text-[#8995a8]">
@@ -214,6 +229,7 @@ export function LeadFormIntentTrigger({
   location,
   label,
   demoId,
+  demoRunId,
   entrySourceCtaId,
   entrySourceLocation,
   selectedAccount,
@@ -241,6 +257,7 @@ export function LeadFormIntentTrigger({
           location,
           label,
           demoId,
+          demoRunId,
           entrySourceCtaId,
           entrySourceLocation,
           selectedAccount,
@@ -250,7 +267,7 @@ export function LeadFormIntentTrigger({
       data-analytics-cta={ctaId}
       data-analytics-location={location}
       data-analytics-label={label}
-      className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-xl border border-[#1457ff] bg-[#1457ff] px-4 text-sm font-black text-white shadow-[0_10px_24px_rgba(20,87,255,.18)] transition hover:-translate-y-px hover:bg-[#0f49dc]"
+      className={className}
     >
       {children}
     </button>

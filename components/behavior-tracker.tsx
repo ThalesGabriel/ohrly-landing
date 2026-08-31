@@ -27,7 +27,7 @@ export function BehaviorTracker() {
     const sentSections = new Set<string>();
     const sentDepths = new Set<number>();
 
-    let formStarted = false;
+    const startedFormRuns = new Set<string>();
     const startedFields = new Set<string>();
 
     let engaged10Reached = false;
@@ -184,11 +184,13 @@ export function BehaviorTracker() {
     //
     // FORM
     //
-    function onFocus(event: FocusEvent) {
+    // form_start deve representar interação real, não autofocus.
+    function onFormInteraction(event: Event) {
       const target =
         event.target as
           | HTMLInputElement
           | HTMLSelectElement
+          | HTMLTextAreaElement
           | null;
 
       const form =
@@ -201,25 +203,44 @@ export function BehaviorTracker() {
       const formId =
         form.dataset.analyticsForm || "form";
 
-      if (!formStarted) {
-        formStarted = true;
+      const formJourneyContext = {
+        journeyStage: form.dataset.journeyStage || null,
+        demoId: form.dataset.demoId || null,
+        demoRunId: form.dataset.demoRunId || null,
+        entrySourceCtaId: form.dataset.entrySourceCtaId || null,
+        entrySourceLocation: form.dataset.entrySourceLocation || null,
+        selectedAccount: form.dataset.selectedAccount || null,
+        selectedAction: form.dataset.selectedAction || null,
+      };
+
+      const formRunKey =
+        formJourneyContext.demoRunId || `${formId}:default`;
+
+      if (!startedFormRuns.has(formRunKey)) {
+        startedFormRuns.add(formRunKey);
 
         void trackBehavior(
           "form_start",
-          { formId },
+          { formId, ...formJourneyContext },
         );
       }
 
+      const fieldRunKey = target?.name
+        ? `${formRunKey}:${target.name}`
+        : null;
+
       if (
         target?.name &&
-        !startedFields.has(target.name)
+        fieldRunKey &&
+        !startedFields.has(fieldRunKey)
       ) {
-        startedFields.add(target.name);
+        startedFields.add(fieldRunKey);
 
         void trackBehavior(
           "form_field_started",
           {
             formId,
+            ...formJourneyContext,
             field: target.name,
           },
         );
@@ -277,8 +298,13 @@ export function BehaviorTracker() {
     );
 
     document.addEventListener(
-      "focusin",
-      onFocus,
+      "input",
+      onFormInteraction,
+    );
+
+    document.addEventListener(
+      "change",
+      onFormInteraction,
     );
 
     window.addEventListener(
@@ -305,8 +331,13 @@ export function BehaviorTracker() {
       );
 
       document.removeEventListener(
-        "focusin",
-        onFocus,
+        "input",
+        onFormInteraction,
+      );
+
+      document.removeEventListener(
+        "change",
+        onFormInteraction,
       );
 
       window.removeEventListener(
