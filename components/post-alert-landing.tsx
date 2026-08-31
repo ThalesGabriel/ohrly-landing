@@ -1,5 +1,3 @@
-import type { Metadata } from "next";
-
 import Image from "next/image";
 
 import type { ReactNode } from "react";
@@ -20,18 +18,6 @@ import {
   LeadModalProvider,
   LeadModalTrigger,
 } from "@/components/lead-form-modal";
-
-export const metadata: Metadata = {
-  title: "Ohrly — Seu health score encontrou o risco. E agora?",
-  description:
-    "O Ohrly ajuda times de Customer Success a entender o que acontece depois do alerta, organizando sinais de uso, suporte, financeiro e relacionamento para apoiar investigação e ação.",
-  openGraph: {
-    title: "Ohrly — Seu health score encontrou o risco. E agora?",
-    description:
-      "Seu health score continua sendo o radar. O Ohrly entra depois do alerta, organizando a trajetória da relação para ajudar seu time a entender o caso e orientar a ação.",
-    type: "website",
-  },
-};
 
 function Brand() {
   return (
@@ -111,7 +97,7 @@ function SignalRow({
   );
 }
 
-export default function Page() {
+export function PostAlertLanding() {
   return (
     <>
       <CookieConsent />
@@ -182,7 +168,7 @@ export default function Page() {
 
               <div className="relative mx-auto grid max-w-[1120px] items-center gap-12 lg:grid-cols-[1.04fr_.96fr] lg:gap-16">
                 <div>
-                  <Eyebrow>Para times de Customer Success</Eyebrow>
+                  <Eyebrow>Para SaaS B2B</Eyebrow>
 
                   <h1 className="mt-5 max-w-[760px] text-[44px] font-black leading-[.98] tracking-[-0.062em] text-[#0d1831] sm:text-[58px] lg:text-[70px]">
                     Seu health score encontrou o risco.{" "}
@@ -192,9 +178,10 @@ export default function Page() {
                   <p className="mt-6 max-w-[650px] text-base leading-7 text-[#68758f] sm:text-[18px] sm:leading-8">
                     O Ohrly usa os sinais que sua operação já possui para{" "}
                     <strong className="font-black text-[#101b35]">
-                      acrescentar contexto depois do alerta 
+                      acrescentar contexto depois do alerta
                     </strong>{" "}
-                    ajudando seu time a investigar com mais clareza e decidir como agir.
+                    — ajudando seu time a entender melhor a situação antes de
+                    decidir como agir.
                   </p>
 
                   <div className="mt-7 flex flex-wrap gap-2.5">
@@ -221,7 +208,8 @@ export default function Page() {
                   </div>
 
                   <p className="mt-3 max-w-[620px] text-[12px] font-semibold leading-5 text-[#8a95a8]">
-                    Funciona junto do seu health score. Sem migrar sua operação.
+                    Comece com seu processo atual. Sem substituir seu health
+                    score e sem migrar sua operação.
                   </p>
                 </div>
 
@@ -277,7 +265,7 @@ export default function Page() {
                         Depois do alerta
                       </div>
 
-                      <p className="mt-1 text-[14px] leading-5 text-gray">
+                      <p className="mt-1 text-[11px] leading-5 text-[#7b879b]">
                         Contexto sobre a trajetória que levou a conta até aqui.
                       </p>
 
@@ -335,7 +323,10 @@ export default function Page() {
                   </h2>
 
                   <p className="mt-5 max-w-[600px] text-base leading-7 text-[#68758f] sm:text-[17px]">
-                    O alerta mostra que algo merece atenção, mas nem sempre explica a situação. Dependendo da operação, o time ainda precisa reunir uso, relacionamento, suporte, contrato e outros sinais antes de decidir a próxima ação.
+                    O alerta mostra que algo merece atenção, mas nem sempre
+                    explica o que aconteceu. Dependendo da operação, o time ainda
+                    precisa reconstruir uso, relacionamento, suporte, contrato e
+                    outros sinais antes de decidir a próxima ação.
                   </p>
                 </div>
 
@@ -521,7 +512,8 @@ export default function Page() {
 
                   <p className="mt-5 text-base leading-7 text-white/65 sm:text-[17px]">
                     Ele continua sendo seu radar de risco. O Ohrly começa depois
-                    do alerta, organizando a trajetória da relação para ajudar seu time a entender o caso e orientar a ação.
+                    do alerta, organizando a trajetória da relação para ajudar
+                    seu time a entender o caso e decidir como agir.
                   </p>
                 </div>
 
@@ -587,7 +579,7 @@ export default function Page() {
                   <Eyebrow>Mais contexto</Eyebrow>
 
                   <h2 className="mt-4 text-[36px] font-black leading-[1.04] tracking-[-0.052em] text-[#101b35] sm:text-[48px]">
-                    Veja mais contexto antes de decidir como agir.
+                    Veja o que mudou antes de decidir o que fazer.
                   </h2>
 
                   <p className="mt-5 text-base leading-7 text-[#68758f] sm:text-[17px]">
@@ -864,7 +856,7 @@ export default function Page() {
             <div className="mx-auto flex max-w-[1120px] flex-col gap-4 border-t border-[#e2e7f0] pt-7 text-xs text-[#7a869a] sm:flex-row sm:items-center sm:justify-between">
               <Brand />
               <div>
-                Seu radar encontra o risco. O Ohrly ajuda seu time a agir com mais contexto depois do alerta.
+                Seu radar encontra o risco. O Ohrly começa depois do alerta.
               </div>
             </div>
           </footer>

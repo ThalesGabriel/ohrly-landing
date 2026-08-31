@@ -149,19 +149,18 @@ export function LeadModalProvider({
             <div className="flex items-start justify-between gap-5">
               <div>
                 <div className="text-[10px] font-black uppercase tracking-[.13em] text-[#1457ff]">
-                  Piloto Ohrly
+                  Avaliação inicial
                 </div>
 
                 <h2
                   id="lead-modal-title"
                   className="mt-2 text-[27px] font-black leading-[1.08] tracking-[-0.045em] text-[#101b35]"
                 >
-                  Veja se faz sentido para sua carteira.
+                  Entenda se o Ohrly faz sentido para sua operação.
                 </h2>
 
                 <p className="mt-2 max-w-[410px] text-sm leading-6 text-[#748097]">
-                  Três informações são suficientes para avaliarmos
-                  se existe um bom cenário para testar o Ohrly.
+                  Algumas informações são suficientes para avaliarmos seu processo atual de risco e entender se existe um bom cenário para testar o Ohrly.
                 </p>
               </div>
 
@@ -179,9 +178,7 @@ export function LeadModalProvider({
 
             <div className="mt-4 border-t border-[#edf0f5] pt-4">
               <p className="text-center text-[11px] leading-5 text-[#8995a8]">
-                Sem migração de ferramenta. Sem compromisso de
-                contratar antes de verificarmos se o teste faz
-                sentido.
+                Sem migração de ferramenta. Sem compromisso de contratar antes de verificarmos se o cenário faz sentido.
               </p>
             </div>
           </div>

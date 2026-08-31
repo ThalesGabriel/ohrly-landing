@@ -249,7 +249,7 @@ async function onSubmit(
     setStatus("success");
 
     setMessage(
-      "Recebemos seus dados. Vamos avaliar se o Ohrly faz sentido para a sua operação.",
+      "Recebemos suas informações. Vamos avaliar se o Ohrly faz sentido para a sua operação e retornar em breve.",
     );
 
     form.reset();
@@ -333,7 +333,7 @@ async function onSubmit(
           htmlFor="customerCount"
           className={labelClass}
         >
-          Quantas contas/clientes o time acompanha?
+          Quantas contas/clientes o time acompanha hoje?
         </label>
 
         <select
@@ -389,17 +389,16 @@ async function onSubmit(
         onClick={onSubmitClick}
         data-analytics-cta="lead_form_submit"
         data-analytics-location="lead_form"
-        data-analytics-label="Ver se faz sentido para minha carteira"
+        data-analytics-label="Solicitar avaliação"
         className="mt-2 min-h-13 rounded-xl border border-[#1457ff] bg-[#1457ff] px-6 text-sm font-black text-white shadow-[0_12px_26px_rgba(20,87,255,.18)] transition hover:bg-[#0f49dc] disabled:cursor-wait disabled:opacity-60"
       >
         {status === "sending"
           ? "Enviando..."
-          : "Ver se faz sentido para minha carteira"}
+          : "Solicitar avaliação"}
       </button>
 
       <p className="text-center text-[11px] leading-4 text-[#8995a8]">
-        Sem migração de ferramenta e sem compromisso
-        de contratar.
+        Sem migração de ferramenta e sem compromisso de contratar.
       </p>
 
       {message ? (
