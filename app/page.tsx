@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
 
 import { BehaviorTracker } from "@/components/behavior-tracker";
 import { CookieConsent } from "@/components/cookie-consent";
 import { LeadModalProvider } from "@/components/lead-form-modal";
-import { CommercialDemoProvider } from "@/components/commercial-demo-modal";
 import {
   CommercialIntentProvider,
   CommercialIntentTrigger,
@@ -259,8 +259,7 @@ export default function Page() {
       <BehaviorTracker />
 
       <LeadModalProvider>
-        <CommercialDemoProvider>
-          <CommercialIntentProvider>
+        <CommercialIntentProvider>
             <div className="min-h-screen bg-white text-[#0b0d12]">
               <header className="sticky top-0 z-40 border-b border-[#e7e9ef]/75 bg-white/90 backdrop-blur-xl">
                 <div className="mx-auto flex h-[74px] w-[min(1180px,calc(100%_-_40px))] items-center justify-between gap-6">
@@ -305,14 +304,15 @@ export default function Page() {
                   </nav>
 
                   <div className="flex items-center gap-2.5">
-                    <CommercialIntentTrigger
-                      ctaId="nav_demo"
-                      location="navigation"
-                      label="Ver demo"
+                    <Link
+                      href="/demo"
+                      data-analytics-cta="nav_demo"
+                      data-analytics-location="navigation"
+                      data-analytics-label="Ver demo"
                       className="hidden min-h-11 items-center justify-center rounded-full border border-[#e7e9ef] bg-white px-5 text-sm font-extrabold text-[#0b0d12] transition hover:-translate-y-px sm:inline-flex"
                     >
                       Ver demo
-                    </CommercialIntentTrigger>
+                    </Link>
 
                     <CommercialIntentTrigger
                       ctaId="nav_review_accounts"
@@ -338,10 +338,9 @@ export default function Page() {
                     <div>
                       <Eyebrow>Observabilidade da relação B2B</Eyebrow>
 
-                      <h1 className="mt-[18px] max-w-[900px] text-[46px] font-black leading-[.99] tracking-[-0.058em] sm:text-[58px]">
-                        Risco sem contexto não é
-                        <span className="text-[#3568f5]"> não é </span>
-                        decisão.
+                      <h1 className="mt-[18px] max-w-[900px] text-[46px] font-black leading-[.99] tracking-[-0.058em] sm:text-[58px] lg:text-[76px]">
+                        Risco sem contexto não é{" "}
+                        <span className="text-[#3568f5]">decisão.</span>
                       </h1>
 
                       <p className="mt-6 max-w-[720px] text-[17px] leading-[1.55] text-[#333946] sm:text-[20px]">
@@ -349,8 +348,8 @@ export default function Page() {
                         <strong className="font-black text-[#0b0d12]">
                           Uso, stakeholders, suporte, contrato e comportamento
                           podem mudar em ritmos diferentes
-                        </strong>
-                        , e algumas mudanças só ficam óbvias quando já há pouco
+                        </strong>{" "}
+                        — e algumas mudanças só ficam óbvias quando já há pouco
                         espaço para agir.
                       </p>
 
@@ -375,14 +374,15 @@ export default function Page() {
                           <ArrowRight size={16} />
                         </CommercialIntentTrigger>
 
-                        <CommercialIntentTrigger
-                          ctaId="hero_demo"
-                          location="hero"
-                          label="Ver como funciona"
+                        <Link
+                          href="/demo"
+                          data-analytics-cta="hero_demo"
+                          data-analytics-location="hero"
+                          data-analytics-label="Ver como funciona"
                           className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#e7e9ef] bg-white px-5 font-extrabold text-[#0b0d12] transition hover:-translate-y-px"
                         >
                           Ver como funciona
-                        </CommercialIntentTrigger>
+                        </Link>
                       </div>
 
                       <div className="mt-[17px] text-[13px] text-[#737a86]">
@@ -477,7 +477,7 @@ export default function Page() {
                   data-analytics-section="problem"
                 >
                   <div className="mx-auto w-[min(1180px,calc(100%_-_40px))]">
-                    <div className="mb-[42px]">
+                    <div className="mb-[42px] max-w-[800px]">
                       <Eyebrow>O alerta não é a decisão</Eyebrow>
                       <h2 className="mt-3 text-[36px] font-black leading-[1.03] tracking-[-0.05em] sm:text-[48px] lg:text-[58px]">
                         Risco, relação e oportunidade de intervenção são
@@ -520,7 +520,7 @@ export default function Page() {
                   data-analytics-section="same_risk_different_stories"
                 >
                   <div className="mx-auto w-[min(1180px,calc(100%_-_40px))]">
-                    <div className="mb-[42px]">
+                    <div className="mb-[42px] max-w-[800px]">
                       <Eyebrow>Mesmo risco, histórias diferentes</Eyebrow>
                       <h2 className="mt-3 text-[36px] font-black leading-[1.03] tracking-[-0.05em] sm:text-[48px] lg:text-[58px]">
                         Duas contas podem parecer igualmente preocupantes e
@@ -604,7 +604,7 @@ export default function Page() {
                     <div>
                       <Eyebrow>Saudável também pode ser frágil</Eyebrow>
                       <h2 className="mt-3 text-[36px] font-black leading-[1.03] tracking-[-0.05em] sm:text-[48px] lg:text-[58px]">
-                        O cliente adotou o produto ou uma pessoa adotou o
+                        O cliente adotou o produto — ou uma pessoa adotou o
                         produto?
                       </h2>
                       <p className="mt-4 text-[17px] leading-[1.6] text-[#606773] sm:text-[20px]">
@@ -656,7 +656,7 @@ export default function Page() {
                     <div>
                       <Eyebrow light>Uma relação, várias leituras</Eyebrow>
                       <h2 className="mt-3 text-[36px] font-black leading-[1.03] tracking-[-0.05em] sm:text-[48px] lg:text-[58px]">
-                        Áreas diferentes podem estar certas e ainda assim tomar
+                        Áreas diferentes podem estar certas — e ainda assim tomar
                         decisões incompatíveis.
                       </h2>
                       <p className="mt-4 text-[17px] leading-[1.6] text-[#a7afbd] sm:text-lg">
@@ -699,7 +699,7 @@ export default function Page() {
                   data-analytics-section="how_it_works"
                 >
                   <div className="mx-auto w-[min(1180px,calc(100%_-_40px))]">
-                    <div className="mb-[42px]">
+                    <div className="mb-[42px] max-w-[800px]">
                       <Eyebrow>Como o Ohrly acompanha a relação</Eyebrow>
                       <h2 className="mt-3 text-[36px] font-black leading-[1.03] tracking-[-0.05em] sm:text-[48px] lg:text-[58px]">
                         Da mudança à resposta, sem esconder a história atrás de
@@ -842,8 +842,7 @@ export default function Page() {
                 </div>
               </footer>
             </div>
-          </CommercialIntentProvider>
-        </CommercialDemoProvider>
+        </CommercialIntentProvider>
       </LeadModalProvider>
     </>
   );
