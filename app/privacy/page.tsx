@@ -15,7 +15,7 @@ const LAST_UPDATED = "1º de setembro de 2026";
  * Antes de publicar:
  * confirme que este endereço existe e é monitorado.
  */
-const PRIVACY_EMAIL = "privacidade@ohrly.com.br";
+const PRIVACY_EMAIL = "taraujo@ohrly.com.br";
 
 function Brand() {
   return (
