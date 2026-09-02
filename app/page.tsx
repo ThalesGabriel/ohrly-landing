@@ -1,10 +1,17 @@
 import type { Metadata } from "next";
+
 import Link from "next/link";
+
 import type { ReactNode } from "react";
+
 import { ArrowRight } from "lucide-react";
+
 import { BehaviorTracker } from "@/components/behavior-tracker";
+
 import { CookieConsent } from "@/components/cookie-consent";
+
 import { LeadModalProvider } from "@/components/lead-form-modal";
+
 import {
 
   CommercialIntentProvider,
@@ -12,8 +19,6 @@ import {
   CommercialIntentTrigger,
 
 } from "@/components/commercial-intent-modal";
-
-const REFERRAL_REWARD = "20% do primeiro pagamento";
 
 export const metadata: Metadata = {
 
@@ -45,43 +50,43 @@ function Brand() {
 
       <svg
 
-        viewBox="0 0 44 44"
+viewBox="0 0 44 44"
 
-        aria-hidden="true"
+aria-hidden="true"
 
-        className="h-[34px] w-[34px]"
+className="h-[34px] w-[34px]"
 
       >
 
         <circle
 
-          cx="19"
+cx="19"
 
-          cy="22"
+cy="22"
 
-          r="12"
+r="12"
 
-          fill="none"
+fill="none"
 
-          stroke="#3568f5"
+stroke="#3568f5"
 
-          strokeWidth="7"
+strokeWidth="7"
 
         />
 
         <path
 
-          d="M18 23h7l3-9 4 17 4-11 3 7h5"
+d="M18 23h7l3-9 4 17 4-11 3 7h5"
 
-          fill="none"
+fill="none"
 
-          stroke="#e43b32"
+stroke="#e43b32"
 
-          strokeWidth="4"
+strokeWidth="4"
 
-          strokeLinecap="round"
+strokeLinecap="round"
 
-          strokeLinejoin="round"
+strokeLinejoin="round"
 
         />
 
@@ -97,9 +102,9 @@ function Brand() {
 
 function Eyebrow({
 
-  children,
+children,
 
-  light = false,
+light = false,
 
 }: {
 
@@ -113,7 +118,7 @@ function Eyebrow({
 
     <div
 
-      className={`inline-flex items-center gap-2.5 text-[13px] font-extrabold uppercase tracking-[.08em] ${light ? "text-[#8faeff]" : "text-[#3568f5]"
+className={`inline-flex items-center gap-2.5 text-[13px] font-extrabold uppercase tracking-[.08em] ${light ? "text-[#8faeff]" : "text-[#3568f5]"
 
         }`}
 
@@ -121,7 +126,7 @@ function Eyebrow({
 
       <span
 
-        className={`h-[3px] w-6 rounded-full ${light ? "bg-[#8faeff]" : "bg-[#3568f5]"
+className={`h-[3px] w-6 rounded-full ${light ? "bg-[#8faeff]" : "bg-[#3568f5]"
 
           }`}
 
@@ -137,9 +142,9 @@ function Eyebrow({
 
 function Pill({
 
-  children,
+children,
 
-  tone = "neutral",
+tone = "neutral",
 
 }: {
 
@@ -165,7 +170,7 @@ function Pill({
 
     <span
 
-      className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-black ${classes[tone]}`}
+className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-black ${classes[tone]}`}
 
     >
 
@@ -179,9 +184,9 @@ function Pill({
 
 function StoryRow({
 
-  date,
+date,
 
-  children,
+children,
 
 }: {
 
@@ -215,13 +220,13 @@ function StoryRow({
 
 function StepCard({
 
-  number,
+number,
 
-  title,
+title,
 
-  body,
+body,
 
-  question,
+question,
 
 }: {
 
@@ -271,9 +276,9 @@ function StepCard({
 
 function Signal({
 
-  label,
+label,
 
-  value,
+value,
 
 }: {
 
@@ -299,11 +304,11 @@ function Signal({
 
 function Metric({
 
-  label,
+label,
 
-  value,
+value,
 
-  tone,
+tone,
 
 }: {
 
@@ -345,9 +350,9 @@ function Metric({
 
 function Perspective({
 
-  area,
+area,
 
-  children,
+children,
 
 }: {
 
@@ -377,11 +382,11 @@ function Perspective({
 
 function Feature({
 
-  icon,
+icon,
 
-  title,
+title,
 
-  children,
+children,
 
 }: {
 
@@ -423,11 +428,11 @@ function Feature({
 
 function ReviewCase({
 
-  number,
+number,
 
-  title,
+title,
 
-  children,
+children,
 
 }: {
 
@@ -489,13 +494,13 @@ export default function Page() {
 
                 <a
 
-                  href="#top"
+href="#top"
 
-                  aria-label="Ohrly"
+aria-label="Ohrly"
 
-                  data-analytics-cta="nav_logo"
+data-analytics-cta="nav_logo"
 
-                  data-analytics-location="navigation"
+data-analytics-location="navigation"
 
                 >
 
@@ -507,11 +512,11 @@ export default function Page() {
 
                   <a
 
-                    href="#problema"
+href="#problema"
 
-                    data-analytics-cta="nav_problem"
+data-analytics-cta="nav_problem"
 
-                    data-analytics-location="navigation"
+data-analytics-location="navigation"
 
                   >
 
@@ -521,11 +526,11 @@ export default function Page() {
 
                   <a
 
-                    href="#como-funciona"
+href="#como-funciona"
 
-                    data-analytics-cta="nav_how_it_works"
+data-analytics-cta="nav_how_it_works"
 
-                    data-analytics-location="navigation"
+data-analytics-location="navigation"
 
                   >
 
@@ -535,11 +540,11 @@ export default function Page() {
 
                   <a
 
-                    href="#produto"
+href="#produto"
 
-                    data-analytics-cta="nav_product"
+data-analytics-cta="nav_product"
 
-                    data-analytics-location="navigation"
+data-analytics-location="navigation"
 
                   >
 
@@ -549,11 +554,11 @@ export default function Page() {
 
                   <a
 
-                    href="#indicacao"
+href="#indicacao"
 
-                    data-analytics-cta="nav_referral"
+data-analytics-cta="nav_referral"
 
-                    data-analytics-location="navigation"
+data-analytics-location="navigation"
 
                   >
 
@@ -563,11 +568,11 @@ export default function Page() {
 
                   <a
 
-                    href="#revisao"
+href="#revisao"
 
-                    data-analytics-cta="nav_review"
+data-analytics-cta="nav_review"
 
-                    data-analytics-location="navigation"
+data-analytics-location="navigation"
 
                   >
 
@@ -581,15 +586,15 @@ export default function Page() {
 
                   <Link
 
-                    href="/demo"
+href="/demo"
 
-                    data-analytics-cta="nav_demo"
+data-analytics-cta="nav_demo"
 
-                    data-analytics-location="navigation"
+data-analytics-location="navigation"
 
-                    data-analytics-label="Ver demo"
+data-analytics-label="Ver demo"
 
-                    className="hidden min-h-11 items-center justify-center rounded-full border border-[#e7e9ef] bg-white px-5 text-sm font-extrabold text-[#0b0d12] transition hover:-translate-y-px sm:inline-flex"
+className="hidden min-h-11 items-center justify-center rounded-full border border-[#e7e9ef] bg-white px-5 text-sm font-extrabold text-[#0b0d12] transition hover:-translate-y-px sm:inline-flex"
 
                   >
 
@@ -599,15 +604,15 @@ export default function Page() {
 
                   <a
 
-                    href="#revisao"
+href="#revisao"
 
-                    data-analytics-cta="nav_review_section"
+data-analytics-cta="nav_review_section"
 
-                    data-analytics-location="navigation"
+data-analytics-location="navigation"
 
-                    data-analytics-label="Revisar contas"
+data-analytics-label="Revisar contas"
 
-                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#0b0d12] bg-[#0b0d12] px-5 text-sm font-extrabold text-white shadow-[0_6px_0_#3568f5] transition hover:-translate-y-px hover:shadow-[0_8px_0_#3568f5]"
+className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#0b0d12] bg-[#0b0d12] px-5 text-sm font-extrabold text-white shadow-[0_6px_0_#3568f5] transition hover:-translate-y-px hover:shadow-[0_8px_0_#3568f5]"
 
                   >
 
@@ -627,9 +632,9 @@ export default function Page() {
 
               <section
 
-                className="relative overflow-hidden py-[72px] sm:py-[88px]"
+className="relative overflow-hidden py-[72px] sm:py-[88px]"
 
-                data-analytics-section="hero"
+data-analytics-section="hero"
 
               >
 
@@ -661,7 +666,7 @@ export default function Page() {
 
                       </strong>{" "}
 
-                      , e algumas mudanças só ficam óbvias quando já há pouco
+                      — e algumas mudanças só ficam óbvias quando já há pouco
 
                       espaço para agir.
 
@@ -689,13 +694,13 @@ export default function Page() {
 
                       <CommercialIntentTrigger
 
-                        ctaId="hero_review_accounts"
+ctaId="hero_review_accounts"
 
-                        location="hero"
+location="hero"
 
-                        label="Solicitar revisão de 3 contas"
+label="Solicitar revisão de 3 contas"
 
-                        className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#0b0d12] bg-[#0b0d12] px-5 font-extrabold text-white shadow-[0_6px_0_#3568f5] transition hover:-translate-y-px hover:shadow-[0_8px_0_#3568f5]"
+className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#0b0d12] bg-[#0b0d12] px-5 font-extrabold text-white shadow-[0_6px_0_#3568f5] transition hover:-translate-y-px hover:shadow-[0_8px_0_#3568f5]"
 
                       >
 
@@ -707,15 +712,15 @@ export default function Page() {
 
                       <Link
 
-                        href="/demo"
+href="/demo"
 
-                        data-analytics-cta="hero_demo"
+data-analytics-cta="hero_demo"
 
-                        data-analytics-location="hero"
+data-analytics-location="hero"
 
-                        data-analytics-label="Ver como funciona"
+data-analytics-label="Ver como funciona"
 
-                        className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#e7e9ef] bg-white px-5 font-extrabold text-[#0b0d12] transition hover:-translate-y-px"
+className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#e7e9ef] bg-white px-5 font-extrabold text-[#0b0d12] transition hover:-translate-y-px"
 
                       >
 
@@ -737,9 +742,9 @@ export default function Page() {
 
                   <div
 
-                    className="rounded-[34px] bg-[#10131a] p-[22px] text-white shadow-[0_24px_70px_rgba(11,13,18,.10)] lg:rotate-[1.2deg]"
+className="rounded-[34px] bg-[#10131a] p-[22px] text-white shadow-[0_24px_70px_rgba(11,13,18,.10)] lg:rotate-[1.2deg]"
 
-                    data-analytics-section="hero_product_preview"
+data-analytics-section="hero_product_preview"
 
                   >
 
@@ -881,11 +886,11 @@ export default function Page() {
 
               <section
 
-                id="problema"
+id="problema"
 
-                className="bg-[#f6f8fc] py-[68px] sm:py-[92px]"
+className="bg-[#f6f8fc] py-[68px] sm:py-[92px]"
 
-                data-analytics-section="problem"
+data-analytics-section="problem"
 
               >
 
@@ -921,37 +926,37 @@ export default function Page() {
 
                     <StepCard
 
-                      number="1"
+number="1"
 
-                      title="Há risco?"
+title="Há risco?"
 
-                      body="Health Score, churn model e sinais existentes ajudam a apontar onde algo pode estar errado."
+body="Health Score, churn model e sinais existentes ajudam a apontar onde algo pode estar errado."
 
-                      question="Quem pode sair?"
-
-                    />
-
-                    <StepCard
-
-                      number="2"
-
-                      title="O que está acontecendo?"
-
-                      body="Uso caiu? O champion sumiu? A cobertura relacional mudou? A conta respondeu à última ação?"
-
-                      question="Como chegamos até aqui?"
+question="Quem pode sair?"
 
                     />
 
                     <StepCard
 
-                      number="3"
+number="2"
 
-                      title="Ainda existe espaço para agir?"
+title="O que está acontecendo?"
 
-                      body="Há tempo, acesso e sinais de resposta suficientes para justificar uma investigação ou intervenção agora?"
+body="Uso caiu? O champion sumiu? A cobertura relacional mudou? A conta respondeu à última ação?"
 
-                      question="O que merece atenção?"
+question="Como chegamos até aqui?"
+
+                    />
+
+                    <StepCard
+
+number="3"
+
+title="Ainda existe espaço para agir?"
+
+body="Há tempo, acesso e sinais de resposta suficientes para justificar uma investigação ou intervenção agora?"
+
+question="O que merece atenção?"
 
                     />
 
@@ -965,9 +970,9 @@ export default function Page() {
 
               <section
 
-                className="py-[68px] sm:py-[92px]"
+className="py-[68px] sm:py-[92px]"
 
-                data-analytics-section="same_risk_different_stories"
+data-analytics-section="same_risk_different_stories"
 
               >
 
@@ -1025,9 +1030,9 @@ export default function Page() {
 
                         <Signal
 
-                          label="Última intervenção"
+label="Última intervenção"
 
-                          value="ainda não houve"
+value="ainda não houve"
 
                         />
 
@@ -1075,9 +1080,9 @@ export default function Page() {
 
                         <Signal
 
-                          label="Economic buyer"
+label="Economic buyer"
 
-                          value="sem relação"
+value="sem relação"
 
                         />
 
@@ -1085,9 +1090,9 @@ export default function Page() {
 
                         <Signal
 
-                          label="Última intervenção"
+label="Última intervenção"
 
-                          value="sem resposta"
+value="sem resposta"
 
                         />
 
@@ -1113,9 +1118,9 @@ export default function Page() {
 
               <section
 
-                className="bg-[#f6f8fc] py-[68px] sm:py-[92px]"
+className="bg-[#f6f8fc] py-[68px] sm:py-[92px]"
 
-                data-analytics-section="healthy_but_fragile"
+data-analytics-section="healthy_but_fragile"
 
               >
 
@@ -1127,7 +1132,7 @@ export default function Page() {
 
                     <h2 className="mt-3 text-[36px] font-black leading-[1.03] tracking-[-0.05em] sm:text-[48px] lg:text-[58px]">
 
-                      O cliente adotou o produto, ou uma pessoa adotou o
+                      O cliente adotou o produto — ou uma pessoa adotou o
 
                       produto?
 
@@ -1157,11 +1162,11 @@ export default function Page() {
 
                     <Metric
 
-                      label="Uso do produto"
+label="Uso do produto"
 
-                      value="saudável"
+value="saudável"
 
-                      tone="good"
+tone="good"
 
                     />
 
@@ -1173,31 +1178,31 @@ export default function Page() {
 
                     <Metric
 
-                      label="Executive sponsor"
+label="Executive sponsor"
 
-                      value="sem contato"
+value="sem contato"
 
-                      tone="warn"
-
-                    />
-
-                    <Metric
-
-                      label="Economic buyer"
-
-                      value="nenhuma relação"
-
-                      tone="bad"
+tone="warn"
 
                     />
 
                     <Metric
 
-                      label="Renovação"
+label="Economic buyer"
 
-                      value="24 dias"
+value="nenhuma relação"
 
-                      tone="warn"
+tone="bad"
+
+                    />
+
+                    <Metric
+
+label="Renovação"
+
+value="24 dias"
+
+tone="warn"
 
                     />
 
@@ -1211,165 +1216,141 @@ export default function Page() {
 
               <section
 
-                id="indicacao"
+id="indicacao"
 
-                className="scroll-mt-24 py-[68px] sm:py-[92px]"
+className="scroll-mt-24 py-[68px] sm:py-[92px]"
 
-                data-analytics-section="referral_program"
+data-analytics-section="referral_program"
 
               >
 
                 <div className="mx-auto w-[min(1180px,calc(100%_-_40px))]">
 
-                  <div className="grid overflow-hidden rounded-[34px] border border-[#dfe7ff] bg-[#f4f7ff] lg:grid-cols-[1.08fr_.92fr]">
+                  <div className="grid overflow-hidden rounded-[34px] border border-[#dfe7ff] bg-[#f4f7ff] lg:grid-cols-[1fr_.92fr]">
 
                     <div className="p-7 sm:p-10 lg:p-12">
 
                       <Eyebrow>Programa de indicação</Eyebrow>
 
-                      <h2 className="mt-3 max-w-[720px] text-[36px] font-black leading-[1.03] tracking-[-0.05em] sm:text-[48px] lg:text-[58px]">
+                      <h2 className="mt-3 max-w-[680px] text-[36px] font-black leading-[1.03] tracking-[-0.05em] sm:text-[48px] lg:text-[56px]">
 
                         Conhece alguém que vive esse problema?
 
                       </h2>
 
-                      <p className="mt-4 max-w-[720px] text-[17px] leading-[1.6] text-[#505b6d] sm:text-lg">
+                      <p className="mt-4 max-w-[680px] text-[17px] leading-[1.6] text-[#505b6d] sm:text-lg">
 
-                        Talvez essa situação não esteja acontecendo na sua carteira.
+                        Faça a ponte entre o Ohrly e um time de CS que já foi
 
-                        Mas você pode conhecer um time de CS que já foi surpreendido
-
-                        por uma renovação mesmo quando os sinais pareciam saudáveis.
-
-                      </p>
-
-                      <p className="mt-4 max-w-[720px] text-[17px] leading-[1.6] text-[#505b6d] sm:text-lg">
-
-                        Faça uma introdução.{" "}
+                        surpreendido por uma renovação.{" "}
 
                         <strong className="font-black text-[#0b0d12]">
 
-                          Se a indicação se tornar cliente do Ohrly, você recebe
-
-                          {` ${REFERRAL_REWARD}`}.
+                          Se virar cliente, você escolhe como receber.
 
                         </strong>
 
                       </p>
 
-                      <div className="mt-7 flex flex-wrap items-center gap-3">
+                      <Link
 
-                        <Link
+href="/referrals"
 
-                          href="/referrals"
+data-analytics-cta="referral_cta"
 
-                          data-analytics-cta="referral_cta"
+data-analytics-location="referral_program"
 
-                          data-analytics-location="referral_program"
+data-analytics-label="Conhecer programa de indicação"
 
-                          data-analytics-label="Quero indicar alguém"
+className="mt-7 inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#0b0d12] bg-[#0b0d12] px-5 font-extrabold text-white shadow-[0_6px_0_#3568f5] transition hover:-translate-y-px hover:shadow-[0_8px_0_#3568f5]"
 
-                          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#0b0d12] bg-[#0b0d12] px-5 font-extrabold text-white shadow-[0_6px_0_#3568f5] transition hover:-translate-y-px hover:shadow-[0_8px_0_#3568f5]"
+                      >
 
-                        >
+                        Conhecer programa de indicação
 
-                          Quero indicar alguém
+                        <ArrowRight size={16} />
 
-                          <ArrowRight size={16} />
-
-                        </Link>
-
-                        <a
-
-                          href="#revisao"
-
-                          data-analytics-cta="referral_self_interest"
-
-                          data-analytics-location="referral_program"
-
-                          data-analytics-label="Esse problema é meu"
-
-                          className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#cad5f2] bg-white px-5 font-extrabold text-[#0b0d12] transition hover:-translate-y-px"
-
-                        >
-
-                          Esse problema é meu
-
-                        </a>
-
-                      </div>
-
-                      <p className="mt-4 max-w-[700px] text-[12px] leading-[1.55] text-[#6f7888]">
-
-                        Preferimos uma introdução com consentimento em vez do envio
-
-                        de dados pessoais de terceiros. A recompensa é devida após a
-
-                        confirmação do primeiro pagamento do cliente indicado.
-
-                      </p>
+                      </Link>
 
                     </div>
 
-                    <div className="border-t border-[#dfe7ff] bg-white p-6 sm:p-8 lg:border-l lg:border-t-0 lg:p-10">
+                    <div className="relative border-t border-[#dfe7ff] bg-white p-6 sm:p-8 lg:border-l lg:border-t-0 lg:p-10">
 
                       <div className="text-[11px] font-extrabold uppercase tracking-[.08em] text-[#8b94a2]">
 
-                        Como funciona
+                        Escolha sua recompensa
 
                       </div>
 
-                      <div className="mt-5 grid gap-3">
+                      <div className="mt-5 grid gap-3 sm:grid-cols-[1fr_auto_1fr] sm:items-stretch">
 
-                        <ReviewCase number="01" title="Você faz a introdução">
+                        <div className="rounded-[22px] border border-[#e7e9ef] bg-[#fbfcfe] p-5">
 
-                          Conte por que lembrou daquela pessoa e coloque o Ohrly na
+                          <div className="text-[34px] font-black tracking-[-0.055em] text-[#0b0d12]">
 
-                          conversa. Não precisa vender nada por nós.
+                            R$100
 
-                        </ReviewCase>
+                          </div>
 
-                        <ReviewCase number="02" title="Nós entendemos o caso">
+                          <div className="mt-1 text-[13px] font-black text-[#3568f5]">
 
-                          Conversamos diretamente com o time indicado para descobrir
+                            assim que virar cliente
 
-                          se o problema existe e se o Ohrly pode acrescentar algo.
+                          </div>
 
-                        </ReviewCase>
+                          <p className="mt-3 text-[12px] leading-[1.45] text-[#6d7683]">
 
-                        <ReviewCase number="03" title="Só há recompensa se houver venda">
+                            Primeiro pagamento confirmado.
 
-                          Se a empresa indicada fizer o primeiro pagamento, você
+                          </p>
 
-                          recebe {REFERRAL_REWARD}. Sem recompensa por cadastro ou
+                        </div>
 
-                          lead sem conversão.
+                        <div className="grid place-items-center">
 
-                        </ReviewCase>
+                          <span className="grid size-9 place-items-center rounded-full bg-[#edf2ff] text-[11px] font-black uppercase text-[#3568f5]">
+
+                            ou
+
+                          </span>
+
+                        </div>
+
+                        <div className="rounded-[22px] border border-[#bfcfff] bg-[#f4f7ff] p-5">
+
+                          <div className="text-[34px] font-black tracking-[-0.055em] text-[#3568f5]">
+
+                            20%
+
+                          </div>
+
+                          <div className="mt-1 text-[13px] font-black text-[#0b0d12]">
+
+                            do primeiro pagamento
+
+                          </div>
+
+                          <p className="mt-3 text-[12px] leading-[1.45] text-[#5f6d86]">
+
+                            Após 30 dias com o cliente ativo e adimplente.
+
+                          </p>
+
+                        </div>
 
                       </div>
 
-                      <div className="mt-5 rounded-[18px] border border-[#e7e9ef] bg-[#fbfcfe] p-4">
+                      <div className="mt-4 flex items-start gap-2 rounded-[16px] border border-[#e7e9ef] bg-white px-4 py-3 text-[11px] leading-[1.45] text-[#737c89]">
 
-                        <div className="text-[11px] font-extrabold uppercase tracking-[.06em] text-[#87909d]">
+                        <span className="mt-[2px] text-[#3568f5]">●</span>
 
-                          Recompensa atual
+                        <span>
 
-                        </div>
+                          A preferência é escolhida no cadastro da indicação e fica
 
-                        <div className="mt-1 text-[28px] font-black tracking-[-0.045em] text-[#0b0d12]">
+                          registrada para aquele caso.
 
-                          {REFERRAL_REWARD}
-
-                        </div>
-
-                        <p className="mt-1.5 text-[12px] leading-[1.45] text-[#6d7683]">
-
-                          O formato percentual acompanha a precificação do Ohrly
-
-                          enquanto validamos o modelo comercial.
-
-                        </p>
+                        </span>
 
                       </div>
 
@@ -1385,9 +1366,9 @@ export default function Page() {
 
               <section
 
-                className="bg-[#0b0d12] py-[68px] text-white sm:py-[92px]"
+className="bg-[#0b0d12] py-[68px] text-white sm:py-[92px]"
 
-                data-analytics-section="cross_functional_context"
+data-analytics-section="cross_functional_context"
 
               >
 
@@ -1399,7 +1380,7 @@ export default function Page() {
 
                     <h2 className="mt-3 text-[36px] font-black leading-[1.03] tracking-[-0.05em] sm:text-[48px] lg:text-[58px]">
 
-                      Áreas diferentes podem estar certas, e ainda assim tomar
+                      Áreas diferentes podem estar certas — e ainda assim tomar
 
                       decisões incompatíveis.
 
@@ -1469,11 +1450,11 @@ export default function Page() {
 
               <section
 
-                id="como-funciona"
+id="como-funciona"
 
-                className="py-[68px] sm:py-[92px]"
+className="py-[68px] sm:py-[92px]"
 
-                data-analytics-section="how_it_works"
+data-analytics-section="how_it_works"
 
               >
 
@@ -1505,9 +1486,9 @@ export default function Page() {
 
                   <div
 
-                    id="produto"
+id="produto"
 
-                    className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5"
+className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5"
 
                   >
 
@@ -1561,11 +1542,11 @@ export default function Page() {
 
               <section
 
-                id="revisao"
+id="revisao"
 
-                className="scroll-mt-24 bg-[#f6f8fc] py-[68px] sm:py-[92px]"
+className="scroll-mt-24 bg-[#f6f8fc] py-[68px] sm:py-[92px]"
 
-                data-analytics-section="review_real_accounts"
+data-analytics-section="review_real_accounts"
 
               >
 
@@ -1615,13 +1596,13 @@ export default function Page() {
 
                       <CommercialIntentTrigger
 
-                        ctaId="review_three_accounts"
+ctaId="review_three_accounts"
 
-                        location="review_section"
+location="review_section"
 
-                        label="Revisar 3 contas comigo"
+label="Revisar 3 contas comigo"
 
-                        className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#0b0d12] bg-[#0b0d12] px-5 font-extrabold text-white shadow-[0_6px_0_#3568f5] transition hover:-translate-y-px hover:shadow-[0_8px_0_#3568f5]"
+className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#0b0d12] bg-[#0b0d12] px-5 font-extrabold text-white shadow-[0_6px_0_#3568f5] transition hover:-translate-y-px hover:shadow-[0_8px_0_#3568f5]"
 
                       >
 
@@ -1637,9 +1618,9 @@ export default function Page() {
 
                       <ReviewCase
 
-                        number="01"
+number="01"
 
-                        title="Uma que churnou de surpresa"
+title="Uma que churnou de surpresa"
 
                       >
 
@@ -1651,9 +1632,9 @@ export default function Page() {
 
                       <ReviewCase
 
-                        number="02"
+number="02"
 
-                        title="Uma que o time tentou recuperar"
+title="Uma que o time tentou recuperar"
 
                       >
 
@@ -1665,9 +1646,9 @@ export default function Page() {
 
                       <ReviewCase
 
-                        number="03"
+number="03"
 
-                        title="Uma que preocupa vocês agora"
+title="Uma que preocupa vocês agora"
 
                       >
 
@@ -1689,9 +1670,9 @@ export default function Page() {
 
               <section
 
-                className="py-[68px] sm:py-[92px]"
+className="py-[68px] sm:py-[92px]"
 
-                data-analytics-section="final_cta"
+data-analytics-section="final_cta"
 
               >
 
@@ -1721,13 +1702,13 @@ export default function Page() {
 
                     <CommercialIntentTrigger
 
-                      ctaId="final_review_accounts"
+ctaId="final_review_accounts"
 
-                      location="final_cta"
+location="final_cta"
 
-                      label="Solicitar revisão de 3 contas"
+label="Solicitar revisão de 3 contas"
 
-                      className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-white bg-white px-5 font-extrabold text-[#0b0d12] shadow-[0_6px_0_#0d2e9f] transition hover:-translate-y-px"
+className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-white bg-white px-5 font-extrabold text-[#0b0d12] shadow-[0_6px_0_#0d2e9f] transition hover:-translate-y-px"
 
                     >
 
@@ -1755,13 +1736,13 @@ export default function Page() {
 
                   <Link
 
-                    href="/privacy"
+href="/privacy"
 
-                    className="font-bold text-[#596270] hover:text-[#0b0d12]"
+className="font-bold text-[#596270] hover:text-[#0b0d12]"
 
-                    data-analytics-cta="footer_privacy"
+data-analytics-cta="footer_privacy"
 
-                    data-analytics-location="footer"
+data-analytics-location="footer"
 
                   >
 
@@ -1771,13 +1752,13 @@ export default function Page() {
 
                   <a
 
-                    href="#indicacao"
+href="#indicacao"
 
-                    className="font-bold text-[#596270] hover:text-[#0b0d12]"
+className="font-bold text-[#596270] hover:text-[#0b0d12]"
 
-                    data-analytics-cta="footer_referral"
+data-analytics-cta="footer_referral"
 
-                    data-analytics-location="footer"
+data-analytics-location="footer"
 
                   >
 

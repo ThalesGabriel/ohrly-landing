@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -14,7 +14,10 @@ import {
   MessageCircle,
 } from "lucide-react";
 
-const REFERRAL_REWARD = "20% do primeiro pagamento";
+const FIXED_REWARD = "R$100";
+const PERCENT_REWARD = "20% do primeiro pagamento";
+
+type RewardType = "fixed_100" | "percent_20_after_30d";
 
 type IntroMode = "intro" | "already_introduced" | "share";
 
@@ -30,6 +33,7 @@ type FormState = {
   company: string;
   context: string;
   introductionMode: IntroMode;
+  rewardType: RewardType | null;
 };
 
 const initialForm: FormState = {
@@ -38,6 +42,7 @@ const initialForm: FormState = {
   company: "",
   context: "",
   introductionMode: "intro",
+  rewardType: null,
 };
 
 function Brand() {
@@ -167,6 +172,29 @@ function Field({
   );
 }
 
+
+const QUALIFIED_VISIT_SESSION_KEY = "ohrly:qualified_visit:referral_form_start";
+
+type QualifiedVisitTrigger =
+  | "name"
+  | "email"
+  | "company"
+  | "context"
+  | "reward"
+  | "introduction_mode";
+
+function readCookie(name: string) {
+  if (typeof document === "undefined") return null;
+
+  const prefix = `${name}=`;
+  const cookie = document.cookie
+    .split(";")
+    .map((part) => part.trim())
+    .find((part) => part.startsWith(prefix));
+
+  return cookie ? decodeURIComponent(cookie.slice(prefix.length)) : null;
+}
+
 export default function ReferralClient() {
   const [form, setForm] = useState<FormState>(initialForm);
   const [utm, setUtm] = useState<Record<string, string>>({});
@@ -176,6 +204,15 @@ export default function ReferralClient() {
   const [error, setError] = useState("");
   const [referralCode, setReferralCode] = useState("");
   const [copied, setCopied] = useState<"message" | "link" | null>(null);
+
+  /*
+   * QualifiedVisit representa, neste experimento, intenção real:
+   * a pessoa começou a preencher o fluxo de indicação.
+   *
+   * Não disparamos em focus/autofocus. Somente em mudança real de campo
+   * ou escolha explícita de recompensa/modo de introdução.
+   */
+  const qualifiedVisitSentRef = useRef(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -215,6 +252,86 @@ export default function ReferralClient() {
     ].join("\n");
   }, [referralLink]);
 
+  function emitQualifiedVisitOnce(trigger: QualifiedVisitTrigger) {
+    if (typeof window === "undefined") return;
+    if (qualifiedVisitSentRef.current) return;
+
+    try {
+      if (window.sessionStorage.getItem(QUALIFIED_VISIT_SESSION_KEY) === "1") {
+        qualifiedVisitSentRef.current = true;
+        return;
+      }
+    } catch {
+      // sessionStorage pode estar indisponível em alguns navegadores/modos.
+    }
+
+    /*
+     * O Pixel é carregado/gerenciado pela infraestrutura de consentimento
+     * já existente no site. Se fbq não estiver disponível, não forçamos
+     * nenhuma chamada de marketing por fora desse fluxo.
+     */
+    const fbq = (
+      window as typeof window & {
+        fbq?: (...args: unknown[]) => void;
+      }
+    ).fbq;
+
+    if (typeof fbq !== "function") return;
+
+    const eventId =
+      typeof crypto !== "undefined" && "randomUUID" in crypto
+        ? crypto.randomUUID()
+        : `qv_referral_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+
+    const params = {
+      funnel: "referral",
+      milestone: "form_start",
+      source: "referral_program",
+      trigger,
+      page_path: window.location.pathname,
+      utm_source: utm.utm_source ?? undefined,
+      utm_medium: utm.utm_medium ?? undefined,
+      utm_campaign: utm.utm_campaign ?? undefined,
+      utm_content: utm.utm_content ?? undefined,
+      utm_term: utm.utm_term ?? undefined,
+    };
+
+    /*
+     * Evento customizado já existente no dataset da Meta.
+     * eventID fica pronto para deduplicação caso CAPI seja reativada
+     * para este mesmo marco posteriormente.
+     */
+    fbq("trackCustom", "QualifiedVisit", params, {
+      eventID: eventId,
+    });
+
+    qualifiedVisitSentRef.current = true;
+
+    try {
+      window.sessionStorage.setItem(QUALIFIED_VISIT_SESSION_KEY, "1");
+    } catch {
+      // O ref em memória ainda impede duplicidade na página atual.
+    }
+
+    /*
+     * Evento local opcional para qualquer listener do Ohrly.
+     * Não interfere no envio para a Meta.
+     */
+    window.dispatchEvent(
+      new CustomEvent("ohrly:qualified-visit", {
+        detail: {
+          signal: "QualifiedVisit",
+          eventId,
+          funnel: "referral",
+          milestone: "form_start",
+          trigger,
+          fbp: readCookie("_fbp"),
+          fbc: readCookie("_fbc"),
+        },
+      }),
+    );
+  }
+
   async function copyText(text: string, type: "message" | "link") {
     await navigator.clipboard.writeText(text);
     setCopied(type);
@@ -228,6 +345,12 @@ export default function ReferralClient() {
     if (!form.name.trim() || !form.email.trim()) {
       setStatus("error");
       setError("Preencha seu nome e e-mail para registrar a indicação.");
+      return;
+    }
+
+    if (!form.rewardType) {
+      setStatus("error");
+      setError("Escolha como você prefere receber a recompensa.");
       return;
     }
 
@@ -245,6 +368,7 @@ export default function ReferralClient() {
           referredCompany: form.company.trim() || null,
           context: form.context.trim() || null,
           introductionMode: form.introductionMode,
+          rewardType: form.rewardType,
           source: utm,
         }),
       });
@@ -311,31 +435,53 @@ export default function ReferralClient() {
                 Conhece alguém que já foi surpreendido por uma renovação mesmo
                 quando os sinais pareciam saudáveis? Faça uma introdução.{" "}
                 <strong className="font-black text-[#0b0d12]">
-                  Se a indicação se tornar cliente, você recebe uma recompensa.
+                  Se a indicação se tornar cliente, você escolhe entre{" "}
+                  <strong className="font-black text-[#0b0d12]">
+                    R$100 na conversão
+                  </strong>{" "}
+                  ou{" "}
+                  <strong className="font-black text-[#0b0d12]">
+                    20% do primeiro pagamento após 30 dias
+                  </strong>
+                  .
                 </strong>
               </p>
             </div>
 
-            <div className="rounded-[26px] border border-[#dfe7ff] bg-white p-6 shadow-[0_18px_50px_rgba(11,13,18,.06)]">
+            <div className="rounded-[26px] border border-[#dfe7ff] bg-white p-5 shadow-[0_18px_50px_rgba(11,13,18,.06)]">
               <div className="flex items-center gap-3">
                 <span className="grid size-11 place-items-center rounded-[14px] bg-[#edf2ff] text-[#3568f5]">
                   <Gift size={20} />
                 </span>
                 <div>
                   <div className="text-[11px] font-extrabold uppercase tracking-[.07em] text-[#87909d]">
-                    Recompensa atual
+                    Você escolhe
                   </div>
-                  <div className="mt-1 text-[25px] font-black tracking-[-0.04em]">
-                    {REFERRAL_REWARD}
+                  <div className="mt-1 text-[18px] font-black tracking-[-0.03em]">
+                    Recompensa imediata ou maior
                   </div>
                 </div>
               </div>
 
-              <p className="mt-4 text-[12px] leading-[1.5] text-[#6f7885]">
-                A recompensa é liberada após a confirmação do primeiro
-                pagamento do cliente indicado. Não pagamos por cadastro ou lead
-                sem conversão.
-              </p>
+              <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
+                <div className="rounded-[15px] border border-[#e7e9ef] bg-[#fbfcfe] p-3.5">
+                  <strong className="text-[22px] tracking-[-0.04em]">
+                    {FIXED_REWARD}
+                  </strong>
+                  <span className="mt-0.5 block text-[11px] font-bold text-[#3568f5]">
+                    primeiro pagamento confirmado
+                  </span>
+                </div>
+
+                <div className="rounded-[15px] border border-[#cdd9ff] bg-[#f4f7ff] p-3.5">
+                  <strong className="text-[22px] tracking-[-0.04em] text-[#3568f5]">
+                    20%
+                  </strong>
+                  <span className="mt-0.5 block text-[11px] font-bold text-[#0b0d12]">
+                    após 30 dias ativo e adimplente
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -356,9 +502,9 @@ export default function ReferralClient() {
                 para encaminhar por WhatsApp, e-mail ou LinkedIn.
               </Step>
 
-              <Step number="03" title="Receba se virar cliente">
-                Se a indicação resultar no primeiro pagamento ao Ohrly, a
-                recompensa fica devida a você.
+              <Step number="03" title="Escolha sua recompensa">
+                Prefira R$100 assim que o primeiro pagamento for confirmado ou
+                20% desse pagamento após 30 dias com o cliente ativo e adimplente.
               </Step>
             </div>
           </div>
@@ -403,7 +549,12 @@ export default function ReferralClient() {
 
             <div className="rounded-[28px] border border-[#e7e9ef] bg-white p-5 shadow-[0_18px_60px_rgba(11,13,18,.06)] sm:p-7">
               {status !== "success" ? (
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form
+                  onSubmit={handleSubmit}
+                  className="space-y-5"
+                  data-ohrly-form="referral"
+                  data-qualified-visit-policy="referral_form_start"
+                >
                   <div>
                     <div className="text-[11px] font-extrabold uppercase tracking-[.07em] text-[#87909d]">
                       Registrar indicação
@@ -418,12 +569,13 @@ export default function ReferralClient() {
                       <input
                         required
                         value={form.name}
-                        onChange={(event) =>
+                        onChange={(event) => {
+                          emitQualifiedVisitOnce("name");
                           setForm((current) => ({
                             ...current,
                             name: event.target.value,
-                          }))
-                        }
+                          }));
+                        }}
                         name="name"
                         autoComplete="name"
                         placeholder="Seu nome"
@@ -436,12 +588,13 @@ export default function ReferralClient() {
                         required
                         type="email"
                         value={form.email}
-                        onChange={(event) =>
+                        onChange={(event) => {
+                          emitQualifiedVisitOnce("email");
                           setForm((current) => ({
                             ...current,
                             email: event.target.value,
-                          }))
-                        }
+                          }));
+                        }}
                         name="email"
                         autoComplete="email"
                         placeholder="voce@empresa.com"
@@ -456,12 +609,13 @@ export default function ReferralClient() {
                   >
                     <input
                       value={form.company}
-                      onChange={(event) =>
+                      onChange={(event) => {
+                        emitQualifiedVisitOnce("company");
                         setForm((current) => ({
                           ...current,
                           company: event.target.value,
-                        }))
-                      }
+                        }));
+                      }}
                       name="company"
                       placeholder="Nome da empresa — não precisamos do contato dela"
                       className="min-h-12 w-full rounded-[14px] border border-[#dfe3eb] bg-white px-4 text-[14px] outline-none transition placeholder:text-[#a4abb5] focus:border-[#3568f5] focus:ring-4 focus:ring-[#3568f5]/10"
@@ -474,18 +628,61 @@ export default function ReferralClient() {
                   >
                     <textarea
                       value={form.context}
-                      onChange={(event) =>
+                      onChange={(event) => {
+                        emitQualifiedVisitOnce("context");
                         setForm((current) => ({
                           ...current,
                           context: event.target.value,
-                        }))
-                      }
+                        }));
+                      }}
                       name="context"
                       rows={3}
                       placeholder="Ex.: comentaram recentemente que foram surpreendidos em uma renovação..."
                       className="w-full resize-none rounded-[14px] border border-[#dfe3eb] bg-white px-4 py-3 text-[14px] outline-none transition placeholder:text-[#a4abb5] focus:border-[#3568f5] focus:ring-4 focus:ring-[#3568f5]/10"
                     />
                   </Field>
+
+
+                  <div>
+                    <div className="text-[13px] font-black text-[#0b0d12]">
+                      Como você prefere receber se a indicação virar cliente?
+                    </div>
+
+                    <p className="mt-1 text-[11px] leading-[1.45] text-[#7b8490]">
+                      A escolha fica vinculada a esta indicação e não pode ser
+                      alterada depois que ela for registrada.
+                    </p>
+
+                    <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                      <Choice
+                        active={form.rewardType === "fixed_100"}
+                        title="R$100 na conversão"
+                        body="Liberado quando o primeiro pagamento do cliente indicado for confirmado."
+                        ctaId="referral_reward_fixed_100"
+                        onClick={() => {
+                          emitQualifiedVisitOnce("reward");
+                          setForm((current) => ({
+                            ...current,
+                            rewardType: "fixed_100",
+                          }));
+                        }}
+                      />
+
+                      <Choice
+                        active={form.rewardType === "percent_20_after_30d"}
+                        title="20% do primeiro pagamento"
+                        body="Liberado após 30 dias com o cliente ativo, adimplente e sem estorno."
+                        ctaId="referral_reward_percent_20"
+                        onClick={() => {
+                          emitQualifiedVisitOnce("reward");
+                          setForm((current) => ({
+                            ...current,
+                            rewardType: "percent_20_after_30d",
+                          }));
+                        }}
+                      />
+                    </div>
+                  </div>
 
                   <div>
                     <div className="text-[13px] font-black text-[#0b0d12]">
@@ -498,12 +695,13 @@ export default function ReferralClient() {
                         title="Quero receber uma mensagem pronta"
                         body="Você registra agora e encaminha a introdução quando quiser."
                         ctaId="referral_mode_intro"
-                        onClick={() =>
+                        onClick={() => {
+                          emitQualifiedVisitOnce("introduction_mode");
                           setForm((current) => ({
                             ...current,
                             introductionMode: "intro",
-                          }))
-                        }
+                          }));
+                        }}
                       />
 
                       <Choice
@@ -513,12 +711,13 @@ export default function ReferralClient() {
                         title="Já fiz a introdução"
                         body="Use esta opção se você já colocou o Ohrly na conversa."
                         ctaId="referral_mode_already_introduced"
-                        onClick={() =>
+                        onClick={() => {
+                          emitQualifiedVisitOnce("introduction_mode");
                           setForm((current) => ({
                             ...current,
                             introductionMode: "already_introduced",
-                          }))
-                        }
+                          }));
+                        }}
                       />
 
                       <Choice
@@ -526,12 +725,13 @@ export default function ReferralClient() {
                         title="Quero apenas compartilhar um link"
                         body="Geramos um link de indicação para você encaminhar."
                         ctaId="referral_mode_share"
-                        onClick={() =>
+                        onClick={() => {
+                          emitQualifiedVisitOnce("introduction_mode");
                           setForm((current) => ({
                             ...current,
                             introductionMode: "share",
-                          }))
-                        }
+                          }));
+                        }}
                       />
                     </div>
                   </div>
@@ -563,8 +763,9 @@ export default function ReferralClient() {
                   </button>
 
                   <p className="text-center text-[11px] leading-[1.45] text-[#87909d]">
-                    A recompensa depende da conversão em cliente e da confirmação
-                    do primeiro pagamento.
+                    Sua preferência de recompensa fica registrada nesta indicação.
+                    R$100 é liberado na confirmação do primeiro pagamento; a opção
+                    percentual exige 30 dias de cliente ativo e adimplente.
                   </p>
                 </form>
               ) : (
@@ -585,6 +786,13 @@ export default function ReferralClient() {
                     Criamos um link associado à sua indicação. Você pode copiar a
                     mensagem pronta ou compartilhar diretamente.
                   </p>
+
+                  <div className="mt-4 rounded-[16px] border border-[#dfe7ff] bg-[#f4f7ff] px-4 py-3 text-[12px] leading-[1.45] text-[#40506c]">
+                    <strong className="text-[#0b0d12]">Recompensa escolhida:</strong>{" "}
+                    {form.rewardType === "fixed_100"
+                      ? "R$100 quando o primeiro pagamento for confirmado."
+                      : "20% do primeiro pagamento após 30 dias com o cliente ativo e adimplente."}
+                  </div>
 
                   <div className="mt-5 rounded-[18px] border border-[#e7e9ef] bg-[#f8f9fc] p-4">
                     <div className="text-[10px] font-extrabold uppercase tracking-[.07em] text-[#87909d]">
@@ -695,9 +903,11 @@ export default function ReferralClient() {
               </p>
 
               <p>
-                <strong className="text-[#0b0d12]">Conversão:</strong> a
-                recompensa é calculada sobre o primeiro pagamento efetivamente
-                recebido do cliente indicado.
+                <strong className="text-[#0b0d12]">Conversão:</strong> para a
+                opção fixa, R$100 é liberado quando o primeiro pagamento for
+                confirmado. Para a opção percentual, 20% do primeiro pagamento
+                é liberado após 30 dias com o cliente ativo, adimplente e sem
+                estorno ou reembolso.
               </p>
 
               <p>
@@ -707,10 +917,10 @@ export default function ReferralClient() {
               </p>
 
               <p>
-                <strong className="text-[#0b0d12]">Modelo em validação:</strong>{" "}
-                preço, percentual e regras podem evoluir. Uma indicação já
-                registrada preserva as condições apresentadas no momento do
-                cadastro.
+                <strong className="text-[#0b0d12]">Preferência registrada:</strong>{" "}
+                cada indicação guarda a modalidade escolhida no cadastro. Preço,
+                percentual e regras podem evoluir para novas indicações, mas as
+                condições registradas para uma indicação válida são preservadas.
               </p>
             </div>
           </div>
