@@ -1,23 +1,23 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
   ArrowRight,
   Check,
-  Clock3,
   RotateCcw,
+  TrendingDown,
+  TrendingUp,
 } from "lucide-react";
 
 import { CommercialIntentTrigger } from "@/components/commercial-intent-modal";
 
-type AccountKey = "northstar" | "luma";
-type DetailTab = "history" | "relationship" | "renewal";
-type DemoStep = 1 | 2 | 3 | 4 | 5 | 6;
+type DemoStep = 1 | 2 | 3 | 4;
+type InitialChoice = "same" | "technova" | "alphacorp" | null;
 
-const TOTAL_STEPS = 6;
+const TOTAL_STEPS = 4;
 
 function Brand() {
   return (
@@ -60,147 +60,48 @@ function Eyebrow({ children }: { children: ReactNode }) {
 
 function Tiny({ children }: { children: ReactNode }) {
   return (
-    <div className="text-[11px] font-extrabold uppercase tracking-[.06em] text-[#87909d]">
+    <div className="text-[11px] font-extrabold uppercase tracking-[.07em] text-[#87909d]">
       {children}
     </div>
   );
 }
 
-function Pill({
-  children,
-  tone = "risk",
-}: {
-  children: ReactNode;
-  tone?: "risk" | "good" | "warn";
-}) {
-  const toneClass = {
-    risk: "bg-[#fff1f0] text-[#b42318]",
-    good: "bg-[#ebf8f1] text-[#18794e]",
-    warn: "bg-[#fff5e9] text-[#a15c00]",
-  }[tone];
-
-  return (
-    <span
-      className={`inline-flex rounded-full px-2.5 py-1.5 text-[11px] font-black ${toneClass}`}
-    >
-      {children}
-    </span>
-  );
-}
-
-function StatusRow({
+function Metric({
   label,
   value,
-  tone = "neutral",
 }: {
   label: string;
   value: string;
-  tone?: "neutral" | "good" | "warn" | "risk";
 }) {
-  const toneClass = {
-    neutral: "text-[#0b0d12]",
-    good: "text-[#18794e]",
-    warn: "text-[#a15c00]",
-    risk: "text-[#b42318]",
-  }[tone];
-
   return (
-    <div className="flex items-center justify-between gap-5 border-b border-[#e7e9ef] py-3 text-[13px]">
-      <span className="text-[#747c88]">{label}</span>
-      <strong className={`text-right ${toneClass}`}>{value}</strong>
+    <div className="rounded-[15px] border border-[#eceef2] bg-[#f8f9fb] p-[14px]">
+      <span className="block text-[10px] font-extrabold uppercase tracking-[.07em] text-[#828998]">
+        {label}
+      </span>
+      <strong className="mt-1 block text-[21px] font-black tracking-[-0.04em] text-[#0b0d12]">
+        {value}
+      </strong>
     </div>
   );
 }
 
-function TimelineItem({
-  date,
-  title,
+function Chip({
   children,
-  tone = "neutral",
+  tone,
 }: {
-  date: string;
-  title: string;
   children: ReactNode;
-  tone?: "neutral" | "good" | "warn" | "risk";
+  tone: "good" | "bad";
 }) {
-  const dotClass = {
-    neutral: "border-[#3568f5]",
-    good: "border-[#18794e]",
-    warn: "border-[#a15c00]",
-    risk: "border-[#b42318]",
-  }[tone];
-
   return (
-    <div className="relative pb-[18px] last:pb-0">
-      <span
-        className={`absolute -left-[31px] top-1 size-[10px] rounded-full border-[3px] bg-white ${dotClass}`}
-      />
-      <Tiny>{date}</Tiny>
-      <div className="mt-[3px] text-[14px] font-black text-[#0b0d12]">
-        {title}
-      </div>
-      <p className="mt-[3px] text-[12px] leading-[1.45] text-[#667085]">
-        {children}
-      </p>
-    </div>
-  );
-}
-
-function AccountChoice({
-  account,
-  selected,
-  onSelect,
-}: {
-  account: AccountKey;
-  selected: boolean;
-  onSelect: (account: AccountKey) => void;
-}) {
-  const isNorthstar = account === "northstar";
-
-  return (
-    <button
-      type="button"
-      onClick={() => onSelect(account)}
-      data-analytics-cta={`demo_account_select_${account}`}
-      data-analytics-location="demo_queue"
-      data-analytics-label={
-        isNorthstar ? "Selecionar Northstar" : "Selecionar Luma"
-      }
-      aria-pressed={selected}
-      className={`rounded-[24px] border bg-white p-5 text-left transition hover:-translate-y-px hover:border-[#bac7ff] hover:shadow-[0_12px_30px_rgba(53,104,245,.08)] ${
-        selected
-          ? "border-[#3568f5] shadow-[0_0_0_2px_rgba(53,104,245,.14)]"
-          : "border-[#e7e9ef]"
+    <span
+      className={`rounded-full px-2.5 py-2 text-[11px] font-black ${
+        tone === "good"
+          ? "bg-[#ebf8f1] text-[#18794e]"
+          : "bg-[#fff1f0] text-[#b42318]"
       }`}
     >
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <Tiny>{isNorthstar ? "CONTA A" : "CONTA B"}</Tiny>
-          <div className="mt-1 text-[26px] font-black tracking-[-0.04em]">
-            {isNorthstar ? "Northstar" : "Luma"}
-          </div>
-          <div className="mt-1 text-[13px] text-[#727b87]">
-            Renovação em {isNorthstar ? "94" : "18"} dias
-          </div>
-        </div>
-        <Pill>Score {isNorthstar ? "41" : "43"}</Pill>
-      </div>
-
-      <div className="mt-[18px] border-t border-[#e7e9ef]">
-        <StatusRow
-          label="Uso"
-          value={isNorthstar ? "em queda" : "estável"}
-        />
-        <StatusRow
-          label="Champion"
-          value={isNorthstar ? "ativo" : "ausente"}
-        />
-        <StatusRow
-          label="Sponsor"
-          value={isNorthstar ? "ativo" : "sem relação"}
-        />
-      </div>
-    </button>
+      {children}
+    </span>
   );
 }
 
@@ -251,7 +152,7 @@ function StepNav({
 
 function Progress({ step }: { step: DemoStep }) {
   return (
-    <div className="mx-auto grid w-[min(1080px,calc(100%_-_32px))] grid-cols-6 gap-[7px] pb-5 pt-3">
+    <div className="mx-auto grid w-[min(1080px,calc(100%_-_32px))] grid-cols-4 gap-[7px] pb-5 pt-3">
       {Array.from({ length: TOTAL_STEPS }).map((_, index) => (
         <div
           key={index}
@@ -264,70 +165,265 @@ function Progress({ step }: { step: DemoStep }) {
   );
 }
 
+function SnapshotCard({
+  name,
+  subtitle,
+}: {
+  name: string;
+  subtitle: string;
+}) {
+  return (
+    <article className="rounded-[24px] border border-[#e7e9ef] bg-white p-5">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <Tiny>{subtitle}</Tiny>
+          <div className="mt-1 text-[26px] font-black tracking-[-0.04em]">
+            {name}
+          </div>
+          <div className="mt-1 text-[13px] text-[#727b87]">
+            Conta recorrente · plano Pro
+          </div>
+        </div>
+
+        <span className="rounded-full bg-[#f5f6f8] px-2.5 py-1.5 text-[11px] font-black text-[#3f4651]">
+          hoje
+        </span>
+      </div>
+
+      <div className="mt-[18px] grid grid-cols-2 gap-2.5">
+        <Metric label="Usuários ativos" value="40" />
+        <Metric label="Receita atual" value="Estável" />
+      </div>
+    </article>
+  );
+}
+
 function QueueStep({
-  selectedAccount,
-  onSelectAccount,
+  choice,
+  onChoose,
   onContinue,
 }: {
-  selectedAccount: AccountKey | null;
-  onSelectAccount: (account: AccountKey) => void;
+  choice: InitialChoice;
+  onChoose: (choice: InitialChoice) => void;
   onContinue: () => void;
 }) {
-  const selectedLabel =
-    selectedAccount === "northstar"
-      ? "Northstar"
-      : selectedAccount === "luma"
-        ? "Luma"
-        : null;
+  const choiceLabel =
+    choice === "same"
+      ? "Tratar igual"
+      : choice === "technova"
+        ? "Investigar TechNova"
+        : choice === "alphacorp"
+          ? "Investigar AlphaCorp"
+          : null;
+
+  const options: Array<{
+    key: Exclude<InitialChoice, null>;
+    label: string;
+    analyticsId: string;
+  }> = [
+    {
+      key: "same",
+      label: "Tratar igual",
+      analyticsId: "demo_initial_choice_same",
+    },
+    {
+      key: "technova",
+      label: "Investigar TechNova",
+      analyticsId: "demo_initial_choice_technova",
+    },
+    {
+      key: "alphacorp",
+      label: "Investigar AlphaCorp",
+      analyticsId: "demo_initial_choice_alphacorp",
+    },
+  ];
 
   return (
     <div>
-      <div className="mb-[22px] max-w-[780px]">
-        <Tiny>A fotografia atual</Tiny>
+      <div className="mb-[22px] max-w-[790px]">
+        <Tiny>01 · A fotografia atual</Tiny>
         <h2 className="mt-1.5 text-[32px] font-black leading-[1.05] tracking-[-0.045em]">
-          Qual dessas duas contas merece sua atenção primeiro?
+          Você faria alguma coisa diferente com esses dois clientes hoje?
         </h2>
         <p className="mt-2.5 text-[15px] leading-[1.55] text-[#6b7280]">
-          Escolha uma antes de ver qualquer contexto adicional.
+          Antes de ver a trajetória, escolha como você trataria as duas contas
+          olhando apenas o estado atual.
         </p>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <AccountChoice
-          account="northstar"
-          selected={selectedAccount === "northstar"}
-          onSelect={onSelectAccount}
-        />
-        <AccountChoice
-          account="luma"
-          selected={selectedAccount === "luma"}
-          onSelect={onSelectAccount}
-        />
+        <SnapshotCard name="TechNova" subtitle="Cliente A · SaaS" />
+        <SnapshotCard name="AlphaCorp" subtitle="Cliente B · Serviços" />
       </div>
 
-      {selectedLabel ? (
-        <div className="mt-5 rounded-[18px] border border-[#dfe7ff] bg-[#f4f7ff] px-[18px] py-4 text-[14px] leading-[1.5] text-[#2b3852]">
-          Sua escolha inicial: <strong>{selectedLabel}</strong>. Agora vamos ver
+      <div className="mt-[18px] flex flex-wrap gap-2.5">
+        {options.map((option) => (
+          <button
+            key={option.key}
+            type="button"
+            onClick={() => onChoose(option.key)}
+            data-analytics-cta={option.analyticsId}
+            data-analytics-location="demo_snapshot"
+            data-analytics-label={option.label}
+            aria-pressed={choice === option.key}
+            className={`rounded-[14px] border px-4 py-3 text-[13px] font-extrabold transition ${
+              choice === option.key
+                ? "border-[#3568f5] text-[#3568f5] shadow-[0_0_0_3px_rgba(53,104,245,.12)]"
+                : "border-[#e7e9ef] bg-white text-[#0b0d12] hover:border-[#bac7ff]"
+            }`}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+
+      {choiceLabel ? (
+        <div className="mt-4 rounded-[16px] border border-[#dfe7ff] bg-[#f4f7ff] px-[17px] py-[15px] text-[14px] leading-[1.5] text-[#2b3852]">
+          Sua escolha inicial: <strong>{choiceLabel}</strong>. Agora vamos ver
           se a trajetória muda essa decisão.
         </div>
       ) : null}
 
       <div className="mt-[22px] flex justify-end border-t border-[#e7e9ef] pt-[18px]">
-        {selectedAccount ? (
+        {choice ? (
           <button
             type="button"
             onClick={onContinue}
-            data-analytics-cta="demo_trajectory_reveal"
-            data-analytics-location="demo_queue"
-            data-analytics-label="Ver a trajetória"
+            data-analytics-cta="demo_history_reveal"
+            data-analytics-location="demo_snapshot"
+            data-analytics-label="Ver a história"
             className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#3568f5] bg-[#3568f5] px-[18px] text-[13px] font-extrabold text-white shadow-[0_5px_0_#18399f] transition hover:-translate-y-px"
           >
-            Ver a trajetória
+            Ver a história
             <ArrowRight size={14} />
           </button>
         ) : null}
       </div>
     </div>
+  );
+}
+
+function TrendChart({
+  direction,
+}: {
+  direction: "up" | "down";
+}) {
+  const isUp = direction === "up";
+  const color = isUp ? "#3568f5" : "#d84a4a";
+  const points = isUp
+    ? "0,142 80,136 160,122 240,101 320,76 400,53 500,28"
+    : "0,28 80,44 160,67 240,87 320,108 400,128 500,145";
+  const area = isUp
+    ? "M0 142 L80 136 L160 122 L240 101 L320 76 L400 53 L500 28 L500 165 L0 165 Z"
+    : "M0 28 L80 44 L160 67 L240 87 L320 108 L400 128 L500 145 L500 165 L0 165 Z";
+  const gradientId = isUp ? "technova-area" : "alphacorp-area";
+
+  return (
+    <div className="relative mt-[18px] h-[165px] overflow-hidden rounded-[18px] border border-[#edf0f5] bg-[#fcfdff]">
+      <div className="absolute inset-0 bg-[linear-gradient(#edf0f5_1px,transparent_1px)] bg-[size:100%_33.33%]" />
+      <svg
+        viewBox="0 0 500 165"
+        preserveAspectRatio="none"
+        className="absolute inset-0 size-full"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={color} stopOpacity=".22" />
+            <stop offset="100%" stopColor={color} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <path d={area} fill={`url(#${gradientId})`} />
+        <polyline
+          points={points}
+          fill="none"
+          stroke={color}
+          strokeWidth="5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </div>
+  );
+}
+
+function TrajectoryCard({
+  name,
+  before,
+  direction,
+  signals,
+  headline,
+  body,
+}: {
+  name: string;
+  before: string;
+  direction: "up" | "down";
+  signals: string[];
+  headline: string;
+  body: string;
+}) {
+  const isUp = direction === "up";
+
+  return (
+    <article className="rounded-[22px] border border-[#e7e9ef] bg-white p-5">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <Tiny>{name}</Tiny>
+          <h3 className="mt-1 text-[22px] font-black tracking-[-0.035em]">
+            40 usuários hoje
+          </h3>
+          <p className="mt-1 text-[13px] text-[#727b87]">
+            Há 90 dias: {before} usuários
+          </p>
+        </div>
+
+        <span className="rounded-full bg-[#f5f6f8] px-2.5 py-1.5 text-[11px] font-black text-[#3f4651]">
+          receita estável
+        </span>
+      </div>
+
+      <TrendChart direction={direction} />
+
+      <div className="mt-3 flex justify-between gap-3 text-[11px] font-bold text-[#858b96]">
+        <span>90 dias atrás · {before}</span>
+        <span>Hoje · 40</span>
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        {signals.map((signal) => (
+          <Chip key={signal} tone={isUp ? "good" : "bad"}>
+            {isUp ? "+ " : "− "}
+            {signal}
+          </Chip>
+        ))}
+      </div>
+
+      <div
+        className={`mt-4 rounded-[17px] border p-4 ${
+          isUp
+            ? "border-[#dfe7ff] bg-[#eef3ff]"
+            : "border-[#ffdede] bg-[#fff1f1]"
+        }`}
+      >
+        <div className="flex items-start gap-3">
+          <div
+            className={`grid size-10 shrink-0 place-items-center rounded-[12px] text-white ${
+              isUp ? "bg-[#3568f5]" : "bg-[#d84a4a]"
+            }`}
+          >
+            {isUp ? <TrendingUp size={20} /> : <TrendingDown size={20} />}
+          </div>
+          <div>
+            <strong className="block text-[14px] leading-[1.4] text-[#0b0d12]">
+              {headline}
+            </strong>
+            <p className="mt-1 text-[12px] leading-[1.48] text-[#667085]">
+              {body}
+            </p>
+          </div>
+        </div>
+      </div>
+    </article>
   );
 }
 
@@ -340,86 +436,100 @@ function TrajectoryStep({
 }) {
   return (
     <div>
-      <div className="mb-[22px] max-w-[780px]">
-        <Tiny>A trajetória</Tiny>
+      <div className="mb-[22px] max-w-[790px]">
+        <Tiny>02 · A história aparece</Tiny>
         <h2 className="mt-1.5 text-[32px] font-black leading-[1.05] tracking-[-0.045em]">
-          O mesmo risco atual veio de histórias muito diferentes.
+          O mesmo estado atual veio de trajetórias opostas.
         </h2>
         <p className="mt-2.5 text-[15px] leading-[1.55] text-[#6b7280]">
-          Agora olhe como cada conta chegou até o estado de hoje.
+          O número de hoje é parecido. O caminho até ele não é.
         </p>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <article className="rounded-[22px] border border-[#e7e9ef] bg-white p-5">
-          <Tiny>Northstar · Score 41</Tiny>
-          <h3 className="mt-1 text-[22px] font-black tracking-[-0.035em]">
-            Deterioração recente
-          </h3>
+        <TrajectoryCard
+          name="TechNova"
+          before="12"
+          direction="up"
+          signals={["nova área", "stakeholders", "novo caso de uso"]}
+          headline="Relacionamento em evolução positiva."
+          body="A relação passou a operar em um patamar diferente da própria história."
+        />
 
-          <div className="ml-1 mt-4 border-l-2 border-[#dde3ee] pl-6">
-            <TimelineItem
-              date="45 dias"
-              title="Uso dentro do padrão"
-              tone="good"
-            >
-              Champion e sponsor participam normalmente.
-            </TimelineItem>
-            <TimelineItem
-              date="23 dias"
-              title="Uso começa a cair"
-              tone="warn"
-            >
-              A mudança passa a se repetir por várias semanas.
-            </TimelineItem>
-            <TimelineItem date="hoje" title="Queda persiste" tone="risk">
-              Acesso ainda existe. Renovação ainda está distante.
-            </TimelineItem>
-          </div>
-        </article>
+        <TrajectoryCard
+          name="AlphaCorp"
+          before="52"
+          direction="down"
+          signals={["champion saiu", "respostas ↓", "decisor distante"]}
+          headline="A receita ainda não mudou. A relação já mudou."
+          body="A sustentação da relação ficou mais frágil antes de aparecer no faturamento."
+        />
+      </div>
 
-        <article className="rounded-[22px] border border-[#e7e9ef] bg-white p-5">
-          <Tiny>Luma · Score 43</Tiny>
-          <h3 className="mt-1 text-[22px] font-black tracking-[-0.035em]">
-            Fragilidade relacional acumulada
-          </h3>
-
-          <div className="ml-1 mt-4 border-l-2 border-[#dde3ee] pl-6">
-            <TimelineItem date="74 dias" title="Uso saudável" tone="good">
-              Champion concentrava 81% das interações.
-            </TimelineItem>
-            <TimelineItem
-              date="51 dias"
-              title="Presença começa a cair"
-              tone="warn"
-            >
-              A cobertura relacional já começa a mudar.
-            </TimelineItem>
-            <TimelineItem
-              date="36 dias"
-              title="Champion sai da empresa"
-              tone="risk"
-            >
-              Nenhum sponsor substituto assume a relação.
-            </TimelineItem>
-            <TimelineItem date="hoje" title="Uso segue estável" tone="risk">
-              Mas economic buyer segue sem relação e a renovação está próxima.
-            </TimelineItem>
-          </div>
-        </article>
+      <div className="mt-[18px] rounded-[20px] bg-[#0b0d12] px-[22px] py-5 text-white">
+        <strong className="block text-[22px] font-black tracking-[-0.025em]">
+          Agora você trataria os dois da mesma forma?
+        </strong>
+        <p className="mt-[7px] text-[14px] leading-[1.5] text-[#b8c0ce]">
+          Se sua decisão mudou, a trajetória acrescentou uma informação que o
+          estado atual não carregava.
+        </p>
       </div>
 
       <StepNav
         onBack={onBack}
         onNext={onNext}
-        nextLabel="Comparar decisões"
-        nextCtaId="demo_cost_of_waiting_view"
+        nextLabel="Ver a leitura do Ohrly"
+        nextCtaId="demo_decision_view"
       />
     </div>
   );
 }
 
-function CostOfWaitingStep({
+function DecisionCard({
+  name,
+  state,
+  history,
+  tone,
+  decision,
+  body,
+}: {
+  name: string;
+  state: string;
+  history: string;
+  tone: "growth" | "retention";
+  decision: string;
+  body: string;
+}) {
+  const growth = tone === "growth";
+
+  return (
+    <article className="rounded-[22px] border border-[#e7e9ef] bg-white p-5">
+      <Tiny>{name}</Tiny>
+      <h3 className="mt-1 text-[22px] font-black tracking-[-0.035em]">
+        {state}
+      </h3>
+
+      <div className="mt-4 grid grid-cols-2 gap-2.5">
+        <Metric label="Hoje" value="40 usuários" />
+        <Metric label="História" value={history} />
+      </div>
+
+      <div
+        className={`mt-4 rounded-[16px] px-4 py-[15px] text-[13px] leading-[1.48] ${
+          growth
+            ? "bg-[#ebf8f1] text-[#155e42]"
+            : "bg-[#fff5e9] text-[#7d4a00]"
+        }`}
+      >
+        <strong className="block">{decision}</strong>
+        {body}
+      </div>
+    </article>
+  );
+}
+
+function DecisionStep({
   onBack,
   onNext,
 }: {
@@ -428,127 +538,66 @@ function CostOfWaitingStep({
 }) {
   return (
     <div>
-      <div className="mb-[22px] max-w-[780px]">
-        <Tiny>O custo de esperar</Tiny>
+      <div className="mb-[22px] max-w-[790px]">
+        <Tiny>03 · Da mudança à decisão</Tiny>
         <h2 className="mt-1.5 text-[32px] font-black leading-[1.05] tracking-[-0.045em]">
-          Mesma fila. Janelas de intervenção diferentes.
+          O mesmo estado atual pode pedir decisões de receita diferentes.
         </h2>
         <p className="mt-2.5 text-[15px] leading-[1.55] text-[#6b7280]">
-          O risco aponta onde olhar. A trajetória ajuda a entender o que esperar
-          pode custar.
+          O Ohrly não tenta adivinhar o futuro. Ele interpreta quando a estratégia
+          atual pode ter ficado para trás em relação ao que mudou.
         </p>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <article className="rounded-[22px] border border-[#e7e9ef] bg-white p-5">
-          <Tiny>Northstar</Tiny>
-          <h3 className="mt-1 text-[22px] font-black tracking-[-0.035em]">
-            Score 41
-          </h3>
-          <div className="mt-3">
-            <StatusRow label="Mudança" value="recente" />
-            <StatusRow label="Acesso" value="preservado" />
-            <StatusRow label="Renovação" value="94 dias" />
-          </div>
-          <div className="mt-4 flex items-start gap-3 rounded-[16px] bg-[#ebf8f1] px-4 py-[15px] text-[13px] leading-[1.45] text-[#155e42]">
-            <Check size={18} className="mt-[1px] shrink-0" />
-            <div>
-              <strong className="block">Ainda existe espaço para agir.</strong>
-              A conta está deteriorando, mas o time ainda tem acesso e tempo para
-              investigar.
-            </div>
-          </div>
-        </article>
+        <DecisionCard
+          name="TechNova"
+          state="Relacionamento em evolução positiva"
+          history="12 → 40"
+          tone="growth"
+          decision="Decisão a investigar → expansão"
+          body="A estratégia comercial atual pode ter ficado pequena para a relação."
+        />
 
-        <article className="rounded-[22px] border border-[#e7e9ef] bg-white p-5">
-          <Tiny>Luma</Tiny>
-          <h3 className="mt-1 text-[22px] font-black tracking-[-0.035em]">
-            Score 43
-          </h3>
-          <div className="mt-3">
-            <StatusRow label="Champion" value="saiu" />
-            <StatusRow label="Última resposta" value="17 dias" />
-            <StatusRow label="Renovação" value="18 dias" />
-          </div>
-          <div className="mt-4 flex items-start gap-3 rounded-[16px] bg-[#fff5e9] px-4 py-[15px] text-[13px] leading-[1.45] text-[#7d4a00]">
-            <Clock3 size={18} className="mt-[1px] shrink-0" />
-            <div>
-              <strong className="block">Esperar está ficando caro.</strong>
-              A cada semana sem resposta, o time perde acesso, alternativas e
-              espaço antes da próxima decisão.
-            </div>
-          </div>
-        </article>
+        <DecisionCard
+          name="AlphaCorp"
+          state="Relacionamento em deterioração"
+          history="52 → 40"
+          tone="retention"
+          decision="Decisão a investigar → retenção"
+          body="A receita segue estável, mas a relação perdeu sustentação."
+        />
       </div>
 
       <div className="mt-[18px] rounded-[20px] bg-[#0b0d12] px-[22px] py-5 text-white">
         <strong className="block text-[22px] font-black tracking-[-0.025em]">
-          O score apontou as duas. A trajetória mudou a prioridade.
+          Mesmo estado atual. Decisões diferentes.
         </strong>
         <p className="mt-[7px] text-[14px] leading-[1.5] text-[#b8c0ce]">
-          Se você escolheria diferente agora, já existe uma informação que a
-          fotografia atual não carregava.
+          O Ohrly começa quando a relação muda — e conecta essa mudança ao que
+          pode estar em jogo economicamente.
         </p>
       </div>
 
       <StepNav
         onBack={onBack}
         onNext={onNext}
-        nextLabel="Explorar a leitura"
-        nextCtaId="demo_detail_explore"
+        nextLabel="Ver o que acontece depois"
+        nextCtaId="demo_after_action_view"
       />
     </div>
   );
 }
 
-function HistoryDetail() {
-  return (
-    <div>
-      <h3 className="text-[24px] font-black tracking-[-0.035em]">
-        Como essa conta chegou até aqui?
-      </h3>
-      <p className="mt-2 text-[14px] leading-[1.5] text-[#6b7280]">
-        O score não estava errado. Ele continuava refletindo sinais que ainda
-        estavam saudáveis. A relação, porém, já tinha mudado.
-      </p>
-
-      <div className="ml-1 mt-4 border-l-2 border-[#dde3ee] pl-6">
-        <TimelineItem date="74 dias" title="Uso saudável" tone="good">
-          Champion concentra 81% das interações.
-        </TimelineItem>
-        <TimelineItem
-          date="51 dias"
-          title="A relação começa a mudar"
-          tone="warn"
-        >
-          Champion reduz presença nas reuniões.
-        </TimelineItem>
-        <TimelineItem
-          date="36 dias"
-          title="Champion sai da empresa"
-          tone="risk"
-        >
-          Nenhum outro sponsor ativo.
-        </TimelineItem>
-        <TimelineItem date="hoje" title="Score continua verde" tone="risk">
-          O produto parece saudável. A estrutura que sustentava a renovação não.
-        </TimelineItem>
-      </div>
-    </div>
-  );
-}
-
-function Stakeholder({
-  initials,
-  role,
-  detail,
-  state,
+function ActionRow({
+  date,
+  title,
+  result,
   tone,
 }: {
-  initials: string;
-  role: string;
-  detail: string;
-  state: string;
+  date: string;
+  title: string;
+  result: string;
   tone: "good" | "warn" | "risk";
 }) {
   const toneClass = {
@@ -558,200 +607,99 @@ function Stakeholder({
   }[tone];
 
   return (
-    <div className="flex items-start gap-3 rounded-[16px] border border-[#e7e9ef] bg-white p-[14px]">
-      <div className="grid size-10 shrink-0 place-items-center rounded-full bg-[#eef3ff] text-[12px] font-black text-[#3568f5]">
-        {initials}
-      </div>
-      <div className="min-w-0 flex-1">
-        <strong className="text-[13px] text-[#0b0d12]">{role}</strong>
-        <p className="mt-1 text-[12px] leading-[1.4] text-[#727b87]">
-          {detail}
-        </p>
-        <span
-          className={`mt-2 inline-flex rounded-full px-2 py-1 text-[10px] font-black ${toneClass}`}
-        >
-          {state}
-        </span>
-      </div>
+    <div className="grid gap-3 rounded-[16px] border border-[#e7e9ef] bg-white px-[14px] py-[13px] sm:grid-cols-[78px_1fr_auto] sm:items-center">
+      <Tiny>{date}</Tiny>
+      <strong className="text-[13px] text-[#0b0d12]">{title}</strong>
+      <span
+        className={`w-fit rounded-full px-2 py-1 text-[10px] font-black ${toneClass}`}
+      >
+        {result}
+      </span>
     </div>
   );
 }
 
-function RelationshipDetail() {
-  return (
-    <div>
-      <h3 className="text-[24px] font-black tracking-[-0.035em]">
-        Quem ainda sustenta essa relação?
-      </h3>
-      <p className="mt-2 text-[14px] leading-[1.5] text-[#6b7280]">
-        Uma conta pode continuar usando enquanto sua cobertura relacional se
-        torna progressivamente mais frágil.
-      </p>
-
-      <div className="mt-[14px] grid gap-2.5 sm:grid-cols-2">
-        <Stakeholder
-          initials="PU"
-          role="Power user"
-          detail="Uso operacional recorrente."
-          state="ativo"
-          tone="good"
-        />
-        <Stakeholder
-          initials="CH"
-          role="Champion"
-          detail="Concentrava 81% das interações."
-          state="saiu há 36 dias"
-          tone="risk"
-        />
-        <Stakeholder
-          initials="SP"
-          role="Executive sponsor"
-          detail="Nenhuma nova relação estabelecida."
-          state="sem contato"
-          tone="warn"
-        />
-        <Stakeholder
-          initials="EB"
-          role="Economic buyer"
-          detail="Não participa da relação atual."
-          state="sem relação"
-          tone="risk"
-        />
-      </div>
-    </div>
-  );
-}
-
-function RenewalDetail() {
-  return (
-    <div>
-      <h3 className="text-[24px] font-black tracking-[-0.035em]">
-        Quando esperar deixou de ser neutro?
-      </h3>
-
-      <div className="mt-[14px] grid gap-[14px] lg:grid-cols-[.9fr_1.1fr]">
-        <div className="rounded-[18px] border border-[#e7e9ef] p-[17px]">
-          <Tiny>Próxima decisão</Tiny>
-          <div className="mt-1 text-[54px] font-black tracking-[-0.06em]">
-            18
-          </div>
-          <strong className="text-[14px]">dias até renovação</strong>
-
-          <div className="mt-[14px] h-[9px] overflow-hidden rounded-full bg-[#edf0f5]">
-            <div className="h-full w-[78%] rounded-full bg-[#3568f5]" />
-          </div>
-
-          <p className="mt-4 text-[13px] leading-[1.5] text-[#667085]">
-            A mesma fragilidade teria outro peso se essa decisão estivesse a 120
-            dias.
-          </p>
-        </div>
-
-        <div className="rounded-[18px] border border-[#e7e9ef] p-[17px]">
-          <Tiny>Contexto atual</Tiny>
-          <div className="mt-2">
-            <StatusRow label="Health Score" value="43 · saudável" tone="good" />
-            <StatusRow label="Uso" value="estável" tone="good" />
-            <StatusRow
-              label="Champion"
-              value="saiu há 36 dias"
-              tone="risk"
-            />
-            <StatusRow
-              label="Economic buyer"
-              value="sem relação"
-              tone="risk"
-            />
-            <StatusRow
-              label="Última resposta"
-              value="17 dias"
-              tone="warn"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ExploreStep({
-  activeTab,
-  onTabChange,
-  onBack,
-  onNext,
+function AfterActionCard({
+  name,
+  mode,
+  actions,
+  observed,
 }: {
-  activeTab: DetailTab;
-  onTabChange: (tab: DetailTab) => void;
-  onBack: () => void;
-  onNext: () => void;
+  name: string;
+  mode: string;
+  actions: Array<{
+    date: string;
+    title: string;
+    result: string;
+    tone: "good" | "warn" | "risk";
+  }>;
+  observed: string;
 }) {
-  const tabs: Array<{ key: DetailTab; label: string }> = [
-    { key: "history", label: "Trajetória" },
-    { key: "relationship", label: "Stakeholders" },
-    { key: "renewal", label: "Janela para agir" },
-  ];
-
   return (
-    <div>
-      <div className="mb-[22px] max-w-[780px]">
-        <Tiny>Drill-down</Tiny>
-        <h2 className="mt-1.5 text-[32px] font-black leading-[1.05] tracking-[-0.045em]">
-          Agora explore por que a Luma ficou mais urgente.
-        </h2>
-        <p className="mt-2.5 text-[15px] leading-[1.55] text-[#6b7280]">
-          As dimensões deixam de ser a narrativa principal da demo e viram
-          evidências da leitura.
-        </p>
-      </div>
+    <article className="rounded-[22px] border border-[#e7e9ef] bg-white p-5">
+      <Tiny>
+        {name} · {mode}
+      </Tiny>
+      <h3 className="mt-1 text-[22px] font-black tracking-[-0.035em]">
+        Estratégia revisada
+      </h3>
 
-      <div className="mb-[18px] flex gap-2 overflow-x-auto pb-1">
-        {tabs.map((tab) => (
-          <button
-            key={tab.key}
-            type="button"
-            onClick={() => onTabChange(tab.key)}
-            data-analytics-cta={`demo_detail_tab_${tab.key}`}
-            data-analytics-location="demo_detail_tabs"
-            data-analytics-label={tab.label}
-            aria-pressed={activeTab === tab.key}
-            className={`shrink-0 rounded-full border px-[14px] py-2.5 text-[12px] font-black transition ${
-              activeTab === tab.key
-                ? "border-[#0b0d12] bg-[#0b0d12] text-white"
-                : "border-[#e3e6ec] bg-white text-[#535b67] hover:bg-[#f5f7fb]"
-            }`}
-          >
-            {tab.label}
-          </button>
+      <div className="mt-4 grid gap-[9px]">
+        {actions.map((action) => (
+          <ActionRow
+            key={`${action.date}-${action.title}`}
+            date={action.date}
+            title={action.title}
+            result={action.result}
+            tone={action.tone}
+          />
         ))}
       </div>
 
-      <div className="rounded-[22px] border border-[#e7e9ef] bg-white p-5">
-        {activeTab === "history" ? <HistoryDetail /> : null}
-        {activeTab === "relationship" ? <RelationshipDetail /> : null}
-        {activeTab === "renewal" ? <RenewalDetail /> : null}
+      <div className="mt-5 border-l-[3px] border-[#3568f5] py-2 pl-4">
+        <strong className="text-[14px] text-[#0b0d12]">
+          Observado depois
+        </strong>
+        <p className="mt-1 text-[12px] leading-[1.48] text-[#667085]">
+          {observed}
+        </p>
       </div>
-
-      <StepNav
-        onBack={onBack}
-        onNext={onNext}
-        nextLabel="Ver o que acontece depois da ação"
-        nextCtaId="demo_intervention_view"
-      />
-    </div>
+    </article>
   );
 }
 
-function InterventionStep({
+function FinalStep({
   onBack,
-  onNext,
+  onRestart,
 }: {
   onBack: () => void;
-  onNext: () => void;
+  onRestart: () => void;
 }) {
-  const actions = [
+  const technovaActions = [
     {
       date: "05 ago",
-      title: "CSM tenta contato com novo sponsor",
+      title: "AM aborda nova área",
+      result: "contato aberto",
+      tone: "good" as const,
+    },
+    {
+      date: "09 ago",
+      title: "Nova área entra na conversa",
+      result: "interesse",
+      tone: "good" as const,
+    },
+    {
+      date: "14 ago",
+      title: "Oportunidade comercial registrada",
+      result: "em avaliação",
+      tone: "good" as const,
+    },
+  ];
+
+  const alphaActions = [
+    {
+      date: "05 ago",
+      title: "Tentativa de reconstruir sponsor",
       result: "sem resposta",
       tone: "warn" as const,
     },
@@ -763,172 +711,47 @@ function InterventionStep({
     },
     {
       date: "12 ago",
-      title: "Workshop de adoção com novo stakeholder",
-      result: "intervenção registrada",
+      title: "Novo stakeholder entra",
+      result: "contato ativo",
       tone: "good" as const,
     },
   ];
 
-  const chipClass = {
-    good: "bg-[#ebf8f1] text-[#18794e]",
-    warn: "bg-[#fff5e9] text-[#a15c00]",
-    risk: "bg-[#fff1f0] text-[#b42318]",
-  };
-
   return (
     <div>
-      <div className="mb-[22px] max-w-[780px]">
-        <Tiny>Intervenção → resposta</Tiny>
+      <div className="mb-[22px] max-w-[790px]">
+        <Tiny>04 · Depois da decisão</Tiny>
         <h2 className="mt-1.5 text-[32px] font-black leading-[1.05] tracking-[-0.045em]">
           O trabalho não termina quando o time age.
         </h2>
         <p className="mt-2.5 text-[15px] leading-[1.55] text-[#6b7280]">
-          Ohrly preserva a intervenção e continua acompanhando o que foi
-          observado depois.
-        </p>
-      </div>
-
-      <div className="grid gap-[9px]">
-        {actions.map((action) => (
-          <div
-            key={`${action.date}-${action.title}`}
-            className="grid gap-3 rounded-[16px] border border-[#e7e9ef] bg-white px-[14px] py-[13px] sm:grid-cols-[78px_1fr_auto] sm:items-center"
-          >
-            <Tiny>{action.date}</Tiny>
-            <strong className="text-[13px] text-[#0b0d12]">
-              {action.title}
-            </strong>
-            <span
-              className={`w-fit rounded-full px-2 py-1 text-[10px] font-black ${chipClass[action.tone]}`}
-            >
-              {action.result}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-[22px]">
-        <Tiny>O que foi observado depois</Tiny>
-
-        <div className="mt-[14px] grid gap-3">
-          {[
-            {
-              time: "+4 dias",
-              title: "Novo stakeholder responde",
-              body: "A relação volta a ter um ponto de contato ativo.",
-            },
-            {
-              time: "+9 dias",
-              title: "Participação em reunião aumenta",
-              body: "O contato passa a participar do ritual operacional.",
-            },
-            {
-              time: "+15 dias",
-              title: "Uso permanece estável",
-              body: "A cobertura relacional melhora, mas o economic buyer ainda segue fora da relação.",
-            },
-          ].map((item) => (
-            <div
-              key={item.time}
-              className="grid grid-cols-[92px_1fr] gap-[14px] border-l-[3px] border-[#3568f5] pl-[14px] sm:grid-cols-[110px_1fr]"
-            >
-              <div className="text-[11px] font-black uppercase text-[#87909d]">
-                {item.time}
-              </div>
-              <div>
-                <strong className="text-[14px] text-[#0b0d12]">
-                  {item.title}
-                </strong>
-                <p className="mt-1 text-[12px] leading-[1.45] text-[#667085]">
-                  {item.body}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="mt-[18px] rounded-[18px] border border-[#dfe7ff] bg-[#f4f7ff] p-[18px] text-[13px] leading-[1.5] text-[#2b3852]">
-        <strong className="block">Leitura atual: relação em reentrada.</strong>
-        Ainda não recuperada. O Ohrly não afirma que a intervenção causou esse
-        resultado; apenas preserva a sequência e acompanha a evolução.
-      </div>
-
-      <StepNav
-        onBack={onBack}
-        onNext={onNext}
-        nextLabel="Voltar para a fila"
-        nextCtaId="demo_response_complete"
-      />
-    </div>
-  );
-}
-
-function FinalStep({
-  onBack,
-  onRestart,
-}: {
-  onBack: () => void;
-  onRestart: () => void;
-}) {
-  return (
-    <div>
-      <div className="mb-[22px] max-w-[780px]">
-        <Tiny>Fechamento</Tiny>
-        <h2 className="mt-1.5 text-[32px] font-black leading-[1.05] tracking-[-0.045em]">
-          Agora você ainda trataria essas duas contas da mesma maneira?
-        </h2>
-        <p className="mt-2.5 text-[15px] leading-[1.55] text-[#6b7280]">
-          A fotografia inicial era parecida. A história, a janela para agir e a
-          resposta observada depois não eram.
+          Ohrly preserva a decisão e continua observando como a relação evolui
+          depois.
         </p>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <article className="rounded-[22px] border border-[#e7e9ef] bg-white p-5">
-          <Tiny>Northstar</Tiny>
-          <h3 className="mt-1 text-[22px] font-black tracking-[-0.035em]">
-            Score 41
-          </h3>
-          <div className="mt-3">
-            <StatusRow label="Trajetória" value="deteriorando" />
-            <StatusRow label="Acesso" value="preservado" />
-            <StatusRow label="Janela" value="94 dias" />
-          </div>
-          <div className="mt-4 rounded-[16px] bg-[#ebf8f1] px-4 py-[15px] text-[13px] leading-[1.45] text-[#155e42]">
-            <strong className="block">
-              Investigar, mas ainda há opcionalidade.
-            </strong>
-            O time ainda tem acesso e tempo para decidir como agir.
-          </div>
-        </article>
+        <AfterActionCard
+          name="TechNova"
+          mode="expansão"
+          actions={technovaActions}
+          observed="Mais stakeholders participam e o novo caso de uso continua ativo."
+        />
 
-        <article className="rounded-[22px] border border-[#e7e9ef] bg-white p-5">
-          <Tiny>Luma</Tiny>
-          <h3 className="mt-1 text-[22px] font-black tracking-[-0.035em]">
-            Score 43
-          </h3>
-          <div className="mt-3">
-            <StatusRow label="Trajetória" value="fragilidade acumulada" />
-            <StatusRow label="Acesso" value="reduzido" />
-            <StatusRow label="Janela" value="18 dias" />
-          </div>
-          <div className="mt-4 rounded-[16px] bg-[#fff5e9] px-4 py-[15px] text-[13px] leading-[1.45] text-[#7d4a00]">
-            <strong className="block">Esperar custa alternativas.</strong>
-            A urgência não veio do score isolado, mas da trajetória + perda de
-            acesso + proximidade da decisão.
-          </div>
-        </article>
+        <AfterActionCard
+          name="AlphaCorp"
+          mode="retenção"
+          actions={alphaActions}
+          observed="A relação volta a ter um ponto de contato, mas ainda não há recuperação completa."
+        />
       </div>
 
-      <div className="mt-[18px] rounded-[20px] bg-[#0b0d12] px-[22px] py-5 text-white">
-        <strong className="block text-[22px] font-black tracking-[-0.025em]">
-          Mesmo risco. Histórias diferentes. Decisões diferentes.
+      <div className="mt-[18px] rounded-[18px] border border-[#dfe7ff] bg-[#f4f7ff] p-[18px] text-[13px] leading-[1.5] text-[#2b3852]">
+        <strong className="block">
+          Importante: o Ohrly não afirma que uma ação causou o resultado.
         </strong>
-        <p className="mt-[7px] text-[14px] leading-[1.5] text-[#b8c0ce]">
-          Esse é o papel do Ohrly: tornar a trajetória legível antes que a
-          próxima decisão conte o final.
-        </p>
+        Ele preserva a sequência entre mudança, decisão, intervenção e resposta
+        observada.
       </div>
 
       <div
@@ -937,21 +760,21 @@ function FinalStep({
       >
         <div>
           <h2 className="text-[30px] font-black leading-[1.04] tracking-[-0.045em] sm:text-[34px]">
-            Quer saber se essa leitura aparece nas suas contas?
+            Seu cliente mudou. Sua estratégia mudou junto?
           </h2>
           <p className="mt-2 max-w-[650px] text-[14px] leading-[1.5] text-[#dce5ff]">
-            Traga uma que churnou de surpresa, uma que o time tentou recuperar e
-            uma que preocupa vocês agora.
+            O Ohrly transforma mudanças no comportamento dos seus clientes em
+            decisões de crescimento e retenção de receita.
           </p>
         </div>
 
         <CommercialIntentTrigger
-          ctaId="demo_final_review_accounts"
+          ctaId="demo_final_analyze_customers"
           location="demo_final_cta"
-          label="Solicitar revisão de 3 contas"
+          label="Analisar meus clientes"
           className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-white bg-white px-5 font-extrabold text-[#0b0d12] shadow-[0_6px_0_#0d2e9f] transition hover:-translate-y-px"
         >
-          Solicitar revisão
+          Analisar meus clientes
           <ArrowRight size={16} />
         </CommercialIntentTrigger>
       </div>
@@ -986,12 +809,7 @@ function FinalStep({
 
 export default function DemoClient() {
   const [step, setStep] = useState<DemoStep>(1);
-  const [selectedAccount, setSelectedAccount] = useState<AccountKey | null>(
-    null,
-  );
-  const [activeTab, setActiveTab] = useState<DetailTab>("history");
-
-  const stepLabel = useMemo(() => `Passo ${step} de ${TOTAL_STEPS}`, [step]);
+  const [initialChoice, setInitialChoice] = useState<InitialChoice>(null);
 
   function goToStep(nextStep: DemoStep) {
     setStep(nextStep);
@@ -999,13 +817,12 @@ export default function DemoClient() {
   }
 
   function restartDemo() {
-    setSelectedAccount(null);
-    setActiveTab("history");
+    setInitialChoice(null);
     goToStep(1);
   }
 
   return (
-    <div className="min-h-screen bg-white text-[#0b0d12]">
+    <div className="min-h-screen bg-[#f7f9fc] text-[#0b0d12]">
       <header className="sticky top-0 z-50 border-b border-[#e7e9ef]/80 bg-white/92 backdrop-blur-xl">
         <div className="mx-auto flex min-h-[70px] w-[min(1080px,calc(100%_-_32px))] items-center justify-between gap-4">
           <Link
@@ -1029,12 +846,12 @@ export default function DemoClient() {
             </Link>
 
             <CommercialIntentTrigger
-              ctaId="demo_nav_review_accounts"
+              ctaId="demo_nav_analyze_customers"
               location="demo_navigation"
-              label="Solicitar revisão de 3 contas"
+              label="Analisar minha base"
               className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-[#0b0d12] bg-[#0b0d12] px-4 text-[13px] font-extrabold text-white shadow-[0_5px_0_#3568f5] transition hover:-translate-y-px hover:shadow-[0_7px_0_#3568f5]"
             >
-              Revisar 3 contas
+              Analisar minha base
             </CommercialIntentTrigger>
           </div>
         </div>
@@ -1051,16 +868,15 @@ export default function DemoClient() {
             <Eyebrow>Demo guiada</Eyebrow>
 
             <h1 className="mx-auto mt-[14px] max-w-[900px] text-[42px] font-black leading-[1] tracking-[-0.055em] sm:text-[54px] lg:text-[68px]">
-              Duas contas entraram na sua fila com praticamente o mesmo risco.{" "}
+              Dois clientes parecem iguais hoje.
               <span className="text-[#3568f5]">
-                Qual você investigaria primeiro?
+                {" "}A história muda a decisão.
               </span>
             </h1>
 
             <p className="mx-auto mt-[18px] max-w-[760px] text-[16px] leading-[1.55] text-[#4b5360] sm:text-[17px]">
-              A demo começa com a mesma fotografia que um time de CS poderia ter
-              hoje. A trajetória aparece depois — para você sentir se ela
-              realmente muda a decisão.
+              Veja como o Ohrly transforma mudanças no comportamento dos seus
+              clientes em decisões de crescimento e retenção de receita.
             </p>
           </div>
         </section>
@@ -1075,22 +891,22 @@ export default function DemoClient() {
             <div className="overflow-hidden rounded-[30px] border border-[#e7e9ef] bg-white shadow-[0_24px_70px_rgba(11,13,18,.09)]">
               <div className="flex items-center justify-between gap-[18px] border-b border-[#e7e9ef] bg-[#fbfcfe] px-5 py-[18px]">
                 <div>
-                  <Tiny>Carteira em revisão</Tiny>
+                  <Tiny>Relações em revisão</Tiny>
                   <div className="mt-1 text-[19px] font-black tracking-[-0.03em]">
-                    Fila de contas sinalizadas
+                    Mesmo estado atual. Histórias diferentes.
                   </div>
                 </div>
 
                 <div className="rounded-full bg-[#eef3ff] px-[11px] py-2 text-[11px] font-black text-[#3568f5]">
-                  {stepLabel}
+                  Passo {step} de {TOTAL_STEPS}
                 </div>
               </div>
 
               <div className="p-[18px] sm:p-6">
                 {step === 1 ? (
                   <QueueStep
-                    selectedAccount={selectedAccount}
-                    onSelectAccount={setSelectedAccount}
+                    choice={initialChoice}
+                    onChoose={setInitialChoice}
                     onContinue={() => goToStep(2)}
                   />
                 ) : null}
@@ -1103,31 +919,15 @@ export default function DemoClient() {
                 ) : null}
 
                 {step === 3 ? (
-                  <CostOfWaitingStep
+                  <DecisionStep
                     onBack={() => goToStep(2)}
                     onNext={() => goToStep(4)}
                   />
                 ) : null}
 
                 {step === 4 ? (
-                  <ExploreStep
-                    activeTab={activeTab}
-                    onTabChange={setActiveTab}
-                    onBack={() => goToStep(3)}
-                    onNext={() => goToStep(5)}
-                  />
-                ) : null}
-
-                {step === 5 ? (
-                  <InterventionStep
-                    onBack={() => goToStep(4)}
-                    onNext={() => goToStep(6)}
-                  />
-                ) : null}
-
-                {step === 6 ? (
                   <FinalStep
-                    onBack={() => goToStep(5)}
+                    onBack={() => goToStep(3)}
                     onRestart={restartDemo}
                   />
                 ) : null}
@@ -1137,7 +937,7 @@ export default function DemoClient() {
         </section>
       </main>
 
-      <footer className="border-t border-[#e7e9ef] py-7">
+      <footer className="border-t border-[#e7e9ef] bg-white py-7">
         <div className="mx-auto flex w-[min(1080px,calc(100%_-_32px))] flex-col items-start justify-between gap-4 text-[12px] text-[#727a86] sm:flex-row sm:items-center">
           <Brand />
           <div>Demo de produto · protótipo comercial</div>
