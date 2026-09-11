@@ -1,39 +1,34 @@
 import type { Metadata } from "next";
-
 import Link from "next/link";
-
+import Script from "next/script";
 import type { ReactNode } from "react";
 
 import {
-  AlertTriangle,
   ArrowRight,
-  Bot,
   Check,
-  GitBranch,
-  Layers3,
+  Clock3,
   LineChart,
   Users,
 } from "lucide-react";
 
 import { BehaviorTracker } from "@/components/behavior-tracker";
-
 import { CookieConsent } from "@/components/cookie-consent";
-
 import { LeadModalProvider } from "@/components/lead-form-modal";
-
 import {
   CommercialIntentProvider,
   CommercialIntentTrigger,
 } from "@/components/commercial-intent-modal";
 
 export const metadata: Metadata = {
-  title: "Ohrly — Saiba o que realmente mudou na sua operação",
+  title:
+    "Ohrly — A mudança que você implantou está produzindo o resultado que você esperava?",
   description:
-    "Ohrly acompanha cada versão da sua operação, quem passou por ela, o que aconteceu depois e onde começam a surgir custos ou comportamentos que você não esperava.",
+    "Ohrly acompanha mudanças operacionais enquanto elas acontecem e conecta o que foi implantado ao que começou a acontecer depois: exposição, sinais, padrões emergentes e investigação.",
   openGraph: {
-    title: "Ohrly — Você mudou seu onboarding. Sabe o que realmente melhorou?",
+    title:
+      "A mudança que você implantou está produzindo o resultado que você esperava?",
     description:
-      "Acompanhe sua próxima mudança operacional enquanto ela roda: versão, exposição, composição, consequência e comportamento emergente.",
+      "Acompanhe uma mudança operacional desde a exposição até os sinais emergentes — antes de esperar o outcome final para começar a investigar.",
     type: "website",
   },
 };
@@ -77,7 +72,7 @@ function Eyebrow({
 }) {
   return (
     <div
-      className={`inline-flex items-center gap-2.5 text-[12px] font-extrabold uppercase tracking-[.08em] ${
+      className={`inline-flex items-center gap-2.5 text-sm font-extrabold uppercase tracking-[.08em] ${
         light ? "text-[#9bb6ff]" : "text-[#3568f5]"
       }`}
     >
@@ -95,67 +90,144 @@ function ChangeStep({
   number,
   title,
   children,
+  highlight = false,
 }: {
   number: string;
   title: string;
   children: ReactNode;
+  highlight?: boolean;
 }) {
   return (
-    <article className="flex min-h-[188px] flex-col rounded-[22px] border border-[#e7e9ef] bg-white p-5 shadow-[0_14px_34px_rgba(11,13,18,.035)]">
-      <div className="text-[11px] font-black tracking-[.12em] text-[#9298a4]">
+    <article
+      className={`relative min-h-[178px] rounded-[21px] border p-5 ${
+        highlight
+          ? "border-[#cad6ff] bg-[#f7f9ff]"
+          : "border-[#e4e7ec] bg-white"
+      }`}
+    >
+      <div
+        className={`text-[10px] font-black tracking-[.1em] ${
+          highlight ? "text-[#3568f5]" : "text-[#9aa1ac]"
+        }`}
+      >
         {number}
       </div>
-      <h3 className="mt-8 text-[17px] font-black leading-[1.18] tracking-[-0.035em]">
+      <h3
+        className={`mt-7 text-[16px] font-black leading-[1.2] tracking-[-0.03em] ${
+          highlight ? "text-[#3568f5]" : ""
+        }`}
+      >
         {title}
       </h3>
-      <p className="mt-2 text-[13px] leading-[1.55] text-[#697180]">{children}</p>
+      <p className="mt-2 text-sm leading-[1.5] text-[#6d7582]">
+        {children}
+      </p>
     </article>
   );
 }
 
-function UseCase({
-  icon,
-  title,
+function CheckLine({ children }: { children: ReactNode }) {
+  return (
+    <div className="flex items-start gap-3 text-[14px] leading-[1.55] text-[#424955]">
+      <span className="mt-[1px] grid size-[21px] shrink-0 place-items-center rounded-full bg-[#0b0d12] text-white">
+        <Check size={13} />
+      </span>
+      <span>{children}</span>
+    </div>
+  );
+}
+
+function ContextCard({
+  label,
   children,
 }: {
-  icon: ReactNode;
-  title: string;
+  label: string;
   children: ReactNode;
 }) {
   return (
-    <article className="min-h-[205px] rounded-[22px] border border-[#e7e9ef] bg-white p-6 shadow-[0_14px_34px_rgba(11,13,18,.035)]">
-      <div className="grid size-10 place-items-center rounded-[13px] bg-[#f1f4fa] text-[#283247]">
-        {icon}
+    <div className="rounded-[17px] border border-[#e2e6ed] bg-white px-4 py-[15px] text-left shadow-[0_8px_24px_rgba(11,13,18,.035)]">
+      <div className="text-[9px] font-black uppercase tracking-[.09em] text-[#8c94a1]">
+        {label}
       </div>
-      <h3 className="mt-8 text-[18px] font-black tracking-[-0.035em]">
-        {title}
-      </h3>
-      <p className="mt-2 text-[13px] leading-[1.55] text-[#697180]">{children}</p>
-    </article>
+      <div className="mt-1.5 text-[14px] font-black leading-[1.4]">
+        {children}
+      </div>
+    </div>
   );
 }
 
-function ComparisonBar({
+function CycleSummary({
   label,
-  value,
-  width,
+  children,
+  tone = "neutral",
 }: {
   label: string;
-  value: string;
-  width: string;
+  children: ReactNode;
+  tone?: "neutral" | "danger" | "success";
 }) {
+  const toneClass =
+    tone === "danger"
+      ? "border-[#efdddd] bg-[#fff6f6]"
+      : tone === "success"
+        ? "border-[#d9ebdf] bg-[#f1faf5]"
+        : "border-[#e6e9ef] bg-[#f8f9fb]";
+
   return (
-    <div>
-      <div className="flex items-center justify-between text-[11px] font-semibold text-[#737b8a]">
-        <span>{label}</span>
-        <span>{value}</span>
+    <div className={`min-h-[94px] rounded-[17px] border p-[15px] ${toneClass}`}>
+      <div className="text-[9px] font-black uppercase tracking-[.08em] text-[#9199a6]">
+        {label}
       </div>
-      <div className="mt-2 h-[7px] overflow-hidden rounded-full bg-[#edf0f5]">
-        <div
-          className="h-full rounded-full bg-[#1b2130]"
-          style={{ width }}
-        />
+      <div className="mt-1.5 text-sm font-black leading-[1.45]">
+        {children}
       </div>
+    </div>
+  );
+}
+
+function SimpleFlowStep({
+  number,
+  label,
+  title,
+  children,
+  tone = "neutral",
+}: {
+  number: string;
+  label: string;
+  title: string;
+  children: ReactNode;
+  tone?: "neutral" | "danger" | "success";
+}) {
+  const toneClass =
+    tone === "danger"
+      ? "border-[#efdcdc] bg-[linear-gradient(180deg,#fff,#fff7f7)]"
+      : tone === "success"
+        ? "border-[#d8ebdf] bg-[linear-gradient(180deg,#fff,#f2fbf6)]"
+        : "border-[#e4e8ef] bg-white";
+
+  return (
+    <div
+      className={`min-h-[152px] rounded-[22px] border p-4 text-center shadow-[0_10px_24px_rgba(11,13,18,.04)] ${toneClass}`}
+    >
+      <div className="mx-auto grid size-[34px] place-items-center rounded-[11px] bg-[#f0f3fa] text-sm font-black text-[#24314e]">
+        {number}
+      </div>
+      <div className="mt-3 text-[9px] font-black uppercase tracking-[.08em] text-[#8b93a0]">
+        {label}
+      </div>
+      <strong className="mt-1.5 block text-[18px] font-black leading-[1.15] tracking-[-0.03em]">
+        {title}
+      </strong>
+      <p className="mt-2 text-sm leading-[1.45] text-[#6b7481]">
+        {children}
+      </p>
+    </div>
+  );
+}
+
+function FlowArrow() {
+  return (
+    <div className="flex items-center justify-center text-[30px] font-black text-[#b6bfcd] rotate-90 lg:rotate-0">
+      →
     </div>
   );
 }
@@ -168,9 +240,12 @@ export default function Page() {
 
       <LeadModalProvider>
         <CommercialIntentProvider>
-          <div className="min-h-screen bg-[#f7f8fb] text-[#0b0d12]">
-            <header className="sticky top-0 z-40 border-b border-[#e7e9ef]/80 bg-[#f7f8fb]/90 backdrop-blur-xl">
-              <div className="mx-auto flex h-[72px] w-[min(1180px,calc(100%_-_40px))] items-center justify-between gap-6">
+          <div
+            className="min-h-screen bg-[#f7f8fb] text-[#0b0d12]"
+            data-lp-version="simplified_learning_cycle_v5"
+          >
+            <header className="sticky top-0 z-40 border-b border-[#e6e9ef]/80 bg-[#f7f8fb]/92 backdrop-blur-xl">
+              <div className="mx-auto flex h-[72px] w-[min(1180px,calc(100%_-_40px))] items-center justify-between gap-5">
                 <a
                   href="#top"
                   aria-label="Ohrly"
@@ -180,37 +255,19 @@ export default function Page() {
                   <Brand />
                 </a>
 
-                <nav className="hidden items-center gap-7 text-sm font-bold text-[#525967] lg:flex">
-                  <a
-                    href="#como-funciona"
-                    data-analytics-cta="nav_how"
-                    data-analytics-location="navigation"
-                  >
-                    Como funciona
-                  </a>
-                  <a
-                    href="#exemplo"
-                    data-analytics-cta="nav_example"
-                    data-analytics-location="navigation"
-                  >
-                    Exemplo
-                  </a>
-                  <a
-                    href="#aplicacoes"
-                    data-analytics-cta="nav_use_cases"
-                    data-analytics-location="navigation"
-                  >
-                    Aplicações
-                  </a>
+                <nav className="hidden items-center gap-6 text-[14px] font-extrabold text-[#596170] lg:flex">
+                  <a href="#unidade">Como funciona</a>
+                  <a href="#caso">Caso concreto</a>
+                  <a href="#para-quem">Para quem</a>
                 </nav>
 
                 <CommercialIntentTrigger
-                  ctaId="nav_next_change"
+                  ctaId="nav_follow_change"
                   location="navigation"
-                  label="Acompanhar minha próxima mudança"
-                  className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#0b0d12] bg-[#0b0d12] px-5 text-sm font-extrabold text-white shadow-[0_6px_0_#3568f5] transition hover:-translate-y-px hover:shadow-[0_8px_0_#3568f5]"
+                  label="Acompanhar uma mudança"
+                  className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#0b0d12] bg-[#0b0d12] px-4 text-sm font-extrabold text-white shadow-[0_5px_0_#3568f5] transition hover:-translate-y-px hover:shadow-[0_7px_0_#3568f5] sm:px-5 sm:text-sm"
                 >
-                  Acompanhar mudança
+                  Acompanhar uma mudança
                 </CommercialIntentTrigger>
               </div>
             </header>
@@ -218,538 +275,661 @@ export default function Page() {
             <main id="top">
               {/* HERO */}
               <section
-                className="relative overflow-hidden py-[72px] sm:py-[96px] lg:py-[112px]"
+                className="relative overflow-hidden pb-[84px] pt-[72px] sm:pb-[104px] sm:pt-[96px] lg:pb-[112px] lg:pt-[108px] h-[100vh] flex items-center"
                 data-analytics-section="hero"
               >
-                <div className="pointer-events-none absolute right-[-220px] top-[-280px] size-[760px] rounded-full bg-[radial-gradient(circle,rgba(53,104,245,.10),rgba(53,104,245,0)_68%)]" />
-                <div className="pointer-events-none absolute bottom-[-250px] left-[-180px] size-[620px] rounded-full bg-[radial-gradient(circle,rgba(58,179,126,.07),rgba(58,179,126,0)_68%)]" />
+                <div className="pointer-events-none absolute right-[-270px] top-[-310px] size-[760px] rounded-full bg-[radial-gradient(circle,rgba(53,104,245,.13),rgba(53,104,245,0)_68%)]" />
+                <div className="pointer-events-none absolute bottom-[-330px] left-[-220px] size-[620px] rounded-full bg-[radial-gradient(circle,rgba(47,181,119,.065),rgba(47,181,119,0)_68%)]" />
 
-                <div className="relative mx-auto grid w-[min(1180px,calc(100%_-_40px))] items-center gap-14 lg:grid-cols-[1.02fr_.98fr]">
+                <div className="relative mx-auto grid w-[min(1180px,calc(100%_-_40px))] items-center gap-[58px]">
                   <div>
-                    <div className="inline-flex items-center gap-2 rounded-full border border-[#e1e5eb] bg-white/85 px-3 py-2 text-[12px] font-bold text-[#596270] shadow-[0_8px_24px_rgba(11,13,18,.04)] backdrop-blur">
-                      <span className="size-[7px] rounded-full bg-[#39b878] shadow-[0_0_0_5px_rgba(57,184,120,.10)]" />
-                      Onboarding v5 · Em produção
+                    <div className="inline-flex items-center gap-2 rounded-full border border-[#e1e5eb] bg-white/90 px-3 py-2 text-sm font-bold text-[#596270] shadow-[0_8px_24px_rgba(11,13,18,.04)]">
+                      <span className="size-[7px] rounded-full bg-[#3568f5] shadow-[0_0_0_5px_rgba(53,104,245,.09)]" />
+                      Para times de CS e Operações de SaaS B2B
                     </div>
 
-                    <h1 className="mt-6 max-w-[760px] text-[48px] font-black leading-[.98] tracking-[-0.062em] sm:text-[62px] lg:text-[72px]">
-                      Você mudou seu onboarding.{" "}
+                    <h1 className="mt-6 text-center text-[47px] font-black leading-[.98] tracking-[-0.062em] sm:text-[62px] lg:text-[72px]">
+                      A mudança que você implantou{" "}
                       <span className="text-[#3568f5]">
-                        Sabe o que realmente melhorou?
+                        está produzindo o resultado que você esperava?
                       </span>
                     </h1>
 
-                    <p className="mt-7 max-w-[680px] text-[18px] leading-[1.58] text-[#596170] sm:text-[20px]">
-                      Ohrly acompanha cada versão da sua operação, quem passou por
-                      ela, o que aconteceu depois e onde começam a surgir custos
-                      ou comportamentos que você não esperava.
+                    <p className="mt-7 text-center text-[18px] leading-[1.62] text-[#596170] sm:text-[19px]">
+                      Ohrly acompanha uma mudança operacional enquanto ela acontece
+                      e conecta{" "}
+                      <strong className="font-black text-[#0b0d12]">
+                        o que você implantou ao que começou a acontecer depois
+                      </strong>
+                      : Quem foi exposto, qual resultado era esperado e quais
+                      efeitos começaram a aparecer antes do fechamento do ciclo.
                     </p>
 
-                    <div className="mt-9 flex flex-wrap gap-3">
+                    <p className="mt-4 text-center text-[15px] leading-[1.62] text-[#747c89]">
+                      Sem depender de uma única métrica e sem esperar o churn
+                      aparecer para começar a investigar.
+                    </p>
+
+                    <div className="mt-9 text-center flex flex-wrap items-center gap-3 justify-center">
                       <CommercialIntentTrigger
-                        ctaId="hero_next_change"
+                        ctaId="hero_follow_change"
                         location="hero"
-                        label="Quero acompanhar minha próxima mudança"
+                        label="Quero acompanhar uma mudança"
                         className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#0b0d12] bg-[#0b0d12] px-5 font-extrabold text-white shadow-[0_6px_0_#3568f5] transition hover:-translate-y-px hover:shadow-[0_8px_0_#3568f5]"
                       >
-                        Quero acompanhar minha próxima mudança
+                        Quero acompanhar uma mudança
                         <ArrowRight size={16} />
                       </CommercialIntentTrigger>
 
                       <a
-                        href="#exemplo"
-                        data-analytics-cta="hero_example"
+                        href="#unidade"
+                        data-analytics-cta="hero_see_how"
                         data-analytics-location="hero"
-                        className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#e0e4ea] bg-white px-5 font-extrabold text-[#0b0d12] transition hover:-translate-y-px"
+                        className="text-center inline-flex min-h-12 items-center justify-center rounded-full border border-[#dfe3e9] bg-white px-5 font-extrabold text-[#0b0d12] transition hover:-translate-y-px"
                       >
                         Ver como funciona
                       </a>
                     </div>
 
-                    <p className="mt-5 text-[13px] font-medium text-[#858b96]">
-                      Feito para SaaS B2B com operação de CS/Onboarding já
-                      estruturada.
+                    <p className="mt-5 text-center text-sm font-medium text-[#858b96]">
+                      Comece com uma mudança real. Sem substituir seu CRM, BI ou
+                      processo atual.
                     </p>
                   </div>
 
-                  {/* PRODUCT MOCK */}
-                  <div className="relative">
-                    <div className="absolute inset-0 translate-x-5 translate-y-5 rounded-[30px] bg-[#e9ecf3]" />
+                </div>
+              </section>
 
-                    <div className="relative overflow-hidden rounded-[28px] border border-[#e2e5eb] bg-white shadow-[0_28px_80px_rgba(11,13,18,.10)]">
-                      <div className="flex items-start justify-between gap-5 border-b border-[#eaedf2] px-5 py-5 sm:px-6">
+              {/* UNIT */}
+              <section
+                id="unidade"
+                className="scroll-mt-24 bg-white py-[82px] sm:py-[98px]"
+                data-analytics-section="change_unit"
+              >
+                <div className="mx-auto w-[min(1180px,calc(100%_-_40px))]">
+                  <div className="mx-auto  text-center">
+                    <Eyebrow>A unidade do Ohrly</Eyebrow>
+                    <h2 className="mt-4 text-[40px] font-black leading-[1.02] tracking-[-0.055em] sm:text-[54px]">
+                      Uma mudança entra em produção.{" "}
+                      <span className="text-[#3568f5]">
+                        Ohrly acompanha o que acontece depois.
+                      </span>
+                    </h2>
+                    <p className="mx-auto mt-5 max-w-[900px] text-[17px] leading-[1.62] text-[#667085]">
+                      O produto organiza a história da mudança de ponta a ponta,
+                      para que você não precise reconstruir meses depois o que
+                      aconteceu, com quem e por quê.
+                    </p>
+                  </div>
+
+                  <div className="mt-12 grid gap-2 lg:grid-cols-6">
+                    <ChangeStep number="01" title="Mudança" highlight>
+                      O que mudou, quando entrou em produção e por quê.
+                    </ChangeStep>
+                    <ChangeStep number="02" title="Exposição">
+                      Quais clientes realmente passaram pela nova configuração.
+                    </ChangeStep>
+                    <ChangeStep number="03" title="Esperado">
+                      Qual comportamento ou resultado deveria melhorar.
+                    </ChangeStep>
+                    <ChangeStep number="04" title="Emergente">
+                      O que começou a mudar junto, inclusive fora da pergunta
+                      original.
+                    </ChangeStep>
+                    <ChangeStep number="05" title="Investigação">
+                      Onde o time precisa aprofundar antes de chamar a mudança de
+                      sucesso.
+                    </ChangeStep>
+                    <ChangeStep number="06" title="Próxima mudança" highlight>
+                      O aprendizado vira evidência para decidir o que fazer
+                      depois.
+                    </ChangeStep>
+                  </div>
+                </div>
+              </section>
+
+              {/* SIMPLIFIED LEARNING CYCLE */}
+              <section
+                id="caso"
+                className="scroll-mt-24 py-[82px] sm:py-[98px]"
+                data-analytics-section="learning_cycle_compare_simplified"
+              >
+                <div className="mx-auto w-[min(1120px,calc(100%_-_40px))]">
+                  <div className="mx-auto text-center">
+                    <Eyebrow>Um caso concreto</Eyebrow>
+                    <h2 className="mt-4 text-[40px] font-black leading-[1.02] tracking-[-0.055em] sm:text-[54px]">
+                      Toda mudança gera sinais.{" "}
+                      <span className="text-[#3568f5]">
+                        A diferença está em quando você consegue entendê-los.
+                      </span>
+                    </h2>
+                    <p className="mx-auto mt-5 max-w-[900px] text-[17px] leading-[1.62] text-[#667085]">
+                      <strong className="text-[#0b0d12]">O mesmo cenário, duas leituras. Uma mudança é fácil de acompanhar, </strong>
+                      o problema começa quando implantação, segmentação, playbooks e automações mudam ao mesmo tempo para clientes, contextos e períodos diferentes.
+                    </p>
+                  </div>
+
+                  {/* <div className="mx-auto mt-9 grid max-w-[940px] gap-3 sm:grid-cols-3">
+                    <ContextCard label="Mudança">
+                      Novo handoff de implantação
+                    </ContextCard>
+                    <ContextCard label="Contexto">
+                      Enterprise · integração complexa
+                    </ContextCard>
+                    <ContextCard label="Exposição">
+                      42 clientes passaram por essa configuração
+                    </ContextCard>
+                  </div> */}
+
+                  <div className="mt-7 overflow-hidden rounded-[32px] border border-[#e2e7ef] bg-white shadow-[0_24px_70px_rgba(11,13,18,.08)]">
+                    <div className="flex justify-center border-b border-[#e8ebf1] bg-[linear-gradient(180deg,#fff,#fbfcfe)] p-[18px]">
+                      <div className="grid w-full max-w-[390px] grid-cols-2 gap-1.5 rounded-full border border-[#e1e5eb] bg-[#f2f4f8] p-1.5">
+                        <button
+                          type="button"
+                          role="tab"
+                          aria-selected="true"
+                          data-cycle-tab="before"
+                          className="min-h-11 rounded-full bg-white px-4 text-sm font-black text-[#0b0d12] shadow-[0_8px_22px_rgba(11,13,18,.08)] transition"
+                        >
+                          Antes do Ohrly
+                        </button>
+                        <button
+                          type="button"
+                          role="tab"
+                          aria-selected="false"
+                          data-cycle-tab="after"
+                          className="min-h-11 rounded-full px-4 text-sm font-black text-[#727b89] transition"
+                        >
+                          Com Ohrly
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* BEFORE */}
+                    <div data-cycle-panel="before">
+                      <div className="flex flex-wrap items-start justify-between gap-4 px-6 pb-1 pt-6">
                         <div>
-                          <div className="text-[15px] font-black tracking-[-0.03em]">
-                            Onboarding · Enterprise
+                          <div className="text-[10px] font-black uppercase tracking-[.09em] text-[#8a929e]">
+                            Leitura da operação
                           </div>
-                          <div className="mt-1 text-[12px] font-medium text-[#7b8390]">
-                            Mudança operacional em acompanhamento
-                          </div>
+                          <h3 className="mt-1.5 text-[27px] font-black leading-[1.08] tracking-[-0.04em]">
+                            A mudança acontece. Os sinais aparecem. A decisão
+                            chega tarde.
+                          </h3>
                         </div>
-                        <span className="inline-flex items-center gap-2 rounded-full bg-[#eaf8f1] px-3 py-2 text-[12px] font-black text-[#16824a]">
-                          <span className="size-[7px] rounded-full bg-[#39b878]" />
-                          v5 ativa
+                        <span className="rounded-full bg-[#fff3f3] px-3 py-2 text-[10px] font-black uppercase tracking-[.08em] text-[#c84444]">
+                          decisão tardia
                         </span>
                       </div>
 
-                      <div className="p-5 sm:p-6">
-                        <div className="flex flex-wrap gap-2">
-                          <span className="rounded-[10px] border border-[#e3e7ee] bg-[#f7f8fa] px-3 py-2 text-[12px] font-black text-[#7a818e]">
-                            v4
-                          </span>
-                          <span className="rounded-[10px] border border-[#0b0d12] bg-[#0b0d12] px-3 py-2 text-[12px] font-black text-white">
-                            v5
-                          </span>
-                        </div>
+                      <div className="p-6">
+                        <div className="rounded-[26px] border border-[#edf0f4] bg-[radial-gradient(circle_at_95%_0%,rgba(53,104,245,.06),transparent_26%),#fafbfc] p-[18px]">
+                          <div className="grid items-center gap-3 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr]">
+                            <SimpleFlowStep
+                              number="01"
+                              label="Mudança"
+                              title="Mudança aplicada"
+                            >
+                              Um novo processo entra em produção.
+                            </SimpleFlowStep>
 
-                        <div className="mt-4 rounded-[16px] border border-[#e6e9ef] bg-[#f6f7f9] p-4">
-                          <div className="text-[10px] font-black uppercase tracking-[.09em] text-[#858d9a]">
-                            O que mudou na v5
-                          </div>
-                          <div className="mt-2 text-[13px] font-bold leading-[1.5] text-[#303744]">
-                            + segmentação por tier · + treinamento técnico · saída
-                            por ativação
-                          </div>
-                        </div>
+                            <FlowArrow />
 
-                        <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                          <div className="rounded-[16px] border border-[#e6e9ef] bg-white p-4">
-                            <div className="text-[11px] font-semibold text-[#777f8c]">
-                              Ativação
-                            </div>
-                            <div className="mt-2 text-[26px] font-black tracking-[-0.04em] text-[#16824a]">
-                              +13%
-                            </div>
-                            <div className="mt-1 text-[11px] font-bold text-[#29925b]">
-                              melhor que v4
-                            </div>
-                          </div>
+                            <SimpleFlowStep
+                              number="02"
+                              label="Exposição"
+                              title="Clientes expostos"
+                            >
+                              Clientes reais passam pela nova configuração.
+                            </SimpleFlowStep>
 
-                          <div className="rounded-[16px] border border-[#e6e9ef] bg-white p-4">
-                            <div className="text-[11px] font-semibold text-[#777f8c]">
-                              Time-to-value
-                            </div>
-                            <div className="mt-2 text-[26px] font-black tracking-[-0.04em] text-[#16824a]">
-                              -18%
-                            </div>
-                            <div className="mt-1 text-[11px] font-bold text-[#29925b]">
-                              melhor que v4
-                            </div>
-                          </div>
+                            <FlowArrow />
 
-                          <div className="rounded-[16px] border border-[#f2d1d1] bg-[#fff8f8] p-4">
-                            <div className="text-[11px] font-semibold text-[#8d6767]">
-                              Esforço de suporte
-                            </div>
-                            <div className="mt-2 text-[26px] font-black tracking-[-0.04em] text-[#c33f3f]">
-                              +31%
-                            </div>
-                            <div className="mt-1 text-[11px] font-bold text-[#c95050]">
-                              mudança inesperada
-                            </div>
+                            <SimpleFlowStep
+                              number="03"
+                              label="Sinais"
+                              title="Sinais espalhados"
+                            >
+                              Dúvidas, reaberturas e fricções aparecem em lugares
+                              diferentes.
+                            </SimpleFlowStep>
+
+                            <FlowArrow />
+
+                            <SimpleFlowStep
+                              number="04"
+                              label="Decisão"
+                              title="Descoberta tardia"
+                              tone="danger"
+                            >
+                              O padrão só ganha nome depois de recorrência
+                              suficiente.
+                            </SimpleFlowStep>
                           </div>
                         </div>
 
-                        <div className="mt-4 grid grid-cols-[34px_1fr] gap-3 rounded-[16px] border border-[#efdba8] bg-[#fff7e3] p-4">
-                          <div className="grid size-[34px] place-items-center rounded-[11px] bg-[#fff0c5] text-[#a2690a]">
-                            <AlertTriangle size={17} />
-                          </div>
-                          <div>
-                            <strong className="block text-[13px] text-[#5d461f]">
-                              Comportamento emergente
+                        <div className="mt-[18px] grid gap-3 md:grid-cols-2">
+                          <div className="rounded-[18px] border border-[#e4e8ef] bg-white px-[18px] py-4 text-sm leading-[1.55] text-[#667085]">
+                            <strong className="mb-1 block text-[#0b0d12]">
+                              O que o time já faz
                             </strong>
-                            <span className="mt-1 block text-[12px] leading-[1.48] text-[#7b684a]">
-                              Clientes Enterprise estão exigindo mais suporte nas
-                              2 primeiras semanas, apesar da ativação ter
-                              melhorado.
-                            </span>
+                            O time percebe sinais localmente, conta por conta.
+                          </div>
+                          <div className="rounded-[18px] border border-[#e4e8ef] bg-white px-[18px] py-4 text-sm leading-[1.55] text-[#667085]">
+                            <strong className="mb-1 block text-[#0b0d12]">
+                              Onde está o gargalo
+                            </strong>
+                            A operação demora para ligar vários episódios à mesma
+                            mudança.
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="border-t border-[#e8ebf0] px-5 py-4 text-center text-sm leading-[1.6] text-[#707987]">
+                        <strong className="text-[#0b0d12]">Sem Ohrly:</strong>{" "}
+                        a percepção existe, mas o entendimento sistêmico chega
+                        depois.
+                      </div>
+                    </div>
+
+                    {/* AFTER */}
+                    <div data-cycle-panel="after" className="hidden">
+                      <div className="flex flex-wrap items-start justify-between gap-4 px-6 pb-1 pt-6">
+                        <div>
+                          <div className="text-[10px] font-black uppercase tracking-[.09em] text-[#8a929e]">
+                            Leitura da operação
+                          </div>
+                          <h3 className="mt-1.5 text-[27px] font-black leading-[1.08] tracking-[-0.04em]">
+                            A mudança acontece. Os sinais ganham contexto. A
+                            decisão chega cedo.
+                          </h3>
+                        </div>
+                        <span className="rounded-full bg-[#eaf8f1] px-3 py-2 text-[10px] font-black uppercase tracking-[.08em] text-[#16824a]">
+                          decisão antecipada
+                        </span>
+                      </div>
+
+                      <div className="p-6">
+                        <div className="rounded-[26px] border border-[#edf0f4] bg-[radial-gradient(circle_at_95%_0%,rgba(53,104,245,.06),transparent_26%),#fafbfc] p-[18px]">
+                          <div className="grid items-center gap-3 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr]">
+                            <SimpleFlowStep
+                              number="01"
+                              label="Mudança"
+                              title="Mudança acompanhada"
+                            >
+                              A mudança é registrada no contexto em que realmente
+                              passou a valer.
+                            </SimpleFlowStep>
+
+                            <FlowArrow />
+
+                            <SimpleFlowStep
+                              number="02"
+                              label="Exposição"
+                              title="Clientes expostos"
+                            >
+                              Ohrly sabe quem passou pela mudança e em qual
+                              contexto.
+                            </SimpleFlowStep>
+
+                            <FlowArrow />
+
+                            <SimpleFlowStep
+                              number="03"
+                              label="Sinais"
+                              title="Sinais ligados à mudança"
+                            >
+                              Os episódios deixam de ficar soltos e passam a
+                              carregar a relação com o que foi implantado.
+                            </SimpleFlowStep>
+
+                            <FlowArrow />
+
+                            <SimpleFlowStep
+                              number="04"
+                              label="Decisão"
+                              title="Investigação antecipada"
+                              tone="success"
+                            >
+                              A operação entende mais cedo o que vale investigar.
+                            </SimpleFlowStep>
+                          </div>
+
+                          <div className="mx-auto mt-5 flex max-w-[580px] items-center justify-center gap-2 rounded-full border border-[#dbe5ff] bg-[#f6f8ff] px-4 py-3 text-center text-[11px] font-black uppercase tracking-[.08em] text-[#526ca8]">
+                            <span>Investigação</span>
+                            <ArrowRight size={13} />
+                            <span>Aprendizado</span>
+                            <ArrowRight size={13} />
+                            <span>Próxima mudança</span>
+                            <span className="text-[16px]">↻</span>
                           </div>
                         </div>
 
-                        <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-[#edf0f4] pt-4">
-                          <span className="text-[11px] font-bold text-[#7a8290]">
-                            42 clientes expostos
-                          </span>
-                          <span className="text-[#c8ccd4]">·</span>
-                          <span className="text-[11px] font-bold text-[#7a8290]">
-                            18 comparáveis à v4
-                          </span>
+                        <div className="mt-[18px] grid gap-3 md:grid-cols-2">
+                          <div className="rounded-[18px] border border-[#e4e8ef] bg-white px-[18px] py-4 text-sm leading-[1.55] text-[#667085]">
+                            <strong className="mb-1 block text-[#0b0d12]">
+                              O que muda
+                            </strong>
+                            A unidade deixa de ser só a conta e passa a incluir a
+                            mudança que estava valendo.
+                          </div>
+                          <div className="rounded-[18px] border border-[#e4e8ef] bg-white px-[18px] py-4 text-sm leading-[1.55] text-[#667085]">
+                            <strong className="mb-1 block text-[#0b0d12]">
+                              O ganho real
+                            </strong>
+                            A investigação pode começar enquanto o padrão ainda
+                            está emergindo.
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </div>
-              </section>
 
-              {/* BI VS OHRLY */}
-              <section
-                className="py-[72px] sm:py-[92px]"
-                data-analytics-section="known_vs_emerging"
-              >
-                <div className="mx-auto w-[min(1180px,calc(100%_-_40px))]">
-                  <div className="grid gap-8 rounded-[34px] bg-[#10131a] p-7 text-white sm:p-10 lg:grid-cols-[.95fr_1.05fr] lg:p-12">
-                    <div>
-                      <Eyebrow light>Quando o problema já tem nome</Eyebrow>
-                      <h2 className="mt-4 max-w-[540px] text-[36px] font-black leading-[1.02] tracking-[-0.05em] sm:text-[48px]">
-                        Seu BI mede muito bem aquilo que sua operação já aprendeu
-                        a procurar.
-                      </h2>
-                      <p className="mt-5 max-w-[540px] text-[15px] leading-[1.65] text-[#aeb6c6]">
-                        CAC, churn, NPS, CSAT, ativação, tickets, LTV. Quando a
-                        pergunta está clara, o seu stack normalmente consegue
-                        respondê-la.
-                      </p>
-                    </div>
-
-                    <div className="rounded-[26px] border border-[#2b3140] bg-[#181c27] p-5 sm:p-6">
-                      <div className="text-[11px] font-black uppercase tracking-[.1em] text-[#818a9b]">
-                        O intervalo que Ohrly observa
-                      </div>
-
-                      <div className="mt-5 grid gap-3">
-                        {[
-                          [
-                            "O comportamento começou a mudar",
-                            'Mas nenhum indicador isolado parece "errado".',
-                          ],
-                          [
-                            "A mudança persiste em uma composição específica",
-                            "Um tier, perfil ou jornada passa a se comportar diferente.",
-                          ],
-                          [
-                            "Ainda não existe uma regra para procurar aquilo",
-                            "É cedo demais para virar um dashboard, mas tarde demais para ignorar.",
-                          ],
-                        ].map(([title, description]) => (
-                          <div
-                            key={title}
-                            className="flex gap-3 rounded-[16px] bg-[#121620] p-4"
-                          >
-                            <span className="mt-[7px] size-[8px] shrink-0 rounded-full bg-[#7f8cff]" />
-                            <div>
-                              <strong className="block text-[13px]">
-                                {title}
-                              </strong>
-                              <span className="mt-1 block text-[12px] leading-[1.45] text-[#8f98aa]">
-                                {description}
-                              </span>
-                            </div>
-                          </div>
-                        ))}
+                      <div className="border-t border-[#e8ebf0] px-5 py-4 text-center text-sm leading-[1.6] text-[#707987]">
+                        <strong className="text-[#0b0d12]">Com Ohrly:</strong>{" "}
+                        a mudança vira o contexto que organiza os sinais e acelera
+                        a decisão.
                       </div>
                     </div>
-                  </div>
-                </div>
-              </section>
 
-              {/* HOW */}
-              <section
-                id="como-funciona"
-                className="scroll-mt-24 py-[76px] sm:py-[98px]"
-                data-analytics-section="how_it_works"
-              >
-                <div className="mx-auto w-[min(1180px,calc(100%_-_40px))]">
-                  <div className="max-w-[800px]">
-                    <Eyebrow>Como funciona</Eyebrow>
-                    <h2 className="mt-4 text-[40px] font-black leading-[1.02] tracking-[-0.055em] sm:text-[54px]">
-                      Uma mudança. Uma versão. Consequências reais.
-                    </h2>
-                    <p className="mt-4 max-w-[700px] text-[17px] leading-[1.6] text-[#667085]">
-                      Ohrly não tenta substituir CRM, BI ou seus playbooks. Ele
-                      conecta a mudança operacional ao comportamento que veio
-                      depois.
-                    </p>
-                  </div>
-
-                  <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-                    <ChangeStep number="01" title="Registre a mudança">
-                      O que mudou, quando, por quê e qual resultado você esperava.
-                    </ChangeStep>
-                    <ChangeStep number="02" title="Crie a nova versão">
-                      Onboarding, tier, playbook, ICP, automação ou outro processo
-                      em evolução.
-                    </ChangeStep>
-                    <ChangeStep number="03" title="Saiba quem foi exposto">
-                      Separe os clientes que viveram cada configuração.
-                    </ChangeStep>
-                    <ChangeStep number="04" title="Observe o resultado">
-                      Ativação, esforço, suporte, engajamento e outros outcomes
-                      relevantes.
-                    </ChangeStep>
-                    <ChangeStep number="05" title="Encontre o inesperado">
-                      Veja onde a nova versão começou a mudar algo que você não
-                      estava procurando.
-                    </ChangeStep>
-                    <ChangeStep number="06" title="Construa a próxima versão">
-                      Use sua própria história operacional como evidência para
-                      decidir o que mudar depois.
-                    </ChangeStep>
-                  </div>
-                </div>
-              </section>
-
-              {/* EXAMPLE */}
-              <section
-                id="exemplo"
-                className="scroll-mt-24 bg-white py-[76px] sm:py-[100px]"
-                data-analytics-section="version_comparison"
-              >
-                <div className="mx-auto w-[min(1180px,calc(100%_-_40px))]">
-                  <div className="max-w-[900px]">
-                    <Eyebrow>Exemplo</Eyebrow>
-                    <h2 className="mt-4 text-[40px] font-black leading-[1.02] tracking-[-0.055em] sm:text-[54px]">
-                      A mudança melhorou o que você queria.{" "}
+                    <div className="border-t border-[#e8ebf0] bg-[#fbfcfe] px-6 py-5 text-center text-[14px] font-black leading-[1.55] text-[#263142]">
+                      Ohrly não muda quem percebe os sinais.{" "}
                       <span className="text-[#3568f5]">
-                        Mas alguma coisa nova começou a aparecer.
+                        Muda quanto tempo a organização leva para relacioná-los ao
+                        que fez.
                       </span>
-                    </h2>
+                    </div>
                   </div>
 
-                  <div className="mt-12 grid gap-6 lg:grid-cols-[.9fr_1.1fr]">
-                    <div className="rounded-[28px] border border-[#e6e9ef] bg-[#fbfcfe] p-6 sm:p-7">
-                      <h3 className="text-[25px] font-black tracking-[-0.04em]">
-                        Histórico da mudança
+                </div>
+              </section>
+
+              {/* PROBLEM */}
+              <section
+                className="bg-[#10131a] py-[82px] text-white sm:py-[98px]"
+                data-analytics-section="problem"
+              >
+                <div className="mx-auto w-[min(1180px,calc(100%_-_40px))]">
+                  <Eyebrow light>O problema que Ohrly ataca</Eyebrow>
+                  <h2 className="mt-4 max-w-[1200px] text-[40px] font-black leading-[1.02] tracking-[-0.055em] sm:text-[54px]">
+                    Enquanto sua operação espera evidência suficiente,{" "}
+                    <span className="text-[#9bb6ff]">
+                      a mudança continua afetando clientes.
+                    </span>
+                  </h2>
+                  <p className="mt-5 max-w-[900px] text-[17px] leading-[1.62] text-[#aeb6c4]">
+                    O custo de esperar não é apenas analítico. Cada novo cliente
+                    exposto aumenta a quantidade de experiência real acontecendo
+                    antes de a operação saber se deve manter, ajustar ou
+                    investigar.
+                  </p>
+
+                  <div className="mt-11 grid gap-3.5 lg:grid-cols-3">
+                    <article className="min-h-[220px] rounded-[23px] border border-[#2a303a] bg-[#171b25] p-6">
+                      <div className="text-[11px] font-black tracking-[.12em] text-[#737c8b]">
+                        01
+                      </div>
+                      <h3 className="mt-10 text-[20px] font-black tracking-[-0.03em]">
+                        A mudança já está rodando
                       </h3>
+                      <p className="mt-2 text-[14px] leading-[1.58] text-[#aab2bf]">
+                        Processos entram em produção antes de existir volume
+                        suficiente para um outcome final confiável.
+                      </p>
+                    </article>
 
-                      <div className="mt-7 grid gap-0">
-                        {[
-                          [
-                            "v4",
-                            "03 AGO",
-                            "Onboarding anterior",
-                            "Mesma jornada para Mid-Market e Enterprise.",
-                          ],
-                          [
-                            "↗",
-                            "12 SET",
-                            "Hipótese de melhoria",
-                            "Reduzir churn precoce com segmentação por tier.",
-                          ],
-                          [
-                            "v5",
-                            "HOJE",
-                            "Nova versão em execução",
-                            "Treinamento extra e critério de saída por ativação.",
-                          ],
-                          [
-                            "!",
-                            "EMERGENTE",
-                            "Mais esforço no Enterprise",
-                            "Suporte cresce antes de qualquer impacto claro em CSAT ou churn.",
-                          ],
-                        ].map(([icon, date, title, description], index) => (
-                          <div
-                            key={title}
-                            className="relative grid grid-cols-[36px_1fr] gap-3 pb-6 last:pb-0"
-                          >
-                            {index < 3 ? (
-                              <div className="absolute bottom-0 left-[17px] top-[34px] w-px bg-[#dde2ea]" />
-                            ) : null}
-                            <div className="relative z-10 grid size-[34px] place-items-center rounded-[10px] border border-[#dfe3ea] bg-white text-[11px] font-black">
-                              {icon}
-                            </div>
-                            <div>
-                              <div className="text-[10px] font-black uppercase tracking-[.08em] text-[#959ca8]">
-                                {date}
-                              </div>
-                              <strong className="mt-1 block text-[13px]">
-                                {title}
-                              </strong>
-                              <p className="mt-1 text-[12px] leading-[1.48] text-[#6d7582]">
-                                {description}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
+                    <article className="min-h-[220px] rounded-[23px] border border-[#2a303a] bg-[#171b25] p-6">
+                      <div className="text-[11px] font-black tracking-[.12em] text-[#737c8b]">
+                        02
                       </div>
-                    </div>
-
-                    <div className="rounded-[28px] border border-[#e6e9ef] bg-[#fbfcfe] p-6 sm:p-7">
-                      <h3 className="text-[25px] font-black tracking-[-0.04em]">
-                        v4 vs. v5 por composição
+                      <h3 className="mt-10 text-[20px] font-black tracking-[-0.03em]">
+                        O indicador principal pode continuar normal
                       </h3>
+                      <p className="mt-2 text-[14px] leading-[1.58] text-[#aab2bf]">
+                        Um problema novo pode aparecer primeiro na composição, no
+                        esforço ou na relação entre áreas.
+                      </p>
+                    </article>
 
-                      <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                        <article className="rounded-[20px] border border-[#e1e5eb] bg-white p-5">
-                          <div className="text-[11px] font-bold text-[#7e8591]">
-                            Mid-Market
-                          </div>
-                          <strong className="mt-1 block text-[14px] leading-[1.4]">
-                            v5 melhora sem aumentar esforço
-                          </strong>
-                          <div className="mt-5 grid gap-4">
-                            <ComparisonBar
-                              label="Ativação"
-                              value="+13%"
-                              width="76%"
-                            />
-                            <ComparisonBar
-                              label="Suporte"
-                              value="+2%"
-                              width="31%"
-                            />
-                          </div>
-                        </article>
-
-                        <article className="rounded-[20px] border border-[#ccd7ff] bg-[#f7f9ff] p-5">
-                          <div className="text-[11px] font-bold text-[#6d78a0]">
-                            Enterprise
-                          </div>
-                          <strong className="mt-1 block text-[14px] leading-[1.4]">
-                            v5 melhora ativação, mas desloca custo
-                          </strong>
-                          <div className="mt-5 grid gap-4">
-                            <ComparisonBar
-                              label="Ativação"
-                              value="+8%"
-                              width="65%"
-                            />
-                            <ComparisonBar
-                              label="Suporte"
-                              value="+31%"
-                              width="88%"
-                            />
-                          </div>
-                        </article>
+                    <article className="min-h-[220px] rounded-[23px] border border-[#2a303a] bg-[#171b25] p-6">
+                      <div className="text-[11px] font-black tracking-[.12em] text-[#737c8b]">
+                        03
                       </div>
+                      <h3 className="mt-10 text-[20px] font-black tracking-[-0.03em]">
+                        A investigação começa tarde
+                      </h3>
+                      <p className="mt-2 text-[14px] leading-[1.58] text-[#aab2bf]">
+                        Quando o problema finalmente ganha nome, dezenas de
+                        clientes já podem ter passado pela mesma configuração.
+                      </p>
+                    </article>
+                  </div>
 
-                      <div className="mt-5 rounded-[18px] border border-[#e4e7ed] bg-white p-5 text-[14px] leading-[1.55] text-[#525a69]">
-                        <strong className="text-[#0b0d12]">
-                          Ohrly não conclui causa.
-                        </strong>{" "}
-                        Ele mostra onde a realidade deixou de se comportar como
-                        você esperava — cedo o suficiente para investigar.
-                      </div>
-                    </div>
+                  <div className="mt-8 rounded-[26px] border border-[#2b3240] bg-[linear-gradient(135deg,#151923,#11151d)] p-7 text-[27px] font-black leading-[1.14] tracking-[-0.045em] sm:text-[38px]">
+                    Ohrly encurta o intervalo entre{" "}
+                    <span className="text-[#9bb6ff]">
+                      “mudamos alguma coisa”
+                    </span>{" "}
+                    e{" "}
+                    <span className="text-[#9bb6ff]">
+                      “agora sabemos o que vale investigar”.
+                    </span>
                   </div>
                 </div>
               </section>
 
-              {/* USE CASES */}
+              {/* CHANGE EXAMPLES */}
               <section
-                id="aplicacoes"
-                className="scroll-mt-24 py-[76px] sm:py-[98px]"
-                data-analytics-section="use_cases"
+                className="py-[82px] sm:py-[98px]"
+                data-analytics-section="change_examples"
               >
                 <div className="mx-auto w-[min(1180px,calc(100%_-_40px))]">
-                  <div className="max-w-[830px]">
-                    <Eyebrow>Mesmo motor, diferentes portas de entrada</Eyebrow>
-                    <h2 className="mt-4 text-[40px] font-black leading-[1.02] tracking-[-0.055em] sm:text-[54px]">
-                      Comece por um processo. Expanda quando fizer sentido.
+                  <Eyebrow>O que pode ser uma mudança?</Eyebrow>
+                  <h2 className="mt-4 max-w-[1200px] text-[40px] font-black leading-[1.02] tracking-[-0.055em] sm:text-[54px]">
+                    Comece por um processo concreto.{" "}
+                    <span className="text-[#3568f5]">
+                      O núcleo continua o mesmo.
+                    </span>
+                  </h2>
+                  <p className="mt-5 max-w-[900px] text-[17px] leading-[1.62] text-[#667085]">
+                    O primeiro piloto deve acompanhar uma mudança real e
+                    delimitada. Depois, o mesmo modelo pode ser usado em outras
+                    partes da operação sem transformar Ohrly em quatro produtos
+                    diferentes.
+                  </p>
+
+                  <div className="mt-10 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
+                    {[
+                      {
+                        icon: "↻",
+                        title: "Implantação / Onboarding",
+                        text: "Nova jornada, handoff, treinamento, critério de ativação ou modelo por tier.",
+                      },
+                      {
+                        icon: "◎",
+                        title: "Segmentação",
+                        text: "Mudança de high-touch, low-touch, ICP, tier ou regras de atendimento.",
+                      },
+                      {
+                        icon: "▦",
+                        title: "Playbook",
+                        text: "Nova cadência, intervenção, ritual, regra de prevenção ou fluxo de recuperação.",
+                      },
+                      {
+                        icon: "AI",
+                        title: "Automação / IA",
+                        text: "Novo agente, prompt, base de conhecimento, roteamento ou política operacional.",
+                      },
+                    ].map((item) => (
+                      <article
+                        key={item.title}
+                        className="min-h-[210px] rounded-[22px] border border-[#e5e8ee] bg-white p-6 shadow-[0_14px_34px_rgba(11,13,18,.035)]"
+                      >
+                        <div className="grid size-10 place-items-center rounded-[13px] bg-[#f0f3fa] text-sm font-black text-[#283247]">
+                          {item.icon}
+                        </div>
+                        <h3 className="mt-7 text-[18px] font-black tracking-[-0.035em]">
+                          {item.title}
+                        </h3>
+                        <p className="mt-2 text-sm leading-[1.55] text-[#6d7582]">
+                          {item.text}
+                        </p>
+                      </article>
+                    ))}
+                  </div>
+                </div>
+              </section>
+
+              {/* WHO */}
+              <section
+                id="para-quem"
+                className="scroll-mt-24 bg-white py-[82px] sm:py-[98px]"
+                data-analytics-section="who_is_it_for"
+              >
+                <div className="mx-auto grid w-[min(1180px,calc(100%_-_40px))] gap-10 lg:grid-cols-[.9fr_1.1fr] lg:items-start">
+                  <div>
+                    <Eyebrow>Para quem faz sentido</Eyebrow>
+                    <h2 className="mt-4 text-[40px] font-black leading-[1.02] tracking-[-0.055em] sm:text-[52px]">
+                      Para operações que já funcionam, {" "}
+                      <span className="text-[#3568f5]">e estão mudando.</span>
                     </h2>
-                    <p className="mt-4 max-w-[720px] text-[17px] leading-[1.6] text-[#667085]">
-                      O MVP começa com uma mudança concreta e pode crescer para
-                      outros processos sem trocar o núcleo do produto.
+                    <p className="mt-5 max-w-[560px] text-[16px] leading-[1.65] text-[#667085]">
+                      Ohrly não foi pensado para substituir processo inexistente.
+                      Ele faz mais sentido quando existe uma operação estruturada,
+                      uma mudança concreta e clientes reais passando por ela.
                     </p>
                   </div>
 
-                  <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    <UseCase icon={<GitBranch size={19} />} title="Onboarding">
-                      Qual versão reduz churn precoce sem deslocar custo para CS
-                      ou Suporte?
-                    </UseCase>
-                    <UseCase icon={<Users size={19} />} title="Segmentação">
-                      High touch realmente compensa para quais perfis e em quais
-                      condições?
-                    </UseCase>
-                    <UseCase icon={<Bot size={19} />} title="AI Support">
-                      Uma nova versão do agente reduziu trabalho ou só mudou onde
-                      ele reaparece?
-                    </UseCase>
-                    <UseCase icon={<Layers3 size={19} />} title="ICP / Revenue">
-                      Quais perfis parecem bons na aquisição mas criam custo
-                      invisível depois?
-                    </UseCase>
+                  <div className="rounded-[28px] border border-[#e5e8ee] bg-[#f8f9fb] p-7 sm:p-8">
+                    <div className="grid gap-5">
+                      <div className="flex items-start gap-4">
+                        <div className="grid size-10 shrink-0 place-items-center rounded-[13px] bg-white text-[#3568f5] shadow-[0_8px_20px_rgba(11,13,18,.05)]">
+                          <Users size={18} />
+                        </div>
+                        <div>
+                          <strong className="text-[15px]">
+                            SaaS B2B com CS/Operações estruturados
+                          </strong>
+                          <p className="mt-1 text-sm leading-[1.5] text-[#717986]">
+                            O time já mede resultados e tem processo suficiente
+                            para dizer o que está mudando.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-4">
+                        <div className="grid size-10 shrink-0 place-items-center rounded-[13px] bg-white text-[#3568f5] shadow-[0_8px_20px_rgba(11,13,18,.05)]">
+                          <Clock3 size={18} />
+                        </div>
+                        <div>
+                          <strong className="text-[15px]">
+                            Uma mudança real em produção ou prestes a entrar
+                          </strong>
+                          <p className="mt-1 text-sm leading-[1.5] text-[#717986]">
+                            O melhor piloto começa perto do Dia 0, antes de o
+                            efeito final estar consolidado.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-4">
+                        <div className="grid size-10 shrink-0 place-items-center rounded-[13px] bg-white text-[#3568f5] shadow-[0_8px_20px_rgba(11,13,18,.05)]">
+                          <LineChart size={18} />
+                        </div>
+                        <div>
+                          <strong className="text-[15px]">
+                            Dados mínimos sobre execução e consequência
+                          </strong>
+                          <p className="mt-1 text-sm leading-[1.5] text-[#717986]">
+                            CRM, produto, suporte, planilha ou warehouse. Não
+                            precisamos começar com dez integrações.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </section>
 
-              {/* DESIGN PARTNER */}
+              {/* PRODUCT BOUNDARY */}
+              <section
+                className="py-[70px] sm:py-[86px]"
+                data-analytics-section="product_boundary"
+              >
+                <div className="mx-auto grid w-[min(1180px,calc(100%_-_40px))] gap-5 rounded-[28px] border border-[#e4e8ee] bg-white p-7 shadow-[0_18px_50px_rgba(11,13,18,.045)] lg:grid-cols-[.9fr_1.1fr] lg:items-center sm:p-9">
+                  <div>
+                    <div className="text-sm font-black uppercase tracking-[.08em] text-[#3568f5]">
+                      O que Ohrly não tenta fazer
+                    </div>
+                    <h3 className="mt-3 text-[28px] font-black leading-[1.08] tracking-[-0.045em]">
+                      Não substitui seu BI. Não substitui o julgamento do CSM.
+                    </h3>
+                  </div>
+
+                  <div className="grid gap-3">
+                    <CheckLine>
+                      Seu BI continua medindo os indicadores que sua operação já
+                      conhece.
+                    </CheckLine>
+                    <CheckLine>
+                      Seu time continua interpretando contexto e decidindo o que
+                      fazer.
+                    </CheckLine>
+                    <CheckLine>
+                      Ohrly preserva a relação entre mudança, contexto, exposição
+                      e consequência para antecipar onde vale investigar.
+                    </CheckLine>
+                  </div>
+                </div>
+              </section>
+
+              {/* FINAL CTA */}
               <section
                 id="piloto"
-                className="scroll-mt-24 pb-[90px] pt-[54px] sm:pb-[110px]"
+                className="scroll-mt-24 pb-[96px] pt-[30px] sm:pb-[112px] sm:pt-[44px]"
                 data-analytics-section="design_partner"
               >
                 <div className="mx-auto w-[min(1180px,calc(100%_-_40px))]">
-                  <div className="grid gap-9 rounded-[36px] bg-[linear-gradient(145deg,#10131a,#1a2130)] p-7 text-white sm:p-10 lg:grid-cols-[1fr_.82fr] lg:items-center lg:p-12">
+                  <div className="grid gap-10 rounded-[36px] bg-[linear-gradient(145deg,#10131a,#1b2231)] p-7 text-white sm:p-10 lg:grid-cols-[1fr_.82fr] lg:items-center lg:p-12">
                     <div>
-                      <Eyebrow light>Design partners</Eyebrow>
-                      <h2 className="mt-4 max-w-[650px] text-[40px] font-black leading-[1.02] tracking-[-0.055em] sm:text-[52px]">
-                        Vai mudar seu onboarding nas próximas semanas?
+                      <Eyebrow light>Primeiros design partners</Eyebrow>
+                      <h2 className="mt-4 max-w-[680px] text-[40px] font-black leading-[1.02] tracking-[-0.055em] sm:text-[53px]">
+                        Qual mudança sua operação está prestes a colocar em
+                        produção?
                       </h2>
-                      <p className="mt-5 max-w-[630px] text-[16px] leading-[1.65] text-[#b7c0d0]">
-                        Estamos selecionando operações SaaS B2B que estejam
-                        reformulando onboarding, segmentação, playbooks,
-                        atendimento ou automações para acompanhar a próxima
-                        versão com dados reais.
+                      <p className="mt-5 max-w-[620px] text-[16px] leading-[1.65] text-[#b8c0cf]">
+                        Queremos acompanhar mudanças reais junto a times de CS e
+                        Operações: entender o que mudou, quem passou por ela, o
+                        que começou a acontecer depois e onde vale investigar
+                        antes que o resultado chegue tarde.
                       </p>
-
-                      <div className="mt-7 grid gap-3">
-                        {[
-                          "SaaS B2B com operação de CS/Onboarding estruturada.",
-                          "Uma mudança real prevista para as próximas semanas.",
-                          "Dados mínimos de CRM, produto, suporte ou planilha.",
-                        ].map((item) => (
-                          <div
-                            key={item}
-                            className="flex items-start gap-3 text-[13px] leading-[1.55] text-[#d0d7e3]"
-                          >
-                            <span className="mt-[1px] grid size-[20px] shrink-0 place-items-center rounded-full bg-[#243044] text-[#a9c0ff]">
-                              <Check size={12} />
-                            </span>
-                            <span>{item}</span>
-                          </div>
-                        ))}
-                      </div>
                     </div>
 
-                    <div className="rounded-[26px] bg-white p-6 text-[#0b0d12] shadow-[0_20px_60px_rgba(0,0,0,.16)]">
-                      <div className="flex items-center gap-3">
-                        <div className="grid size-11 place-items-center rounded-[14px] bg-[#eef3ff] text-[#3568f5]">
-                          <LineChart size={20} />
-                        </div>
-                        <div>
-                          <div className="text-[18px] font-black tracking-[-0.035em]">
-                            Acompanhe uma mudança real
-                          </div>
-                          <div className="mt-1 text-[12px] text-[#747c89]">
-                            Primeiro entendemos se o caso é bom para o piloto.
-                          </div>
-                        </div>
+                    <div className="rounded-[27px] bg-white p-6 text-[#0b0d12] shadow-[0_22px_65px_rgba(0,0,0,.17)]">
+                      <div className="text-[11px] font-black uppercase tracking-[.09em] text-[#7d8591]">
+                        Primeiro passo
                       </div>
-
-                      <div className="mt-6 rounded-[18px] border border-[#e6e9ef] bg-[#f7f8fa] p-4">
-                        <div className="text-[11px] font-black uppercase tracking-[.08em] text-[#7f8795]">
-                          O que queremos observar
-                        </div>
-                        <div className="mt-3 grid gap-2.5 text-[13px] leading-[1.5] text-[#4f5663]">
-                          <div className="flex items-start gap-2.5">
-                            <Check className="mt-[2px] shrink-0 text-[#258c59]" size={15} />
-                            <span>Quem passou pela versão anterior e pela nova.</span>
-                          </div>
-                          <div className="flex items-start gap-2.5">
-                            <Check className="mt-[2px] shrink-0 text-[#258c59]" size={15} />
-                            <span>O que melhorou ou piorou por composição.</span>
-                          </div>
-                          <div className="flex items-start gap-2.5">
-                            <Check className="mt-[2px] shrink-0 text-[#258c59]" size={15} />
-                            <span>O que começou a acontecer que ninguém estava procurando.</span>
-                          </div>
-                        </div>
-                      </div>
+                      <h3 className="mt-2 text-[25px] font-black leading-[1.1] tracking-[-0.043em]">
+                        Conte a mudança. A gente avalia se ela é um bom caso para
+                        acompanhar.
+                      </h3>
+                      <p className="mt-3 text-sm leading-[1.55] text-[#727a87]">
+                        A primeira conversa serve para entender o processo, o
+                        momento da mudança e os dados disponíveis. Sem compromisso
+                        e sem integração obrigatória.
+                      </p>
 
                       <CommercialIntentTrigger
-                        ctaId="design_partner_next_change"
+                        ctaId="design_partner_follow_change"
                         location="design_partner"
-                        label="Quero acompanhar minha próxima mudança"
-                        className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-[#0b0d12] bg-[#0b0d12] px-5 font-extrabold text-white shadow-[0_6px_0_#3568f5] transition hover:-translate-y-px hover:shadow-[0_8px_0_#3568f5]"
+                        label="Quero acompanhar uma mudança"
+                        className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-[#0b0d12] bg-[#0b0d12] px-5 font-extrabold text-white shadow-[0_6px_0_#3568f5] transition hover:-translate-y-px hover:shadow-[0_8px_0_#3568f5]"
                       >
-                        Quero acompanhar minha próxima mudança
+                        Quero acompanhar uma mudança
                         <ArrowRight size={16} />
                       </CommercialIntentTrigger>
 
-                      <p className="mt-4 text-center text-[11px] leading-[1.5] text-[#8a919d]">
+                      <p className="mt-4 text-center text-[11px] leading-[1.5] text-[#8b929e]">
                         Sem compromisso. A primeira conversa serve para entender
-                        a mudança, o momento e os dados disponíveis.
+                        se o caso faz sentido para o piloto.
                       </p>
                     </div>
                   </div>
@@ -757,19 +937,11 @@ export default function Page() {
               </section>
             </main>
 
-            <footer className="border-t border-[#e2e5eb] bg-white py-10 sm:py-[42px]">
-              <div className="mx-auto flex w-[min(1180px,calc(100%_-_40px))] flex-col items-start justify-between gap-5 text-[13px] text-[#707784] sm:flex-row sm:items-center">
+            <footer className="border-t border-[#e3e6eb] bg-white py-10">
+              <div className="mx-auto flex w-[min(1180px,calc(100%_-_40px))] flex-col items-start justify-between gap-5 text-sm text-[#707784] sm:flex-row sm:items-center">
                 <Brand />
 
                 <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-                  <Link
-                    href="/referrals"
-                    className="font-bold text-[#596270] hover:text-[#0b0d12]"
-                    data-analytics-cta="footer_referral"
-                    data-analytics-location="footer"
-                  >
-                    Programa de indicação
-                  </Link>
                   <Link
                     href="/privacy"
                     className="font-bold text-[#596270] hover:text-[#0b0d12]"
@@ -785,6 +957,52 @@ export default function Page() {
           </div>
         </CommercialIntentProvider>
       </LeadModalProvider>
+
+      <Script id="ohrly-learning-cycle-tabs" strategy="afterInteractive">
+        {`
+          (() => {
+            const root = document.querySelector(
+              '[data-analytics-section="learning_cycle_compare_simplified"]'
+            );
+            if (!root) return;
+
+            const buttons = root.querySelectorAll("[data-cycle-tab]");
+            const panels = root.querySelectorAll("[data-cycle-panel]");
+
+            const activeClass =
+              "min-h-11 rounded-full bg-white px-4 text-sm font-black text-[#0b0d12] shadow-[0_8px_22px_rgba(11,13,18,.08)] transition";
+            const inactiveClass =
+              "min-h-11 rounded-full px-4 text-sm font-black text-[#727b89] transition";
+
+            const activate = (target) => {
+              buttons.forEach((button) => {
+                const active =
+                  button.getAttribute("data-cycle-tab") === target;
+                button.setAttribute(
+                  "aria-selected",
+                  active ? "true" : "false"
+                );
+                button.className = active
+                  ? activeClass
+                  : inactiveClass;
+              });
+
+              panels.forEach((panel) => {
+                const active =
+                  panel.getAttribute("data-cycle-panel") === target;
+                panel.classList.toggle("hidden", !active);
+              });
+            };
+
+            buttons.forEach((button) => {
+              button.addEventListener("click", () => {
+                const target = button.getAttribute("data-cycle-tab");
+                if (target) activate(target);
+              });
+            });
+          })();
+        `}
+      </Script>
     </>
   );
 }
