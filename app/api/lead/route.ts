@@ -14,8 +14,10 @@ export const runtime = "nodejs";
 
 type LeadBody = {
   email?: string;
-  companySite?: string;
-  customerCount?: string;
+  companySite?: string | null;
+  customerCount?: string | null;
+  changeType?: string;
+  rolloutStage?: string;
   website?: string;
   clientEventId?: string;
 
@@ -54,14 +56,25 @@ type LeadBody = {
     entrySourceLocation?: string | null;
     selectedAccount?: string | null;
     selectedAction?: string | null;
+    formFlowVersion?: string | null;
+    changeType?: string | null;
+    rolloutStage?: string | null;
   };
 };
 
-const ALLOWED_CUSTOMER_COUNTS = new Set([
-  "under_100",
-  "100_500",
-  "500_2000",
-  "2000_plus",
+const ALLOWED_CHANGE_TYPES = new Set([
+  "onboarding",
+  "automation_ai",
+  "playbook_cadence",
+  "segmentation",
+  "support",
+  "other",
+]);
+
+const ALLOWED_ROLLOUT_STAGES = new Set([
+  "in_production",
+  "starting",
+  "planned",
 ]);
 
 function clean(
@@ -118,17 +131,35 @@ function getIp(request: Request) {
   );
 }
 
-function displayCustomerCount(
-  value: string,
-) {
+function displayChangeType(value: string) {
   const labels: Record<string, string> = {
-    under_100: "Até 100",
-    "100_500": "100–500",
-    "500_2000": "500–2.000",
-    "2000_plus": "2.000+",
+    onboarding: "Implantação / onboarding",
+    automation_ai: "Automação ou IA",
+    playbook_cadence: "Playbook ou cadência",
+    segmentation: "Segmentação",
+    support: "Atendimento / suporte",
+    other: "Outra mudança",
   };
 
   return labels[value] || value;
+}
+
+function displayRolloutStage(value: string) {
+  const labels: Record<string, string> = {
+    in_production: "Já está em produção",
+    starting: "Está começando agora",
+    planned: "Ainda será implantada",
+  };
+
+  return labels[value] || value;
+}
+
+function companyFromEmail(email: string) {
+  const domain = email.split("@")[1]?.trim().toLowerCase();
+
+  if (!domain) return "Não informado";
+
+  return domain;
 }
 
 export async function POST(
@@ -155,14 +186,23 @@ export async function POST(
       254,
     ).toLowerCase();
 
-    const companySite = clean(
+    const companySiteRaw = clean(
       body.companySite,
       300,
     );
 
-    const customerCount = clean(
-      body.customerCount,
-      40,
+    const companySite = companySiteRaw
+      ? validHttpUrl(companySiteRaw)
+      : null;
+
+    const changeType = clean(
+      body.changeType,
+      80,
+    );
+
+    const rolloutStage = clean(
+      body.rolloutStage,
+      80,
     );
 
     const clientEventId = clean(
@@ -172,10 +212,8 @@ export async function POST(
 
     if (
       !validEmail(email) ||
-      validHttpUrl(companySite) == null ||
-      !ALLOWED_CUSTOMER_COUNTS.has(
-        customerCount,
-      ) ||
+      !ALLOWED_CHANGE_TYPES.has(changeType) ||
+      !ALLOWED_ROLLOUT_STAGES.has(rolloutStage) ||
       !isUuid(clientEventId)
     ) {
       return NextResponse.json(
@@ -205,6 +243,18 @@ export async function POST(
     const entrySourceLocation = clean(journey.entrySourceLocation, 120) || null;
     const selectedAccount = clean(journey.selectedAccount, 80) || null;
     const selectedAction = clean(journey.selectedAction, 80) || null;
+    const formFlowVersion = clean(journey.formFlowVersion, 80) || "change_first_v1";
+
+    // Preferimos os valores top-level, mas aceitamos o contexto de journey
+    // para manter o contrato resiliente a chamadas futuras.
+    const journeyChangeType = clean(journey.changeType, 80);
+    const journeyRolloutStage = clean(journey.rolloutStage, 80);
+    const normalizedChangeType = ALLOWED_CHANGE_TYPES.has(changeType)
+      ? changeType
+      : journeyChangeType;
+    const normalizedRolloutStage = ALLOWED_ROLLOUT_STAGES.has(rolloutStage)
+      ? rolloutStage
+      : journeyRolloutStage;
 
     const utmPlacement =
       clean(
@@ -264,8 +314,17 @@ export async function POST(
       tracking.consent?.analytics,
     );
 
-    const customerLabel =
-      displayCustomerCount(customerCount);
+    const changeTypeLabel =
+      displayChangeType(normalizedChangeType);
+
+    const rolloutStageLabel =
+      displayRolloutStage(normalizedRolloutStage);
+
+    // decision_leads.company é obrigatório no schema atual. Como o novo
+    // experimento não pede site, usamos o domínio do e-mail como proxy
+    // operacional, sem criar uma nova barreira no formulário.
+    const companyLabel =
+      companySite || companyFromEmail(email);
 
     const supabase =
       getSupabaseAdmin();
@@ -285,23 +344,23 @@ export async function POST(
 
           name: null,
 
-          company: companySite,
+          company: companyLabel,
 
           email,
 
           whatsapp: null,
 
           decision:
-            "Identificar quais contas da carteira realmente precisam de atenção e reduzir a investigação manual do time de CS",
+            "Entender se uma mudança operacional já produziu evidência suficiente para justificar investigação",
 
           context:
-            `Volume aproximado de contas: ${customerLabel}.`,
+            `Mudança: ${changeTypeLabel}. Estágio: ${rolloutStageLabel}.`,
 
           question:
-            "Quais contas realmente mudaram e quais o time deveria investigar primeiro?",
+            "Já existe evidência suficiente para investigar esta mudança antes que continuar esperando fique mais caro?",
 
           decision_type:
-            "b2b_account_attention_diagnostic",
+            "operational_change_monitor_design_partner",
 
           systems: null,
 
@@ -354,10 +413,25 @@ export async function POST(
 
           metadata: {
             source:
-              "Ohrly landing page - Account attention",
+              "Ohrly landing page - Change first",
 
-            customer_count:
-              customerCount,
+            form_flow_version:
+              formFlowVersion,
+
+            change_type:
+              normalizedChangeType,
+
+            change_type_label:
+              changeTypeLabel,
+
+            rollout_stage:
+              normalizedRolloutStage,
+
+            rollout_stage_label:
+              rolloutStageLabel,
+
+            company_site:
+              companySite,
 
             client_event_id:
               clientEventId,
@@ -449,8 +523,14 @@ export async function POST(
           form_id:
             "attention_lead_form",
 
-          customer_count:
-            customerCount,
+          form_flow_version:
+            formFlowVersion,
+
+          change_type:
+            normalizedChangeType,
+
+          rollout_stage:
+            normalizedRolloutStage,
 
           device_type:
             tracking.deviceType ||
@@ -531,7 +611,11 @@ export async function POST(
 
             landingVariant,
 
-            customerCount,
+            changeType:
+              normalizedChangeType,
+
+            rolloutStage:
+              normalizedRolloutStage,
           })
         : Promise.resolve({
             ok: false,
@@ -550,11 +634,14 @@ export async function POST(
 
         companySite,
 
-        customerCount:
-          customerLabel,
+        changeType:
+          changeTypeLabel,
+
+        rolloutStage:
+          rolloutStageLabel,
 
         source:
-          "Ohrly landing page - Account attention",
+          "Ohrly landing page - Change first",
 
         pageUrl,
 

@@ -1,9 +1,11 @@
 export type FormspreeLeadInput = {
   email: string;
 
-  companySite: string;
+  companySite?: string | null;
 
-  customerCount: string;
+  changeType?: string | null;
+
+  rolloutStage?: string | null;
 
   source: string;
 
@@ -54,10 +56,13 @@ export async function sendFormspreeLead(
             input.email,
 
           company:
-            input.companySite,
+            input.companySite || undefined,
 
-          customer_count:
-            input.customerCount,
+          change_type:
+            input.changeType || undefined,
+
+          rollout_stage:
+            input.rolloutStage || undefined,
 
           source:
             input.source,
@@ -71,7 +76,7 @@ export async function sendFormspreeLead(
           ...input.utm,
 
           _subject:
-            "Novo lead — Ohrly Account Attention",
+            "Novo lead — Ohrly Change Monitor",
         }),
 
         cache: "no-store",

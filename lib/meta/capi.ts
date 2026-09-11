@@ -189,7 +189,9 @@ export type MetaLeadInput = {
     | null;
 
   landingVariant: string;
-  customerCount: string;
+  customerCount?: string | null;
+  changeType?: string | null;
+  rolloutStage?: string | null;
 };
 
 export async function sendMetaLead(
@@ -232,10 +234,16 @@ export async function sendMetaLead(
         input.landingVariant,
 
       customer_count:
-        input.customerCount,
+        input.customerCount || undefined,
+
+      change_type:
+        input.changeType || undefined,
+
+      rollout_stage:
+        input.rolloutStage || undefined,
 
       source:
-        "ohrly_account_attention_lp",
+        "ohrly_operational_change_lp",
     },
   });
 }

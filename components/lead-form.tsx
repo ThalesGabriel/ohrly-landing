@@ -236,8 +236,8 @@ export function LeadForm({
       if (tracking.consent?.marketing) {
         trackMetaLead(clientEventId, {
           landing_variant: tracking.landingVariant,
-          // Mantém o shape atual do evento Meta sem inventar volume de carteira.
-          customer_count: "not_collected",
+          change_type: changeType,
+          rollout_stage: rolloutStage,
           journey_stage: eventContext.journeyStage,
           demo_id: eventContext.demoId,
           demo_run_id: eventContext.demoRunId,
