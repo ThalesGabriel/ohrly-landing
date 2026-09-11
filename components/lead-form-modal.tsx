@@ -51,7 +51,6 @@ export function useLeadModal() {
 export function LeadModalProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [source, setSource] = useState<LeadModalSource | null>(null);
-
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const metaLeadFormOpenSentRef = useRef(false);
 
@@ -59,10 +58,9 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
     setSource(nextSource);
     setIsOpen(true);
 
-    // lead_form_open agora representa intenção comercial explícita,
-    // tanto no caminho direto quanto depois da demo.
     void trackBehavior("lead_form_open", {
       formId: "attention_lead_form",
+      formFlowVersion: "change_first_v1",
       journeyStage: nextSource.journeyStage,
       demoId: nextSource.demoId,
       demoRunId: nextSource.demoRunId ?? null,
@@ -79,7 +77,6 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
 
     if (tracking.consent?.marketing && !metaLeadFormOpenSentRef.current) {
       metaLeadFormOpenSentRef.current = true;
-
       const clientEventId = crypto.randomUUID();
 
       trackMetaLeadFormOpen(clientEventId, {
@@ -97,6 +94,7 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
 
       void trackBehavior("meta_optimization_signal_sent", {
         signal: "LeadFormOpen",
+        formFlowVersion: "change_first_v1",
         journeyStage: nextSource.journeyStage,
         demoId: nextSource.demoId ?? null,
         demoRunId: nextSource.demoRunId ?? null,
@@ -113,6 +111,7 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
 
     void trackBehavior("lead_form_close", {
       formId: "attention_lead_form",
+      formFlowVersion: "change_first_v1",
       journeyStage: source?.journeyStage ?? null,
       demoId: source?.demoId ?? null,
       demoRunId: source?.demoRunId ?? null,
@@ -140,13 +139,10 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
 
     window.addEventListener("keydown", handleKeyDown);
 
-    // Mantemos o autofocus por acessibilidade/UX. O behavior-tracker
-    // agora cria form_start somente em input/change, não em focus.
+    // Mantém o foco dentro do diálogo sem jogar o usuário diretamente
+    // no e-mail nem abrir o teclado do mobile.
     const frame = window.requestAnimationFrame(() => {
-      const firstField = dialogRef.current?.querySelector<HTMLElement>(
-        'input:not([type="hidden"]), select, textarea',
-      );
-      firstField?.focus();
+      dialogRef.current?.focus();
     });
 
     return () => {
@@ -160,14 +156,16 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
 
   const modalCopy = isDirectIntent
     ? {
-        eyebrow: "Avalie sua operação",
-        title: "Veja se o Ohrly faz sentido para sua carteira.",
-        body: "Conte rapidamente como seu time acompanha contas em risco hoje. Começamos pelo processo e pelos dados que vocês já possuem.",
+        eyebrow: "Acompanhe uma mudança",
+        title: "O que mudou na sua operação?",
+        body:
+          "Comece pela mudança. Queremos entender o que entrou em produção e se já existem clientes passando por ela.",
       }
     : {
         eyebrow: "Teste na sua operação",
-        title: "Veja o que o Ohrly encontraria nas suas contas.",
-        body: "Agora que você viu a proposta, precisamos apenas de algumas informações para entender se existe um bom caso para testar com dados reais da sua operação.",
+        title: "Vamos partir de uma mudança real.",
+        body:
+          "Conte o que mudou e em que momento ela está. Depois vemos juntos se existe um bom caso para acompanhar.",
       };
 
   return (
@@ -178,7 +176,9 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
         <div
           className="fixed inset-0 z-[100] flex items-end justify-center bg-[#091126]/55 backdrop-blur-[3px] sm:items-center sm:p-6"
           onMouseDown={(event) => {
-            if (event.target === event.currentTarget) closeLeadModal("backdrop");
+            if (event.target === event.currentTarget) {
+              closeLeadModal("backdrop");
+            }
           }}
         >
           <div
@@ -186,7 +186,8 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
             role="dialog"
             aria-modal="true"
             aria-labelledby="lead-modal-title"
-            className="relative max-h-[94dvh] w-full overflow-y-auto rounded-t-[28px] border border-[#dfe5f0] bg-white px-5 pb-7 pt-5 shadow-[0_30px_100px_rgba(8,22,60,.28)] sm:max-w-[520px] sm:rounded-[28px] sm:p-7"
+            tabIndex={-1}
+            className="relative max-h-[94dvh] w-full overflow-y-auto rounded-t-[28px] border border-[#dfe5f0] bg-white px-5 pb-7 pt-5 shadow-[0_30px_100px_rgba(8,22,60,.28)] outline-none sm:max-w-[520px] sm:rounded-[28px] sm:p-7"
           >
             <div className="flex items-start justify-between gap-5">
               <div>
@@ -229,8 +230,8 @@ export function LeadModalProvider({ children }: { children: ReactNode }) {
             />
 
             <div className="mt-4 border-t border-[#edf0f5] pt-4">
-              <p className="text-center text-[11px] leading-5 text-[#8995a8]">
-                Sem migrar seu stack. Primeiro avaliamos se a leitura acrescenta algo ao seu processo atual.
+              <p className="text-center text-sm leading-5 text-[#8995a8]">
+                Primeiro entendemos a mudança. Seu contato só é pedido no final.
               </p>
             </div>
           </div>
@@ -247,9 +248,7 @@ type LeadFormIntentTriggerProps = Omit<LeadModalSource, "journeyStage"> & {
 };
 
 /**
- * Este trigger é propositalmente específico: ele representa a intenção de
- * avançar para o formulário DEPOIS da demo. CTAs da landing devem abrir a demo,
- * nunca este componente diretamente.
+ * Trigger usado depois da demo para abrir diretamente o formulário.
  */
 export function LeadFormIntentTrigger({
   ctaId,
@@ -273,6 +272,7 @@ export function LeadFormIntentTrigger({
       aria-haspopup="dialog"
       onClick={() => {
         onBeforeOpen?.();
+
         context.openLeadModal({
           ctaId,
           location,

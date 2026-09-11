@@ -195,7 +195,7 @@ export default function Page() {
         <CommercialIntentProvider>
           <div
             className="min-h-screen bg-[#f7f8fb] text-[#0b0d12]"
-            data-lp-version="hareware_clarity_relevance_v2"
+            data-lp-version="decision_window_change_first_v1"
           >
             {/* NAV */}
             <header className="sticky top-0 z-40 border-b border-[#e6e9ef]/80 bg-[#f7f8fb]/92 backdrop-blur-xl">
@@ -298,7 +298,7 @@ export default function Page() {
                 data-analytics-section="simple_case"
               >
                 <div className="mx-auto w-[min(1120px,calc(100%_-_40px))]">
-                  <div className="mx-auto max-w-[900px] text-center">
+                  <div className="mx-auto max-w-[1200px] text-left">
                     <Eyebrow>Um caso concreto</Eyebrow>
                     <h2 className="mt-4 text-[39px] font-black leading-[1.02] tracking-[-0.055em] sm:text-[53px]">
                       Toda mudança gera sinais.{" "}
@@ -306,7 +306,7 @@ export default function Page() {
                         A diferença está em quando você consegue entendê-los.
                       </span>
                     </h2>
-                    <p className="mx-auto mt-5 max-w-[760px] text-[17px] leading-[1.62] text-[#667085]">
+                    <p className="mt-5 max-w-[1200px] text-[17px] leading-[1.62] text-[#667085]">
                       O mesmo cenário, duas leituras. Sem teoria demais: apenas o
                       que muda na prática quando os sinais deixam de ficar soltos.
                     </p>
@@ -581,11 +581,11 @@ export default function Page() {
                 </div>
               </section>
 
-              {/* LEARNING LATENCY */}
+              {/* DECISION WINDOW */}
               <section
                 id="custo"
                 className="scroll-mt-24 bg-white py-[82px] sm:py-[96px]"
-                data-analytics-section="learning_latency"
+                data-analytics-section="decision_window"
               >
                 <div className="mx-auto w-[min(1120px,calc(100%_-_40px))]">
                   <Eyebrow>Por que isso importa</Eyebrow>
